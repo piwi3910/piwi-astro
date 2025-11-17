@@ -9,6 +9,9 @@ import { initializeStorage } from './lib/minio';
 // Routes
 import healthRoutes from './routes/health';
 import authRoutes from './routes/auth';
+import telescopesRoutes from './routes/telescopes';
+import camerasRoutes from './routes/cameras';
+import rigsRoutes from './routes/rigs';
 
 const fastify = Fastify({
   logger: {
@@ -44,6 +47,9 @@ const start = async (): Promise<void> => {
     // Register routes
     await fastify.register(healthRoutes);
     await fastify.register(authRoutes, { prefix: '/api/auth' });
+    await fastify.register(telescopesRoutes, { prefix: '/api/telescopes' });
+    await fastify.register(camerasRoutes, { prefix: '/api/cameras' });
+    await fastify.register(rigsRoutes, { prefix: '/api/rigs' });
 
     // Start server
     const port = parseInt(process.env.API_PORT || '4000', 10);

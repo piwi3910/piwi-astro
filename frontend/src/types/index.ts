@@ -45,3 +45,82 @@ export interface ImageUpload {
   uploadedAt: string;
   notes: string | null;
 }
+
+export interface Telescope {
+  id: string;
+  userId: string;
+  name: string;
+  brand: string | null;
+  model: string | null;
+  focalLengthMm: number;
+  apertureMm: number;
+  focalRatio: number | null;
+  notes: string | null;
+}
+
+export interface Camera {
+  id: string;
+  userId: string;
+  name: string;
+  brand: string | null;
+  model: string | null;
+  sensorWidthMm: number;
+  sensorHeightMm: number;
+  resolutionX: number;
+  resolutionY: number;
+  pixelSizeUm: number;
+  sensorType: string;
+  notes: string | null;
+}
+
+export interface FOV {
+  fovWidthArcmin: number;
+  fovHeightArcmin: number;
+  pixelScaleArcsecPerPixel: number;
+}
+
+export interface Rig {
+  id: string;
+  userId: string;
+  name: string;
+  telescopeId: string;
+  cameraId: string;
+  reducerFactor: number | null;
+  barlowFactor: number | null;
+  rotationDegDefault: number | null;
+  telescope: Telescope;
+  camera: Camera;
+  fov: FOV;
+}
+
+export interface CreateTelescopeInput {
+  name: string;
+  brand?: string;
+  model?: string;
+  focalLengthMm: number;
+  apertureMm: number;
+  focalRatio?: number;
+  notes?: string;
+}
+
+export interface CreateCameraInput {
+  name: string;
+  brand?: string;
+  model?: string;
+  sensorWidthMm: number;
+  sensorHeightMm: number;
+  resolutionX: number;
+  resolutionY: number;
+  pixelSizeUm: number;
+  sensorType: string;
+  notes?: string;
+}
+
+export interface CreateRigInput {
+  name: string;
+  telescopeId: string;
+  cameraId: string;
+  reducerFactor?: number;
+  barlowFactor?: number;
+  rotationDegDefault?: number;
+}
