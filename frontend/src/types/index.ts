@@ -70,9 +70,23 @@ export interface Telescope {
   notes: string | null;
 }
 
+export interface CameraCatalog {
+  id: string;
+  brand: string;
+  model: string;
+  pixelSizeUm: number;
+  resolutionX: number;
+  resolutionY: number;
+  sensorWidthMm: number;
+  sensorHeightMm: number;
+  externalId: string | null;
+  isActive: boolean;
+}
+
 export interface Camera {
   id: string;
   userId: string;
+  catalogId: string | null;
   name: string;
   brand: string | null;
   model: string | null;
@@ -117,6 +131,7 @@ export interface CreateTelescopeInput {
 }
 
 export interface CreateCameraInput {
+  catalogId?: string;
   name: string;
   brand?: string;
   model?: string;

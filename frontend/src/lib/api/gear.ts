@@ -2,6 +2,7 @@ import type {
   Telescope,
   TelescopeCatalog,
   Camera,
+  CameraCatalog,
   Rig,
   CreateTelescopeInput,
   CreateCameraInput,
@@ -87,6 +88,38 @@ export const updateTelescope = (
 
 export const deleteTelescope = (id: string): Promise<void> =>
   fetchAPI(`/api/telescopes/${id}`, { method: 'DELETE' });
+
+// Camera Catalog
+export const getCameraBrands = (): Promise<{ brands: string[] }> => {
+  const params = new URLSearchParams({ type: 'brands' });
+  return fetchAPI(`/api/camera-catalog?${params.toString()}`);
+};
+
+export const getCamerasByBrand = (
+  brand: string,
+  limit: number = 100,
+  offset: number = 0
+): Promise<{ cameras: CameraCatalog[]; total: number; hasMore: boolean }> => {
+  const params = new URLSearchParams({
+    brand,
+    limit: limit.toString(),
+    offset: offset.toString(),
+  });
+  return fetchAPI(`/api/camera-catalog?${params.toString()}`);
+};
+
+export const searchCameraCatalog = (
+  search: string = '',
+  limit: number = 20,
+  offset: number = 0
+): Promise<{ cameras: CameraCatalog[]; total: number; hasMore: boolean }> => {
+  const params = new URLSearchParams({
+    search,
+    limit: limit.toString(),
+    offset: offset.toString(),
+  });
+  return fetchAPI(`/api/camera-catalog?${params.toString()}`);
+};
 
 // Cameras
 export const getCameras = (): Promise<Camera[]> =>

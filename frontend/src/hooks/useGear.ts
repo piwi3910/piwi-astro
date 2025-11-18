@@ -3,6 +3,7 @@ import type {
   Telescope,
   TelescopeCatalog,
   Camera,
+  CameraCatalog,
   Rig,
   CreateTelescopeInput,
   CreateCameraInput,
@@ -73,6 +74,32 @@ export function useDeleteTelescope() {
       queryClient.invalidateQueries({ queryKey: ['telescopes'] });
       queryClient.invalidateQueries({ queryKey: ['rigs'] });
     },
+  });
+}
+
+// Camera Catalog
+export function useCameraBrands() {
+  return useQuery<{ brands: string[] }>({
+    queryKey: ['camera-brands'],
+    queryFn: gearApi.getCameraBrands,
+    staleTime: 10 * 60 * 1000, // 10 minutes - brands rarely change
+  });
+}
+
+export function useCamerasByBrand(brand: string | null, limit: number = 100, offset: number = 0) {
+  return useQuery<{ cameras: CameraCatalog[]; total: number; hasMore: boolean }>({
+    queryKey: ['camera-catalog', 'by-brand', brand, limit, offset],
+    queryFn: () => gearApi.getCamerasByBrand(brand!, limit, offset),
+    enabled: !!brand, // Only fetch when brand is selected
+    staleTime: 5 * 60 * 1000, // 5 minutes - catalog doesn't change often
+  });
+}
+
+export function useCameraCatalog(search: string = '', limit: number = 20, offset: number = 0) {
+  return useQuery<{ cameras: CameraCatalog[]; total: number; hasMore: boolean }>({
+    queryKey: ['camera-catalog', search, limit, offset],
+    queryFn: () => gearApi.searchCameraCatalog(search, limit, offset),
+    staleTime: 5 * 60 * 1000, // 5 minutes - catalog doesn't change often
   });
 }
 

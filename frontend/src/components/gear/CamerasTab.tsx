@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Stack,
   Button,
@@ -14,6 +14,7 @@ import {
   ActionIcon,
   Alert,
   Select,
+  Divider,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconPlus, IconEdit, IconTrash, IconCamera } from '@tabler/icons-react';
@@ -22,6 +23,8 @@ import {
   useCreateCamera,
   useUpdateCamera,
   useDeleteCamera,
+  useCameraBrands,
+  useCamerasByBrand,
 } from '@/hooks/useGear';
 import type { Camera, CreateCameraInput } from '@/types';
 
@@ -29,14 +32,24 @@ export function CamerasTab(): JSX.Element {
   const [opened, setOpened] = useState(false);
   const [editingCamera, setEditingCamera] = useState<Camera | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+  const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
 
   const { data: cameras, isLoading } = useCameras();
   const createMutation = useCreateCamera();
   const updateMutation = useUpdateCamera();
   const deleteMutation = useDeleteCamera();
 
+  // Camera Catalog queries
+  const { data: brandsData } = useCameraBrands();
+  const { data: modelsData } = useCamerasByBrand(selectedBrand);
+
+  const brands = brandsData?.brands || [];
+  const models = modelsData?.cameras || [];
+
   const form = useForm<CreateCameraInput>({
     initialValues: {
+      catalogId: undefined,
       name: '',
       brand: '',
       model: '',
@@ -57,6 +70,28 @@ export function CamerasTab(): JSX.Element {
       pixelSizeUm: (value) => (value <= 0 ? 'Pixel size must be positive' : null),
     },
   });
+
+  // Auto-fill form when camera model is selected from catalog
+  useEffect(() => {
+    if (selectedModelId) {
+      const selectedCamera = models.find((c) => c.id === selectedModelId);
+      if (selectedCamera) {
+        form.setValues({
+          catalogId: selectedCamera.id,
+          name: `${selectedCamera.brand} ${selectedCamera.model}`,
+          brand: selectedCamera.brand,
+          model: selectedCamera.model,
+          sensorWidthMm: selectedCamera.sensorWidthMm,
+          sensorHeightMm: selectedCamera.sensorHeightMm,
+          resolutionX: selectedCamera.resolutionX,
+          resolutionY: selectedCamera.resolutionY,
+          pixelSizeUm: selectedCamera.pixelSizeUm,
+          sensorType: 'CMOS', // Default, user can change
+          notes: form.values.notes, // Preserve notes if any
+        });
+      }
+    }
+  }, [selectedModelId, models]);
 
   const handleSubmit = async (values: CreateCameraInput): Promise<void> => {
     try {
@@ -102,6 +137,8 @@ export function CamerasTab(): JSX.Element {
   const handleClose = (): void => {
     setOpened(false);
     setEditingCamera(null);
+    setSelectedBrand(null);
+    setSelectedModelId(null);
     form.reset();
   };
 
@@ -182,6 +219,41 @@ export function CamerasTab(): JSX.Element {
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack gap="md">
+            {!editingCamera && (
+              <>
+                <Text size="sm" fw={500}>
+                  Select from Camera Catalog
+                </Text>
+                <Select
+                  label="Brand"
+                  placeholder="Select a brand"
+                  data={brands}
+                  value={selectedBrand}
+                  onChange={(value) => {
+                    setSelectedBrand(value);
+                    setSelectedModelId(null); // Reset model when brand changes
+                  }}
+                  searchable
+                  clearable
+                  disabled={brands.length === 0}
+                />
+                {selectedBrand && (
+                  <Select
+                    label="Model"
+                    placeholder="Select a model"
+                    data={models.map((c) => ({
+                      value: c.id,
+                      label: `${c.model} (${c.resolutionX}x${c.resolutionY}, ${c.pixelSizeUm.toFixed(2)}µm)`,
+                    }))}
+                    value={selectedModelId}
+                    onChange={setSelectedModelId}
+                    searchable
+                    clearable
+                  />
+                )}
+                <Divider label="Or enter manually" labelPosition="center" />
+              </>
+            )}
             <TextInput label="Name" placeholder="My Camera" required {...form.getInputProps('name')} />
             <Group grow>
               <TextInput label="Brand" placeholder="ZWO" {...form.getInputProps('brand')} />
