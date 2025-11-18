@@ -173,8 +173,8 @@ export function RigsTab(): JSX.Element {
                     </Group>
                   )}
 
-                  <Card mt="md" padding="sm" bg="gray.0" radius="sm">
-                    <Text size="sm" fw={500} mb="xs">
+                  <Card mt="md" padding="sm" bg="dark.6" radius="sm">
+                    <Text size="sm" fw={500} mb="xs" c="dimmed">
                       Field of View
                     </Text>
                     <Stack gap={4}>
