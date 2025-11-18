@@ -27,6 +27,8 @@ import {
   Modal,
   Loader,
   Center,
+  Checkbox,
+  Menu,
 } from '@mantine/core';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
@@ -42,6 +44,7 @@ import {
   IconArrowUp,
   IconArrowDown,
   IconArrowsSort,
+  IconSelector,
 } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import {
@@ -105,7 +108,7 @@ async function fetchLocations(): Promise<Location[]> {
 async function fetchTargets(params: {
   page: number;
   search: string;
-  type: string;
+  types: string[];
   constellation: string;
   latitude?: number;
   longitude?: number;
@@ -118,7 +121,7 @@ async function fetchTargets(params: {
     page: params.page.toString(),
     limit: '12',
     ...(params.search && { search: params.search }),
-    ...(params.type && { type: params.type }),
+    ...(params.types.length > 0 && { type: params.types.join(',') }),
     ...(params.constellation && { constellation: params.constellation }),
     ...(params.latitude !== undefined && { latitude: params.latitude.toString() }),
     ...(params.longitude !== undefined && { longitude: params.longitude.toString() }),
@@ -890,7 +893,7 @@ export default function TargetsPage(): JSX.Element {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const [type, setType] = useState('');
+  const [types, setTypes] = useState<string[]>([]);
   const [constellation, setConstellation] = useState('');
   const [magnitudeRange, setMagnitudeRange] = useState<[number, number]>([-15, 15]);
   const [timeWindow, setTimeWindow] = useState<[number, number]>([12, 36]); // 12h to 36h (full 24h range)
@@ -898,7 +901,7 @@ export default function TargetsPage(): JSX.Element {
   const [azimuthSegments, setAzimuthSegments] = useState<boolean[]>(Array(24).fill(true)); // 24 segments of 15° each
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
-  const [showMoonOverlay, setShowMoonOverlay] = useState(true);
+  const showMoonOverlay = true; // Always show moon overlay
   const [sortBy, setSortBy] = useState<'magnitude' | 'size'>('magnitude');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [addedTargets, setAddedTargets] = useState<Set<string>>(new Set());
@@ -960,7 +963,7 @@ export default function TargetsPage(): JSX.Element {
       'targets',
       page,
       search,
-      type,
+      types,
       constellation,
       selectedLocation?.latitude,
       selectedLocation?.longitude,
@@ -972,7 +975,7 @@ export default function TargetsPage(): JSX.Element {
       fetchTargets({
         page,
         search,
-        type,
+        types,
         constellation,
         latitude: selectedLocation?.latitude,
         longitude: selectedLocation?.longitude,
@@ -1280,7 +1283,7 @@ export default function TargetsPage(): JSX.Element {
 
   return (
     <Container size="xl" py="xl">
-      <Stack gap="lg">
+      <Stack gap="sm">
         <Group justify="space-between">
           <div>
             <Title order={1}>Target Catalog</Title>
@@ -1291,7 +1294,7 @@ export default function TargetsPage(): JSX.Element {
         </Group>
 
         {/* Location Selector - FIRST THING */}
-        <Paper p="md" withBorder style={{ backgroundColor: 'var(--mantine-color-blue-0)' }}>
+        <Paper p="md" withBorder>
           <Stack gap="md">
             <Group gap="md">
               <IconMapPin size={20} />
@@ -1321,15 +1324,6 @@ export default function TargetsPage(): JSX.Element {
                 </Text>
               )}
             </Group>
-
-            <Divider />
-
-            <Switch
-              label="Show moon position and interference"
-              description="Display moon altitude curve and phase-aware interference warnings"
-              checked={showMoonOverlay}
-              onChange={(event) => setShowMoonOverlay(event.currentTarget.checked)}
-            />
           </Stack>
         </Paper>
 
@@ -1345,27 +1339,84 @@ export default function TargetsPage(): JSX.Element {
                 setPage(1);
               }}
             />
-            <Select
-              placeholder="All types"
-              clearable
-              data={[
-                'Planet',
-                'Natural Satellite',
-                'Comet',
-                'Galaxy',
-                'Emission Nebula',
-                'Planetary Nebula',
-                'Supernova Remnant',
-                'Open Cluster',
-                'Globular Cluster',
-                'Nebula',
-              ]}
-              value={type}
-              onChange={(val) => {
-                setType(val || '');
-                setPage(1);
-              }}
-            />
+            <Menu closeOnItemClick={false} width={250}>
+              <Menu.Target>
+                <Button
+                  variant="default"
+                  rightSection={<IconSelector size={16} style={{ color: 'var(--mantine-color-dark-3)' }} />}
+                  fullWidth
+                  styles={{
+                    root: {
+                      height: '36px',
+                      fontWeight: 400,
+                    },
+                    label: {
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    },
+                    section: {
+                      marginLeft: 0,
+                    },
+                  }}
+                >
+                  <Text size="sm" c={types.length === 0 ? 'dimmed' : undefined}>
+                    {types.length === 0 ? 'All types' : `${types.length} type${types.length > 1 ? 's' : ''} selected`}
+                  </Text>
+                </Button>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Label>
+                  <Group justify="space-between">
+                    <Text size="sm">Object Type</Text>
+                    {types.length > 0 && (
+                      <Button
+                        size="xs"
+                        variant="subtle"
+                        onClick={() => {
+                          setTypes([]);
+                          setPage(1);
+                        }}
+                      >
+                        Clear
+                      </Button>
+                    )}
+                  </Group>
+                </Menu.Label>
+                {[
+                  'Planet',
+                  'Natural Satellite',
+                  'Comet',
+                  'Galaxy',
+                  'Emission Nebula',
+                  'Planetary Nebula',
+                  'Supernova Remnant',
+                  'Open Cluster',
+                  'Globular Cluster',
+                  'Nebula',
+                ].map((typeOption) => (
+                  <Menu.Item
+                    key={typeOption}
+                    onClick={() => {
+                      if (types.includes(typeOption)) {
+                        setTypes(types.filter((t) => t !== typeOption));
+                      } else {
+                        setTypes([...types, typeOption]);
+                      }
+                      setPage(1);
+                    }}
+                  >
+                    <Checkbox
+                      label={typeOption}
+                      checked={types.includes(typeOption)}
+                      onChange={() => {}} // Handled by Menu.Item onClick
+                      styles={{ input: { cursor: 'pointer' }, label: { cursor: 'pointer' } }}
+                    />
+                  </Menu.Item>
+                ))}
+              </Menu.Dropdown>
+            </Menu>
             <Select
               placeholder="All constellations"
               clearable
@@ -1470,7 +1521,7 @@ export default function TargetsPage(): JSX.Element {
       </Stack>
 
         {/* Sort and Advanced Filters */}
-        <Group gap="md">
+        <Group gap="md" mb={0}>
           <Button
             variant="subtle"
             leftSection={<IconArrowsSort size={16} />}

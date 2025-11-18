@@ -7,7 +7,8 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
 
     const search = searchParams.get('search') || '';
-    const type = searchParams.get('type') || '';
+    const typeParam = searchParams.get('type') || '';
+    const types = typeParam ? typeParam.split(',').filter(Boolean) : [];
     const constellation = searchParams.get('constellation') || '';
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '50');
@@ -55,7 +56,7 @@ export async function GET(request: Request) {
             ],
           }
         : {},
-      type ? { type: { equals: type } } : {},
+      types.length > 0 ? { type: { in: types } } : {},
       constellation ? { constellation: { equals: constellation } } : {},
       magnitudeMin !== undefined ? { magnitude: { gte: magnitudeMin } } : {},
       magnitudeMax !== undefined ? { magnitude: { lte: magnitudeMax } } : {},
