@@ -335,9 +335,9 @@ export default function FOVPlannerPage(): JSX.Element {
               </Grid.Col>
             </Grid>
             {vizData && vizData.panelCount > 1 && (
-              <Paper p="sm" mt="md" withBorder style={{ background: 'var(--mantine-color-blue-0)' }}>
+              <Paper p="sm" mt="md" withBorder bg="dark.6">
                 <Group justify="space-between">
-                  <Text size="sm" fw={600}>
+                  <Text size="sm" fw={600} c="dimmed">
                     Total Mosaic Coverage:
                   </Text>
                   <Text size="sm">
@@ -684,8 +684,8 @@ export default function FOVPlannerPage(): JSX.Element {
                 </Paper>
               )}
 
-              <Paper p="md" withBorder style={{ background: 'var(--mantine-color-blue-0)' }}>
-                <Text size="sm" fw={600} mb="xs">
+              <Paper p="md" withBorder bg="dark.6">
+                <Text size="sm" fw={600} mb="xs" c="dimmed">
                   Calculated FOV
                 </Text>
                 <Stack gap="xs">
@@ -719,8 +719,8 @@ export default function FOVPlannerPage(): JSX.Element {
               </Paper>
 
               {selectedTarget && (
-                <Paper p="md" withBorder style={{ background: 'var(--mantine-color-grape-0)' }}>
-                  <Text size="sm" fw={600} mb="xs">
+                <Paper p="md" withBorder bg="dark.6">
+                  <Text size="sm" fw={600} mb="xs" c="dimmed">
                     Target Information
                   </Text>
                   <Stack gap="xs">
