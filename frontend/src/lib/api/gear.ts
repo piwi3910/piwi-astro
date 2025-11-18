@@ -32,6 +32,24 @@ async function fetchAPI<T>(url: string, options?: RequestInit): Promise<T> {
 }
 
 // Telescope Catalog
+export const getTelescopeBrands = (): Promise<{ brands: string[] }> => {
+  const params = new URLSearchParams({ type: 'brands' });
+  return fetchAPI(`/api/telescope-catalog?${params.toString()}`);
+};
+
+export const getTelescopesByBrand = (
+  brand: string,
+  limit: number = 100,
+  offset: number = 0
+): Promise<{ telescopes: TelescopeCatalog[]; total: number; hasMore: boolean }> => {
+  const params = new URLSearchParams({
+    brand,
+    limit: limit.toString(),
+    offset: offset.toString(),
+  });
+  return fetchAPI(`/api/telescope-catalog?${params.toString()}`);
+};
+
 export const searchTelescopeCatalog = (
   search: string = '',
   limit: number = 20,

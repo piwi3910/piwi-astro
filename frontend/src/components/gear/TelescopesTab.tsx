@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Stack,
   Button,
@@ -14,31 +14,30 @@ import {
   ActionIcon,
   Alert,
   Divider,
-  Loader,
-  ScrollArea,
-  Badge,
+  Select,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useDebouncedValue } from '@mantine/hooks';
-import { IconPlus, IconEdit, IconTrash, IconTelescope, IconSearch } from '@tabler/icons-react';
+import { IconPlus, IconEdit, IconTrash, IconTelescope } from '@tabler/icons-react';
 import {
   useTelescopes,
-  useTelescopeCatalog,
+  useTelescopeBrands,
+  useTelescopesByBrand,
   useCreateTelescope,
   useUpdateTelescope,
   useDeleteTelescope,
 } from '@/hooks/useGear';
-import type { Telescope, CreateTelescopeInput, TelescopeCatalog } from '@/types';
+import type { Telescope, CreateTelescopeInput } from '@/types';
 
 export function TelescopesTab(): JSX.Element {
   const [opened, setOpened] = useState(false);
   const [editingTelescope, setEditingTelescope] = useState<Telescope | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [catalogSearch, setCatalogSearch] = useState('');
-  const [debouncedSearch] = useDebouncedValue(catalogSearch, 300);
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+  const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
 
   const { data: telescopes, isLoading } = useTelescopes();
-  const { data: catalogData, isLoading: isCatalogLoading } = useTelescopeCatalog(debouncedSearch, 50);
+  const { data: brandsData } = useTelescopeBrands();
+  const { data: modelsData } = useTelescopesByBrand(selectedBrand);
   const createMutation = useCreateTelescope();
   const updateMutation = useUpdateTelescope();
   const deleteMutation = useDeleteTelescope();
@@ -61,7 +60,28 @@ export function TelescopesTab(): JSX.Element {
     },
   });
 
-  const catalogTelescopes = useMemo(() => catalogData?.telescopes || [], [catalogData]);
+  const brands = useMemo(() => brandsData?.brands || [], [brandsData]);
+  const models = useMemo(() => modelsData?.telescopes || [], [modelsData]);
+
+  // When model is selected, auto-fill form
+  useEffect(() => {
+    if (selectedModelId) {
+      const selectedTelescope = models.find((t) => t.id === selectedModelId);
+      if (selectedTelescope) {
+        form.setValues({
+          catalogId: selectedTelescope.id,
+          name: `${selectedTelescope.brand} ${selectedTelescope.model}`,
+          brand: selectedTelescope.brand,
+          model: selectedTelescope.model,
+          focalLengthMm: selectedTelescope.focalLengthMm,
+          apertureMm: selectedTelescope.apertureMm,
+          focalRatio: selectedTelescope.focalRatio,
+          notes: form.values.notes || '',
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedModelId, models]);
 
   const handleSubmit = async (values: CreateTelescopeInput): Promise<void> => {
     try {
@@ -104,21 +124,9 @@ export function TelescopesTab(): JSX.Element {
   const handleClose = (): void => {
     setOpened(false);
     setEditingTelescope(null);
-    setCatalogSearch('');
+    setSelectedBrand(null);
+    setSelectedModelId(null);
     form.reset();
-  };
-
-  const handleSelectFromCatalog = (catalogTelescope: TelescopeCatalog): void => {
-    form.setValues({
-      catalogId: catalogTelescope.id,
-      name: `${catalogTelescope.brand} ${catalogTelescope.model}`,
-      brand: catalogTelescope.brand,
-      model: catalogTelescope.model,
-      focalLengthMm: catalogTelescope.focalLengthMm,
-      apertureMm: catalogTelescope.apertureMm,
-      focalRatio: catalogTelescope.focalRatio,
-      notes: form.values.notes || '',
-    });
   };
 
   if (isLoading) {
@@ -206,62 +214,35 @@ export function TelescopesTab(): JSX.Element {
                 <Text size="sm" fw={500}>
                   Select from Catalog
                 </Text>
-                <TextInput
-                  placeholder="Search by brand or model..."
-                  leftSection={<IconSearch size={16} />}
-                  value={catalogSearch}
-                  onChange={(e) => setCatalogSearch(e.currentTarget.value)}
+                <Select
+                  label="Brand"
+                  placeholder="Select a brand"
+                  data={brands}
+                  value={selectedBrand}
+                  onChange={(value) => {
+                    setSelectedBrand(value);
+                    setSelectedModelId(null); // Reset model when brand changes
+                  }}
+                  searchable
+                  clearable
+                  maxDropdownHeight={300}
                 />
-                <ScrollArea h={200} type="auto">
-                  {isCatalogLoading ? (
-                    <Group justify="center" p="md">
-                      <Loader size="sm" />
-                    </Group>
-                  ) : catalogTelescopes.length > 0 ? (
-                    <Stack gap={4}>
-                      {catalogTelescopes.map((telescope) => (
-                        <Button
-                          key={telescope.id}
-                          variant="subtle"
-                          onClick={() => handleSelectFromCatalog(telescope)}
-                          styles={{
-                            root: {
-                              height: 'auto',
-                              padding: '8px 12px',
-                            },
-                            label: {
-                              display: 'block',
-                              textAlign: 'left',
-                              whiteSpace: 'normal',
-                            },
-                          }}
-                        >
-                          <Group justify="space-between" w="100%" wrap="nowrap">
-                            <Stack gap={0}>
-                              <Text size="sm" fw={500}>
-                                {telescope.brand} {telescope.model}
-                              </Text>
-                              <Text size="xs" c="dimmed">
-                                {telescope.apertureMm}mm f/{telescope.focalRatio.toFixed(1)}
-                              </Text>
-                            </Stack>
-                            <Badge size="sm" variant="light">
-                              {telescope.focalLengthMm}mm
-                            </Badge>
-                          </Group>
-                        </Button>
-                      ))}
-                    </Stack>
-                  ) : catalogSearch ? (
-                    <Text size="sm" c="dimmed" ta="center" p="md">
-                      No telescopes found matching &quot;{catalogSearch}&quot;
-                    </Text>
-                  ) : (
-                    <Text size="sm" c="dimmed" ta="center" p="md">
-                      Search for a telescope to get started
-                    </Text>
-                  )}
-                </ScrollArea>
+
+                {selectedBrand && (
+                  <Select
+                    label="Model"
+                    placeholder="Select a model"
+                    data={models.map((t) => ({
+                      value: t.id,
+                      label: `${t.model} (${t.apertureMm}mm f/${t.focalRatio.toFixed(1)} - ${t.focalLengthMm}mm)`,
+                    }))}
+                    value={selectedModelId}
+                    onChange={setSelectedModelId}
+                    searchable
+                    clearable
+                    maxDropdownHeight={300}
+                  />
+                )}
               </Stack>
 
               <Divider label="Or enter custom telescope details" labelPosition="center" />

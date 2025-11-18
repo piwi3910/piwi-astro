@@ -11,6 +11,23 @@ import type {
 import * as gearApi from '@/lib/api/gear';
 
 // Telescope Catalog
+export function useTelescopeBrands() {
+  return useQuery<{ brands: string[] }>({
+    queryKey: ['telescope-brands'],
+    queryFn: gearApi.getTelescopeBrands,
+    staleTime: 10 * 60 * 1000, // 10 minutes - brands rarely change
+  });
+}
+
+export function useTelescopesByBrand(brand: string | null, limit: number = 100, offset: number = 0) {
+  return useQuery<{ telescopes: TelescopeCatalog[]; total: number; hasMore: boolean }>({
+    queryKey: ['telescope-catalog', 'by-brand', brand, limit, offset],
+    queryFn: () => gearApi.getTelescopesByBrand(brand!, limit, offset),
+    enabled: !!brand, // Only fetch when brand is selected
+    staleTime: 5 * 60 * 1000, // 5 minutes - catalog doesn't change often
+  });
+}
+
 export function useTelescopeCatalog(search: string = '', limit: number = 20, offset: number = 0) {
   return useQuery<{ telescopes: TelescopeCatalog[]; total: number; hasMore: boolean }>({
     queryKey: ['telescope-catalog', search, limit, offset],
