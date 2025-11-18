@@ -1,0 +1,3722 @@
+[
+  {
+    "brand": "ALCCD",
+    "model": "QHY-21c",
+    "pixelSizeUm": 4.54,
+    "resolutionX": 1940,
+    "resolutionY": 1460,
+    "sensorWidthMm": 8.81,
+    "sensorHeightMm": 6.63,
+    "externalId": "175"
+  },
+  {
+    "brand": "ALCCD",
+    "model": "QHY-22c",
+    "pixelSizeUm": 4.54,
+    "resolutionX": 2758,
+    "resolutionY": 2208,
+    "sensorWidthMm": 12.52,
+    "sensorHeightMm": 10.02,
+    "externalId": "174"
+  },
+  {
+    "brand": "ALCCD",
+    "model": "QHY-23c",
+    "pixelSizeUm": 3.69,
+    "resolutionX": 3388,
+    "resolutionY": 2712,
+    "sensorWidthMm": 12.5,
+    "sensorHeightMm": 10.01,
+    "externalId": "173"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "GPCAM MT9M034M",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "134"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "GPCAM2 130",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "408"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "GPCAM2 224C",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "256"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "GPCAM2 327C",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 5.57,
+    "sensorHeightMm": 3.13,
+    "externalId": "3929"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "GPCAM3 178C/M",
+    "pixelSizeUm": 2.4,
+    "resolutionX": 3040,
+    "resolutionY": 2048,
+    "sensorWidthMm": 7.3,
+    "sensorHeightMm": 4.92,
+    "externalId": "658"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "GPCAM3 287M",
+    "pixelSizeUm": 6.9,
+    "resolutionX": 720,
+    "resolutionY": 540,
+    "sensorWidthMm": 4.97,
+    "sensorHeightMm": 3.73,
+    "externalId": "6846"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "GPCAM3 290C/M",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1936,
+    "resolutionY": 1096,
+    "sensorWidthMm": 5.61,
+    "sensorHeightMm": 3.18,
+    "externalId": "8676"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "GPCAM3 385C",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1936,
+    "resolutionY": 1096,
+    "sensorWidthMm": 7.26,
+    "sensorHeightMm": 4.11,
+    "externalId": "2014"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "Hypercam 115M",
+    "pixelSizeUm": 4.63,
+    "resolutionX": 4128,
+    "resolutionY": 2808,
+    "sensorWidthMm": 19.11,
+    "sensorHeightMm": 13,
+    "externalId": "8986"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "Hypercam 174M",
+    "pixelSizeUm": 5.86,
+    "resolutionX": 1920,
+    "resolutionY": 1200,
+    "sensorWidthMm": 11.25,
+    "sensorHeightMm": 7.03,
+    "externalId": "404"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "Hypercam 183C/M",
+    "pixelSizeUm": 2.4,
+    "resolutionX": 5440,
+    "resolutionY": 3648,
+    "sensorWidthMm": 13.06,
+    "sensorHeightMm": 8.76,
+    "externalId": "695"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "Hypercam 269C",
+    "pixelSizeUm": 3.3,
+    "resolutionX": 5280,
+    "resolutionY": 3956,
+    "sensorWidthMm": 17.42,
+    "sensorHeightMm": 13.05,
+    "externalId": "3392"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "Hypercam 26C/M",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 6224,
+    "resolutionY": 4168,
+    "sensorWidthMm": 23.4,
+    "sensorHeightMm": 15.67,
+    "externalId": "5292"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "Hypercam 294C",
+    "pixelSizeUm": 4.63,
+    "resolutionX": 4128,
+    "resolutionY": 2808,
+    "sensorWidthMm": 19.11,
+    "sensorHeightMm": 13,
+    "externalId": "2272"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "Hypercam 533C",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 3000,
+    "resolutionY": 3000,
+    "sensorWidthMm": 11.28,
+    "sensorHeightMm": 11.28,
+    "externalId": "8677"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "Hypercam AA24CFX",
+    "pixelSizeUm": 5.94,
+    "resolutionX": 6064,
+    "resolutionY": 4040,
+    "sensorWidthMm": 36.02,
+    "sensorHeightMm": 24,
+    "externalId": "11930"
+  },
+  {
+    "brand": "Altair Astro",
+    "model": "Hypercam AA61CFX/MFX",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 9568,
+    "resolutionY": 6380,
+    "sensorWidthMm": 35.98,
+    "sensorHeightMm": 23.99,
+    "externalId": "11931"
+  },
+  {
+    "brand": "Astro Video Systems",
+    "model": "DSO-1",
+    "pixelSizeUm": 5,
+    "resolutionX": 768,
+    "resolutionY": 494,
+    "sensorWidthMm": 3.84,
+    "sensorHeightMm": 3.66,
+    "externalId": "220"
+  },
+  {
+    "brand": "Atik",
+    "model": "11000",
+    "pixelSizeUm": 9,
+    "resolutionX": 4008,
+    "resolutionY": 2672,
+    "sensorWidthMm": 36.07,
+    "sensorHeightMm": 24.05,
+    "externalId": "41"
+  },
+  {
+    "brand": "Atik",
+    "model": "16200 Mono / Colour",
+    "pixelSizeUm": 6,
+    "resolutionX": 4499,
+    "resolutionY": 3599,
+    "sensorWidthMm": 26.99,
+    "sensorHeightMm": 21.59,
+    "externalId": "409"
+  },
+  {
+    "brand": "Atik",
+    "model": "16ic",
+    "pixelSizeUm": 7.4,
+    "resolutionX": 659,
+    "resolutionY": 494,
+    "sensorWidthMm": 4.88,
+    "sensorHeightMm": 3.66,
+    "externalId": "178"
+  },
+  {
+    "brand": "Atik",
+    "model": "314L Plus",
+    "pixelSizeUm": 6.45,
+    "resolutionX": 1392,
+    "resolutionY": 1040,
+    "sensorWidthMm": 8.98,
+    "sensorHeightMm": 6.71,
+    "externalId": "2"
+  },
+  {
+    "brand": "Atik",
+    "model": "320E",
+    "pixelSizeUm": 4.4,
+    "resolutionX": 1620,
+    "resolutionY": 1220,
+    "sensorWidthMm": 7.13,
+    "sensorHeightMm": 5.37,
+    "externalId": "78"
+  },
+  {
+    "brand": "Atik",
+    "model": "383L+",
+    "pixelSizeUm": 5.4,
+    "resolutionX": 3362,
+    "resolutionY": 2504,
+    "sensorWidthMm": 18.15,
+    "sensorHeightMm": 13.52,
+    "externalId": "21"
+  },
+  {
+    "brand": "Atik",
+    "model": "4000",
+    "pixelSizeUm": 7.4,
+    "resolutionX": 2048,
+    "resolutionY": 2048,
+    "sensorWidthMm": 15.16,
+    "sensorHeightMm": 15.16,
+    "externalId": "42"
+  },
+  {
+    "brand": "Atik",
+    "model": "4120EX",
+    "pixelSizeUm": 3.1,
+    "resolutionX": 4242,
+    "resolutionY": 2830,
+    "sensorWidthMm": 13.15,
+    "sensorHeightMm": 8.77,
+    "externalId": "65"
+  },
+  {
+    "brand": "Atik",
+    "model": "414EX",
+    "pixelSizeUm": 6.45,
+    "resolutionX": 1392,
+    "resolutionY": 1040,
+    "sensorWidthMm": 8.98,
+    "sensorHeightMm": 6.71,
+    "externalId": "64"
+  },
+  {
+    "brand": "Atik",
+    "model": "420",
+    "pixelSizeUm": 4.4,
+    "resolutionX": 1619,
+    "resolutionY": 1219,
+    "sensorWidthMm": 7.12,
+    "sensorHeightMm": 5.36,
+    "externalId": "4420"
+  },
+  {
+    "brand": "Atik",
+    "model": "428EX",
+    "pixelSizeUm": 4.54,
+    "resolutionX": 1932,
+    "resolutionY": 1452,
+    "sensorWidthMm": 8.77,
+    "sensorHeightMm": 6.59,
+    "externalId": "40"
+  },
+  {
+    "brand": "Atik",
+    "model": "450",
+    "pixelSizeUm": 3.45,
+    "resolutionX": 2448,
+    "resolutionY": 2050,
+    "sensorWidthMm": 8.45,
+    "sensorHeightMm": 7.07,
+    "externalId": "75"
+  },
+  {
+    "brand": "Atik",
+    "model": "460EX",
+    "pixelSizeUm": 4.54,
+    "resolutionX": 2750,
+    "resolutionY": 2200,
+    "sensorWidthMm": 12.48,
+    "sensorHeightMm": 9.99,
+    "externalId": "8"
+  },
+  {
+    "brand": "Atik",
+    "model": "490EX",
+    "pixelSizeUm": 3.69,
+    "resolutionX": 3380,
+    "resolutionY": 2704,
+    "sensorWidthMm": 12.47,
+    "sensorHeightMm": 9.98,
+    "externalId": "39"
+  },
+  {
+    "brand": "Atik",
+    "model": "ACIS 12.3",
+    "pixelSizeUm": 3.45,
+    "resolutionX": 4096,
+    "resolutionY": 3008,
+    "sensorWidthMm": 14.13,
+    "sensorHeightMm": 10.38,
+    "externalId": "5366"
+  },
+  {
+    "brand": "Atik",
+    "model": "ACIS 2.4",
+    "pixelSizeUm": 5.86,
+    "resolutionX": 1936,
+    "resolutionY": 1216,
+    "sensorWidthMm": 11.34,
+    "sensorHeightMm": 7.13,
+    "externalId": "5365"
+  },
+  {
+    "brand": "Atik",
+    "model": "ACIS 7.1",
+    "pixelSizeUm": 4.5,
+    "resolutionX": 3208,
+    "resolutionY": 2200,
+    "sensorWidthMm": 14.44,
+    "sensorHeightMm": 9.9,
+    "externalId": "4366"
+  },
+  {
+    "brand": "Atik",
+    "model": "Apx60 (CosMOS)",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 9576,
+    "resolutionY": 6388,
+    "sensorWidthMm": 36.01,
+    "sensorHeightMm": 24.02,
+    "externalId": "5367"
+  },
+  {
+    "brand": "Atik",
+    "model": "GP",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1296,
+    "resolutionY": 964,
+    "sensorWidthMm": 4.86,
+    "sensorHeightMm": 3.62,
+    "externalId": "17"
+  },
+  {
+    "brand": "Atik",
+    "model": "Horizon",
+    "pixelSizeUm": 3.8,
+    "resolutionX": 4644,
+    "resolutionY": 3506,
+    "sensorWidthMm": 17.65,
+    "sensorHeightMm": 13.32,
+    "externalId": "949"
+  },
+  {
+    "brand": "Atik",
+    "model": "Infinity",
+    "pixelSizeUm": 6.45,
+    "resolutionX": 1392,
+    "resolutionY": 1040,
+    "sensorWidthMm": 8.98,
+    "sensorHeightMm": 6.71,
+    "externalId": "117"
+  },
+  {
+    "brand": "Atik",
+    "model": "One 6.0",
+    "pixelSizeUm": 4.54,
+    "resolutionX": 2750,
+    "resolutionY": 2200,
+    "sensorWidthMm": 12.48,
+    "sensorHeightMm": 9.99,
+    "externalId": "1"
+  },
+  {
+    "brand": "Atik",
+    "model": "One 9.0",
+    "pixelSizeUm": 3.69,
+    "resolutionX": 3380,
+    "resolutionY": 2704,
+    "sensorWidthMm": 12.47,
+    "sensorHeightMm": 9.98,
+    "externalId": "12"
+  },
+  {
+    "brand": "Atik",
+    "model": "Titan",
+    "pixelSizeUm": 7.4,
+    "resolutionX": 659,
+    "resolutionY": 494,
+    "sensorWidthMm": 4.88,
+    "sensorHeightMm": 3.66,
+    "externalId": "15"
+  },
+  {
+    "brand": "Canon",
+    "model": "1000D",
+    "pixelSizeUm": 5.71,
+    "resolutionX": 3888,
+    "resolutionY": 2591,
+    "sensorWidthMm": 22.2,
+    "sensorHeightMm": 14.79,
+    "externalId": "129"
+  },
+  {
+    "brand": "Canon",
+    "model": "10D",
+    "pixelSizeUm": 7.38,
+    "resolutionX": 3072,
+    "resolutionY": 2048,
+    "sensorWidthMm": 22.67,
+    "sensorHeightMm": 15.11,
+    "externalId": "107"
+  },
+  {
+    "brand": "Canon",
+    "model": "1200D",
+    "pixelSizeUm": 4.3,
+    "resolutionX": 5184,
+    "resolutionY": 3456,
+    "sensorWidthMm": 22.29,
+    "sensorHeightMm": 14.86,
+    "externalId": "280"
+  },
+  {
+    "brand": "Canon",
+    "model": "1300D",
+    "pixelSizeUm": 4.29,
+    "resolutionX": 5184,
+    "resolutionY": 3456,
+    "sensorWidthMm": 22.24,
+    "sensorHeightMm": 14.83,
+    "externalId": "3556"
+  },
+  {
+    "brand": "Canon",
+    "model": "200D / MKII",
+    "pixelSizeUm": 3.7,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 22.2,
+    "sensorHeightMm": 14.8,
+    "externalId": "1300"
+  },
+  {
+    "brand": "Canon",
+    "model": "20D",
+    "pixelSizeUm": 6.4,
+    "resolutionX": 3520,
+    "resolutionY": 2344,
+    "sensorWidthMm": 22.53,
+    "sensorHeightMm": 15,
+    "externalId": "62"
+  },
+  {
+    "brand": "Canon",
+    "model": "30D",
+    "pixelSizeUm": 6.42,
+    "resolutionX": 3504,
+    "resolutionY": 2336,
+    "sensorWidthMm": 22.5,
+    "sensorHeightMm": 15,
+    "externalId": "22"
+  },
+  {
+    "brand": "Canon",
+    "model": "350D",
+    "pixelSizeUm": 6.41,
+    "resolutionX": 3456,
+    "resolutionY": 2304,
+    "sensorWidthMm": 22.15,
+    "sensorHeightMm": 14.77,
+    "externalId": "96"
+  },
+  {
+    "brand": "Canon",
+    "model": "450D",
+    "pixelSizeUm": 5.1,
+    "resolutionX": 4272,
+    "resolutionY": 2848,
+    "sensorWidthMm": 21.79,
+    "sensorHeightMm": 14.52,
+    "externalId": "61"
+  },
+  {
+    "brand": "Canon",
+    "model": "50d",
+    "pixelSizeUm": 4.7,
+    "resolutionX": 4752,
+    "resolutionY": 3168,
+    "sensorWidthMm": 22.33,
+    "sensorHeightMm": 14.89,
+    "externalId": "88"
+  },
+  {
+    "brand": "Canon",
+    "model": "550D",
+    "pixelSizeUm": 4.3,
+    "resolutionX": 5184,
+    "resolutionY": 3456,
+    "sensorWidthMm": 22.29,
+    "sensorHeightMm": 14.86,
+    "externalId": "119"
+  },
+  {
+    "brand": "Canon",
+    "model": "5DS",
+    "pixelSizeUm": 4.13,
+    "resolutionX": 8988,
+    "resolutionY": 5792,
+    "sensorWidthMm": 37.12,
+    "sensorHeightMm": 23.92,
+    "externalId": "777"
+  },
+  {
+    "brand": "Canon",
+    "model": "5DSR",
+    "pixelSizeUm": 4.14,
+    "resolutionX": 8688,
+    "resolutionY": 5792,
+    "sensorWidthMm": 35.97,
+    "sensorHeightMm": 23.98,
+    "externalId": "859"
+  },
+  {
+    "brand": "Canon",
+    "model": "600D",
+    "pixelSizeUm": 4.29,
+    "resolutionX": 5184,
+    "resolutionY": 3456,
+    "sensorWidthMm": 22.24,
+    "sensorHeightMm": 14.83,
+    "externalId": "37"
+  },
+  {
+    "brand": "Canon",
+    "model": "60Da",
+    "pixelSizeUm": 4.3,
+    "resolutionX": 5184,
+    "resolutionY": 3456,
+    "sensorWidthMm": 22.29,
+    "sensorHeightMm": 14.86,
+    "externalId": "27"
+  },
+  {
+    "brand": "Canon",
+    "model": "650D",
+    "pixelSizeUm": 4.29,
+    "resolutionX": 5184,
+    "resolutionY": 3456,
+    "sensorWidthMm": 22.24,
+    "sensorHeightMm": 14.83,
+    "externalId": "143"
+  },
+  {
+    "brand": "Canon",
+    "model": "6D",
+    "pixelSizeUm": 6.54,
+    "resolutionX": 5472,
+    "resolutionY": 3648,
+    "sensorWidthMm": 35.79,
+    "sensorHeightMm": 23.86,
+    "externalId": "90"
+  },
+  {
+    "brand": "Canon",
+    "model": "70D",
+    "pixelSizeUm": 4.1,
+    "resolutionX": 5472,
+    "resolutionY": 3648,
+    "sensorWidthMm": 22.44,
+    "sensorHeightMm": 14.96,
+    "externalId": "109"
+  },
+  {
+    "brand": "Canon",
+    "model": "760D",
+    "pixelSizeUm": 3.7,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 22.2,
+    "sensorHeightMm": 14.8,
+    "externalId": "176"
+  },
+  {
+    "brand": "Canon",
+    "model": "7D",
+    "pixelSizeUm": 4.3,
+    "resolutionX": 5184,
+    "resolutionY": 3456,
+    "sensorWidthMm": 22.29,
+    "sensorHeightMm": 14.86,
+    "externalId": "98"
+  },
+  {
+    "brand": "Canon",
+    "model": "800D",
+    "pixelSizeUm": 3.72,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 22.32,
+    "sensorHeightMm": 14.88,
+    "externalId": "1090"
+  },
+  {
+    "brand": "Canon",
+    "model": "90D",
+    "pixelSizeUm": 3.19,
+    "resolutionX": 6960,
+    "resolutionY": 4640,
+    "sensorWidthMm": 22.2,
+    "sensorHeightMm": 14.8,
+    "externalId": "2763"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 1000D",
+    "pixelSizeUm": 5.71,
+    "resolutionX": 3888,
+    "resolutionY": 2592,
+    "sensorWidthMm": 22.2,
+    "sensorHeightMm": 14.8,
+    "externalId": "6"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 100D",
+    "pixelSizeUm": 4.3,
+    "resolutionX": 5196,
+    "resolutionY": 3464,
+    "sensorWidthMm": 22.34,
+    "sensorHeightMm": 14.9,
+    "externalId": "4"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 1100D",
+    "pixelSizeUm": 5.18,
+    "resolutionX": 4272,
+    "resolutionY": 2848,
+    "sensorWidthMm": 22.13,
+    "sensorHeightMm": 14.75,
+    "externalId": "16"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 1300D",
+    "pixelSizeUm": 4.3,
+    "resolutionX": 5184,
+    "resolutionY": 3456,
+    "sensorWidthMm": 22.29,
+    "sensorHeightMm": 14.86,
+    "externalId": "13598"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 1500D",
+    "pixelSizeUm": 3.72,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 22.32,
+    "sensorHeightMm": 14.88,
+    "externalId": "13396"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 40D",
+    "pixelSizeUm": 5.7,
+    "resolutionX": 3888,
+    "resolutionY": 2592,
+    "sensorWidthMm": 22.16,
+    "sensorHeightMm": 14.77,
+    "externalId": "23"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 500D",
+    "pixelSizeUm": 4.68,
+    "resolutionX": 4752,
+    "resolutionY": 3168,
+    "sensorWidthMm": 22.24,
+    "sensorHeightMm": 14.83,
+    "externalId": "14"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 5D Mk11",
+    "pixelSizeUm": 6.4,
+    "resolutionX": 5616,
+    "resolutionY": 3744,
+    "sensorWidthMm": 35.94,
+    "sensorHeightMm": 23.96,
+    "externalId": "26"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 5D Mk111",
+    "pixelSizeUm": 6.25,
+    "resolutionX": 5760,
+    "resolutionY": 3840,
+    "sensorWidthMm": 36,
+    "sensorHeightMm": 24,
+    "externalId": "24"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 5D MkIV",
+    "pixelSizeUm": 5.3,
+    "resolutionX": 6720,
+    "resolutionY": 4480,
+    "sensorWidthMm": 35.62,
+    "sensorHeightMm": 23.74,
+    "externalId": "142"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 700D",
+    "pixelSizeUm": 4.3,
+    "resolutionX": 5184,
+    "resolutionY": 3456,
+    "sensorWidthMm": 22.29,
+    "sensorHeightMm": 14.86,
+    "externalId": "83"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 750D",
+    "pixelSizeUm": 3.7,
+    "resolutionX": 6024,
+    "resolutionY": 4022,
+    "sensorWidthMm": 22.29,
+    "sensorHeightMm": 14.88,
+    "externalId": "196"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 7D mkII",
+    "pixelSizeUm": 4.1,
+    "resolutionX": 5472,
+    "resolutionY": 3648,
+    "sensorWidthMm": 22.44,
+    "sensorHeightMm": 14.96,
+    "externalId": "146"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS 80D",
+    "pixelSizeUm": 3.7,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 22.2,
+    "sensorHeightMm": 14.8,
+    "externalId": "310"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS M5",
+    "pixelSizeUm": 3.7,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 22.2,
+    "sensorHeightMm": 14.8,
+    "externalId": "4098"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS M50",
+    "pixelSizeUm": 3.71,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 22.26,
+    "sensorHeightMm": 14.84,
+    "externalId": "2383"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS M6 Mk II",
+    "pixelSizeUm": 3.19,
+    "resolutionX": 6960,
+    "resolutionY": 4640,
+    "sensorWidthMm": 22.2,
+    "sensorHeightMm": 14.8,
+    "externalId": "2762"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS R10",
+    "pixelSizeUm": 3.72,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 22.32,
+    "sensorHeightMm": 14.88,
+    "externalId": "14090"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS R5",
+    "pixelSizeUm": 4.39,
+    "resolutionX": 8192,
+    "resolutionY": 5464,
+    "sensorWidthMm": 35.96,
+    "sensorHeightMm": 23.99,
+    "externalId": "4773"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS R6",
+    "pixelSizeUm": 6.54,
+    "resolutionX": 5472,
+    "resolutionY": 3648,
+    "sensorWidthMm": 35.79,
+    "sensorHeightMm": 23.86,
+    "externalId": "13969"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS R6 Mk II",
+    "pixelSizeUm": 5.96,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 35.76,
+    "sensorHeightMm": 23.84,
+    "externalId": "13968"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS R7",
+    "pixelSizeUm": 3.2,
+    "resolutionX": 6960,
+    "resolutionY": 4640,
+    "sensorWidthMm": 22.27,
+    "sensorHeightMm": 14.85,
+    "externalId": "10488"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS Ra",
+    "pixelSizeUm": 5.36,
+    "resolutionX": 6720,
+    "resolutionY": 4480,
+    "sensorWidthMm": 36.02,
+    "sensorHeightMm": 24.01,
+    "externalId": "3402"
+  },
+  {
+    "brand": "Canon",
+    "model": "EOS RP",
+    "pixelSizeUm": 5.73,
+    "resolutionX": 6240,
+    "resolutionY": 4160,
+    "sensorWidthMm": 35.76,
+    "sensorHeightMm": 23.84,
+    "externalId": "13962"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexImage 10",
+    "pixelSizeUm": 1.67,
+    "resolutionX": 3856,
+    "resolutionY": 2764,
+    "sensorWidthMm": 6.44,
+    "sensorHeightMm": 4.62,
+    "externalId": "338"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Neximage 5",
+    "pixelSizeUm": 2.2,
+    "resolutionX": 2592,
+    "resolutionY": 1944,
+    "sensorWidthMm": 5.7,
+    "sensorHeightMm": 4.28,
+    "externalId": "20"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Neximage Burst",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "54"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexImage Solar System Imager",
+    "pixelSizeUm": 3,
+    "resolutionX": 1280,
+    "resolutionY": 720,
+    "sensorWidthMm": 3.84,
+    "sensorHeightMm": 2.16,
+    "externalId": "55"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Nightscape 8300",
+    "pixelSizeUm": 5.4,
+    "resolutionX": 3326,
+    "resolutionY": 2504,
+    "sensorWidthMm": 17.96,
+    "sensorHeightMm": 13.52,
+    "externalId": "74"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Origin (IMX178LQJ)",
+    "pixelSizeUm": 2.4,
+    "resolutionX": 3096,
+    "resolutionY": 2080,
+    "sensorWidthMm": 7.43,
+    "sensorHeightMm": 4.99,
+    "externalId": "13155"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Skyris 132",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "157"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Skyris 236",
+    "pixelSizeUm": 2.8,
+    "resolutionX": 1920,
+    "resolutionY": 1200,
+    "sensorWidthMm": 5.38,
+    "sensorHeightMm": 3.36,
+    "externalId": "118"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Skyris 274",
+    "pixelSizeUm": 4.4,
+    "resolutionX": 1600,
+    "resolutionY": 1200,
+    "sensorWidthMm": 7.04,
+    "sensorHeightMm": 5.28,
+    "externalId": "19"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Skyris 445",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "18"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Skyris 618",
+    "pixelSizeUm": 5.6,
+    "resolutionX": 640,
+    "resolutionY": 480,
+    "sensorWidthMm": 3.58,
+    "sensorHeightMm": 2.69,
+    "externalId": "3"
+  },
+  {
+    "brand": "DWARFLAB",
+    "model": "DWARF II (IMX415)",
+    "pixelSizeUm": 1.45,
+    "resolutionX": 3840,
+    "resolutionY": 2160,
+    "sensorWidthMm": 5.57,
+    "sensorHeightMm": 3.13,
+    "externalId": "12594"
+  },
+  {
+    "brand": "DWARFLAB",
+    "model": "DWARF III (IMX678)",
+    "pixelSizeUm": 2,
+    "resolutionX": 3840,
+    "resolutionY": 2160,
+    "sensorWidthMm": 7.68,
+    "sensorHeightMm": 4.32,
+    "externalId": "14150"
+  },
+  {
+    "brand": "FLI",
+    "model": "ML 8300",
+    "pixelSizeUm": 5.4,
+    "resolutionX": 3326,
+    "resolutionY": 2504,
+    "sensorWidthMm": 17.96,
+    "sensorHeightMm": 13.52,
+    "externalId": "79"
+  },
+  {
+    "brand": "FLI",
+    "model": "ML-09000",
+    "pixelSizeUm": 12,
+    "resolutionX": 3056,
+    "resolutionY": 3056,
+    "sensorWidthMm": 36.67,
+    "sensorHeightMm": 36.67,
+    "externalId": "36"
+  },
+  {
+    "brand": "FLI",
+    "model": "ML11002",
+    "pixelSizeUm": 9,
+    "resolutionX": 4008,
+    "resolutionY": 2672,
+    "sensorWidthMm": 36.07,
+    "sensorHeightMm": 24.05,
+    "externalId": "100"
+  },
+  {
+    "brand": "FLI",
+    "model": "ML16803",
+    "pixelSizeUm": 9,
+    "resolutionX": 4096,
+    "resolutionY": 4096,
+    "sensorWidthMm": 36.86,
+    "sensorHeightMm": 36.86,
+    "externalId": "243"
+  },
+  {
+    "brand": "FLI",
+    "model": "ML16803",
+    "pixelSizeUm": 9,
+    "resolutionX": 4096,
+    "resolutionY": 4096,
+    "sensorWidthMm": 36.86,
+    "sensorHeightMm": 36.86,
+    "externalId": "99"
+  },
+  {
+    "brand": "FLI",
+    "model": "ML50100",
+    "pixelSizeUm": 6,
+    "resolutionX": 8176,
+    "resolutionY": 6132,
+    "sensorWidthMm": 49.06,
+    "sensorHeightMm": 36.79,
+    "externalId": "131"
+  },
+  {
+    "brand": "FLI",
+    "model": "Proline PL 16803",
+    "pixelSizeUm": 9,
+    "resolutionX": 4096,
+    "resolutionY": 4096,
+    "sensorWidthMm": 36.86,
+    "sensorHeightMm": 36.86,
+    "externalId": "321"
+  },
+  {
+    "brand": "Fujifilm",
+    "model": "GFX 100S",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 11648,
+    "resolutionY": 8736,
+    "sensorWidthMm": 43.8,
+    "sensorHeightMm": 32.85,
+    "externalId": "13970"
+  },
+  {
+    "brand": "Fujifilm",
+    "model": "GFX50S II",
+    "pixelSizeUm": 5.3,
+    "resolutionX": 8256,
+    "resolutionY": 6192,
+    "sensorWidthMm": 43.76,
+    "sensorHeightMm": 32.82,
+    "externalId": "13961"
+  },
+  {
+    "brand": "Fujifilm",
+    "model": "X-E3",
+    "pixelSizeUm": 3.93,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 23.58,
+    "sensorHeightMm": 15.72,
+    "externalId": "1940"
+  },
+  {
+    "brand": "Fujifilm",
+    "model": "X-H1",
+    "pixelSizeUm": 3.93,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 23.58,
+    "sensorHeightMm": 15.72,
+    "externalId": "2154"
+  },
+  {
+    "brand": "Fujifilm",
+    "model": "X-T1",
+    "pixelSizeUm": 4.8,
+    "resolutionX": 4896,
+    "resolutionY": 3264,
+    "sensorWidthMm": 23.5,
+    "sensorHeightMm": 15.67,
+    "externalId": "155"
+  },
+  {
+    "brand": "Fujifilm",
+    "model": "X-T2",
+    "pixelSizeUm": 3.93,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 23.58,
+    "sensorHeightMm": 15.72,
+    "externalId": "481"
+  },
+  {
+    "brand": "Hasselblad",
+    "model": "X1Dii",
+    "pixelSizeUm": 5.3,
+    "resolutionX": 8272,
+    "resolutionY": 6200,
+    "sensorWidthMm": 43.84,
+    "sensorHeightMm": 32.86,
+    "externalId": "5202"
+  },
+  {
+    "brand": "Imaging Source",
+    "model": "DMK 41AU02",
+    "pixelSizeUm": 4.65,
+    "resolutionX": 1360,
+    "resolutionY": 1024,
+    "sensorWidthMm": 6.32,
+    "sensorHeightMm": 4.76,
+    "externalId": "11"
+  },
+  {
+    "brand": "iNova",
+    "model": "PLB-Cx",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "30"
+  },
+  {
+    "brand": "Lacerta",
+    "model": "MGEN-3",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "3727"
+  },
+  {
+    "brand": "Lacerta",
+    "model": "MGEN-II",
+    "pixelSizeUm": 4.7,
+    "resolutionX": 752,
+    "resolutionY": 582,
+    "sensorWidthMm": 3.53,
+    "sensorHeightMm": 2.74,
+    "externalId": "2495"
+  },
+  {
+    "brand": "Lumix",
+    "model": "GH2",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 4608,
+    "resolutionY": 3456,
+    "sensorWidthMm": 17.28,
+    "sensorHeightMm": 12.96,
+    "externalId": "154"
+  },
+  {
+    "brand": "MallinCam",
+    "model": "DS10C / TEC",
+    "pixelSizeUm": 4.63,
+    "resolutionX": 4096,
+    "resolutionY": 2160,
+    "sensorWidthMm": 18.96,
+    "sensorHeightMm": 10,
+    "externalId": "2098"
+  },
+  {
+    "brand": "MallinCam",
+    "model": "SkyRaider",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "188"
+  },
+  {
+    "brand": "MallinCam",
+    "model": "SkyRaider 23DS Plus",
+    "pixelSizeUm": 5.86,
+    "resolutionX": 1936,
+    "resolutionY": 1216,
+    "sensorWidthMm": 11.34,
+    "sensorHeightMm": 7.13,
+    "externalId": "319"
+  },
+  {
+    "brand": "Meade",
+    "model": "DSI 2",
+    "pixelSizeUm": 8.3,
+    "resolutionX": 752,
+    "resolutionY": 582,
+    "sensorWidthMm": 6.24,
+    "sensorHeightMm": 5.01,
+    "externalId": "115"
+  },
+  {
+    "brand": "Meade",
+    "model": "DSI III Pro",
+    "pixelSizeUm": 6.45,
+    "resolutionX": 1360,
+    "resolutionY": 1024,
+    "sensorWidthMm": 8.77,
+    "sensorHeightMm": 6.6,
+    "externalId": "136"
+  },
+  {
+    "brand": "Meade",
+    "model": "DSI-C",
+    "pixelSizeUm": 9.6,
+    "resolutionX": 510,
+    "resolutionY": 492,
+    "sensorWidthMm": 4.9,
+    "sensorHeightMm": 3.69,
+    "externalId": "122"
+  },
+  {
+    "brand": "Microsoft",
+    "model": "HD Lifecam",
+    "pixelSizeUm": 3.1,
+    "resolutionX": 1280,
+    "resolutionY": 720,
+    "sensorWidthMm": 3.97,
+    "sensorHeightMm": 2.23,
+    "externalId": "106"
+  },
+  {
+    "brand": "Moravian",
+    "model": "16803",
+    "pixelSizeUm": 9,
+    "resolutionX": 4096,
+    "resolutionY": 4096,
+    "sensorWidthMm": 36.86,
+    "sensorHeightMm": 36.86,
+    "externalId": "303"
+  },
+  {
+    "brand": "Moravian",
+    "model": "G2-4000",
+    "pixelSizeUm": 7.4,
+    "resolutionX": 2056,
+    "resolutionY": 2042,
+    "sensorWidthMm": 15.21,
+    "sensorHeightMm": 15.11,
+    "externalId": "86"
+  },
+  {
+    "brand": "Moravian",
+    "model": "G3-1000",
+    "pixelSizeUm": 24,
+    "resolutionX": 1024,
+    "resolutionY": 1024,
+    "sensorWidthMm": 24.58,
+    "sensorHeightMm": 24.58,
+    "externalId": "244"
+  },
+  {
+    "brand": "Moravian",
+    "model": "G3-11000",
+    "pixelSizeUm": 9,
+    "resolutionX": 4032,
+    "resolutionY": 2688,
+    "sensorWidthMm": 36.29,
+    "sensorHeightMm": 24.19,
+    "externalId": "168"
+  },
+  {
+    "brand": "Moravian",
+    "model": "G3-16200",
+    "pixelSizeUm": 6,
+    "resolutionX": 4540,
+    "resolutionY": 3640,
+    "sensorWidthMm": 27.24,
+    "sensorHeightMm": 21.84,
+    "externalId": "248"
+  },
+  {
+    "brand": "Moravian",
+    "model": "G3-16200",
+    "pixelSizeUm": 6,
+    "resolutionX": 4540,
+    "resolutionY": 3640,
+    "sensorWidthMm": 27.24,
+    "sensorHeightMm": 21.84,
+    "externalId": "189"
+  },
+  {
+    "brand": "Moravian Instruments",
+    "model": "G2-8300",
+    "pixelSizeUm": 5.4,
+    "resolutionX": 3358,
+    "resolutionY": 2536,
+    "sensorWidthMm": 18.13,
+    "sensorHeightMm": 13.69,
+    "externalId": "102"
+  },
+  {
+    "brand": "NASA",
+    "model": "Webb NIRCam Module A - Short Wavelength",
+    "pixelSizeUm": 18,
+    "resolutionX": 4080,
+    "resolutionY": 4080,
+    "sensorWidthMm": 73.44,
+    "sensorHeightMm": 73.44,
+    "externalId": "9872"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D300S",
+    "pixelSizeUm": 5.5,
+    "resolutionX": 4288,
+    "resolutionY": 2848,
+    "sensorWidthMm": 23.58,
+    "sensorHeightMm": 15.66,
+    "externalId": "167"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D3200",
+    "pixelSizeUm": 3.84,
+    "resolutionX": 6016,
+    "resolutionY": 4000,
+    "sensorWidthMm": 23.1,
+    "sensorHeightMm": 15.36,
+    "externalId": "356"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D3300",
+    "pixelSizeUm": 3.9,
+    "resolutionX": 4000,
+    "resolutionY": 6000,
+    "sensorWidthMm": 15.6,
+    "sensorHeightMm": 23.4,
+    "externalId": "153"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D500",
+    "pixelSizeUm": 4.2,
+    "resolutionX": 5568,
+    "resolutionY": 3712,
+    "sensorWidthMm": 23.39,
+    "sensorHeightMm": 15.59,
+    "externalId": "8466"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D5000",
+    "pixelSizeUm": 551,
+    "resolutionX": 4288,
+    "resolutionY": 2848,
+    "sensorWidthMm": 2362.69,
+    "sensorHeightMm": 1569.25,
+    "externalId": "13958"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D5100",
+    "pixelSizeUm": 4.78,
+    "resolutionX": 4928,
+    "resolutionY": 3264,
+    "sensorWidthMm": 23.56,
+    "sensorHeightMm": 15.6,
+    "externalId": "87"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D5300",
+    "pixelSizeUm": 3.92,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 23.52,
+    "sensorHeightMm": 15.68,
+    "externalId": "123"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D5500",
+    "pixelSizeUm": 3.89,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 23.34,
+    "sensorHeightMm": 15.56,
+    "externalId": "186"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D610",
+    "pixelSizeUm": 5.95,
+    "resolutionX": 6016,
+    "resolutionY": 4016,
+    "sensorWidthMm": 35.8,
+    "sensorHeightMm": 23.9,
+    "externalId": "13410"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D7000",
+    "pixelSizeUm": 4.7,
+    "resolutionX": 4991,
+    "resolutionY": 3280,
+    "sensorWidthMm": 23.46,
+    "sensorHeightMm": 15.42,
+    "externalId": "73"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D70S",
+    "pixelSizeUm": 7.9,
+    "resolutionX": 3008,
+    "resolutionY": 2000,
+    "sensorWidthMm": 23.76,
+    "sensorHeightMm": 15.8,
+    "externalId": "296"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D7100",
+    "pixelSizeUm": 3.9,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 23.4,
+    "sensorHeightMm": 15.6,
+    "externalId": "3474"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D7200",
+    "pixelSizeUm": 3.89,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 23.34,
+    "sensorHeightMm": 15.56,
+    "externalId": "12866"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D750",
+    "pixelSizeUm": 5.97,
+    "resolutionX": 6016,
+    "resolutionY": 4016,
+    "sensorWidthMm": 35.92,
+    "sensorHeightMm": 24.02,
+    "externalId": "127"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D7500",
+    "pixelSizeUm": 4.2,
+    "resolutionX": 5568,
+    "resolutionY": 3712,
+    "sensorWidthMm": 23.39,
+    "sensorHeightMm": 15.59,
+    "externalId": "1345"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D800",
+    "pixelSizeUm": 4.88,
+    "resolutionX": 7360,
+    "resolutionY": 4912,
+    "sensorWidthMm": 35.92,
+    "sensorHeightMm": 23.97,
+    "externalId": "150"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D810a",
+    "pixelSizeUm": 4.88,
+    "resolutionX": 7360,
+    "resolutionY": 4912,
+    "sensorWidthMm": 35.92,
+    "sensorHeightMm": 23.97,
+    "externalId": "108"
+  },
+  {
+    "brand": "Nikon",
+    "model": "D90",
+    "pixelSizeUm": 5.51,
+    "resolutionX": 4288,
+    "resolutionY": 2848,
+    "sensorWidthMm": 23.63,
+    "sensorHeightMm": 15.69,
+    "externalId": "13489"
+  },
+  {
+    "brand": "Nikon",
+    "model": "V1",
+    "pixelSizeUm": 3.41,
+    "resolutionX": 3872,
+    "resolutionY": 2592,
+    "sensorWidthMm": 13.2,
+    "sensorHeightMm": 8.79,
+    "externalId": "126"
+  },
+  {
+    "brand": "Nikon",
+    "model": "Z50",
+    "pixelSizeUm": 4.2,
+    "resolutionX": 5568,
+    "resolutionY": 3712,
+    "sensorWidthMm": 23.39,
+    "sensorHeightMm": 15.59,
+    "externalId": "3218"
+  },
+  {
+    "brand": "Nikon",
+    "model": "Z6",
+    "pixelSizeUm": 5.92,
+    "resolutionX": 6048,
+    "resolutionY": 4024,
+    "sensorWidthMm": 35.8,
+    "sensorHeightMm": 23.82,
+    "externalId": "2438"
+  },
+  {
+    "brand": "Nikon",
+    "model": "Z7",
+    "pixelSizeUm": 4.34,
+    "resolutionX": 8256,
+    "resolutionY": 5504,
+    "sensorWidthMm": 35.83,
+    "sensorHeightMm": 23.89,
+    "externalId": "2480"
+  },
+  {
+    "brand": "Nikon",
+    "model": "Z8",
+    "pixelSizeUm": 4.35,
+    "resolutionX": 8256,
+    "resolutionY": 5504,
+    "sensorWidthMm": 35.91,
+    "sensorHeightMm": 23.94,
+    "externalId": "11826"
+  },
+  {
+    "brand": "Nikon",
+    "model": "Z8 - DX",
+    "pixelSizeUm": 4.35,
+    "resolutionX": 5392,
+    "resolutionY": 3592,
+    "sensorWidthMm": 23.46,
+    "sensorHeightMm": 15.63,
+    "externalId": "14181"
+  },
+  {
+    "brand": "Olympus",
+    "model": "E-PM1",
+    "pixelSizeUm": 4.29,
+    "resolutionX": 4032,
+    "resolutionY": 3024,
+    "sensorWidthMm": 17.3,
+    "sensorHeightMm": 12.97,
+    "externalId": "608"
+  },
+  {
+    "brand": "Olympus",
+    "model": "O-MD E-M10 II",
+    "pixelSizeUm": 3.74,
+    "resolutionX": 4608,
+    "resolutionY": 3456,
+    "sensorWidthMm": 17.23,
+    "sensorHeightMm": 12.93,
+    "externalId": "8510"
+  },
+  {
+    "brand": "Olympus",
+    "model": "OM-1",
+    "pixelSizeUm": 3.32,
+    "resolutionX": 5184,
+    "resolutionY": 3888,
+    "sensorWidthMm": 17.21,
+    "sensorHeightMm": 12.91,
+    "externalId": "13956"
+  },
+  {
+    "brand": "Olympus",
+    "model": "OM-D E-M5 Mark III",
+    "pixelSizeUm": 3.36,
+    "resolutionX": 5184,
+    "resolutionY": 3888,
+    "sensorWidthMm": 17.42,
+    "sensorHeightMm": 13.06,
+    "externalId": "11687"
+  },
+  {
+    "brand": "Olympus",
+    "model": "OMD Em-5 mk2",
+    "pixelSizeUm": 3.74,
+    "resolutionX": 4608,
+    "resolutionY": 3456,
+    "sensorWidthMm": 17.23,
+    "sensorHeightMm": 12.93,
+    "externalId": "207"
+  },
+  {
+    "brand": "Opticstar",
+    "model": "DS-616C XL",
+    "pixelSizeUm": 7.8,
+    "resolutionX": 3032,
+    "resolutionY": 2014,
+    "sensorWidthMm": 23.65,
+    "sensorHeightMm": 15.71,
+    "externalId": "114"
+  },
+  {
+    "brand": "Orion",
+    "model": "SSAG",
+    "pixelSizeUm": 5.2,
+    "resolutionX": 1280,
+    "resolutionY": 1024,
+    "sensorWidthMm": 6.66,
+    "sensorHeightMm": 5.32,
+    "externalId": "120"
+  },
+  {
+    "brand": "Orion",
+    "model": "StarShoot AutoGuider",
+    "pixelSizeUm": 5.2,
+    "resolutionX": 1280,
+    "resolutionY": 1024,
+    "sensorWidthMm": 6.66,
+    "sensorHeightMm": 5.32,
+    "externalId": "97"
+  },
+  {
+    "brand": "Orion",
+    "model": "StarShoot G3 Mono",
+    "pixelSizeUm": 8.6,
+    "resolutionX": 752,
+    "resolutionY": 852,
+    "sensorWidthMm": 6.47,
+    "sensorHeightMm": 7.07,
+    "externalId": "103"
+  },
+  {
+    "brand": "Orion",
+    "model": "StarShoot IV",
+    "pixelSizeUm": 3.6,
+    "resolutionX": 1280,
+    "resolutionY": 1024,
+    "sensorWidthMm": 4.61,
+    "sensorHeightMm": 3.69,
+    "externalId": "69"
+  },
+  {
+    "brand": "Panasonic",
+    "model": "DMC-G3",
+    "pixelSizeUm": 3.77,
+    "resolutionX": 4592,
+    "resolutionY": 3448,
+    "sensorWidthMm": 17.31,
+    "sensorHeightMm": 13,
+    "externalId": "6482"
+  },
+  {
+    "brand": "Panasonic",
+    "model": "DMC-GH4",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 4608,
+    "resolutionY": 3456,
+    "sensorWidthMm": 17.28,
+    "sensorHeightMm": 12.96,
+    "externalId": "171"
+  },
+  {
+    "brand": "Panasonic",
+    "model": "Lumix GX7",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 4592,
+    "resolutionY": 3448,
+    "sensorWidthMm": 17.22,
+    "sensorHeightMm": 12.93,
+    "externalId": "1157"
+  },
+  {
+    "brand": "PCO Imaging",
+    "model": "PCO Edge",
+    "pixelSizeUm": 6.5,
+    "resolutionX": 2560,
+    "resolutionY": 2160,
+    "sensorWidthMm": 16.64,
+    "sensorHeightMm": 14.04,
+    "externalId": "182"
+  },
+  {
+    "brand": "Pegasus",
+    "model": "SmartEye",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 3008,
+    "resolutionY": 3008,
+    "sensorWidthMm": 11.31,
+    "sensorHeightMm": 11.31,
+    "externalId": "16605"
+  },
+  {
+    "brand": "Pentax",
+    "model": "K-30",
+    "pixelSizeUm": 4.8,
+    "resolutionX": 4928,
+    "resolutionY": 3264,
+    "sensorWidthMm": 23.65,
+    "sensorHeightMm": 15.67,
+    "externalId": "291"
+  },
+  {
+    "brand": "Pentax",
+    "model": "K200D",
+    "pixelSizeUm": 6.05,
+    "resolutionX": 3896,
+    "resolutionY": 2616,
+    "sensorWidthMm": 23.57,
+    "sensorHeightMm": 15.83,
+    "externalId": "1385"
+  },
+  {
+    "brand": "Pentax",
+    "model": "K3",
+    "pixelSizeUm": 3.91,
+    "resolutionX": 6024,
+    "resolutionY": 4024,
+    "sensorWidthMm": 23.55,
+    "sensorHeightMm": 15.73,
+    "externalId": "1067"
+  },
+  {
+    "brand": "Pentax",
+    "model": "K3III",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 6192,
+    "resolutionY": 4128,
+    "sensorWidthMm": 23.28,
+    "sensorHeightMm": 15.52,
+    "externalId": "10543"
+  },
+  {
+    "brand": "Phil Dyer",
+    "model": "PD1",
+    "pixelSizeUm": 6.5,
+    "resolutionX": 752,
+    "resolutionY": 582,
+    "sensorWidthMm": 4.89,
+    "sensorHeightMm": 3.64,
+    "externalId": "183"
+  },
+  {
+    "brand": "Phillips",
+    "model": "SPC900NC",
+    "pixelSizeUm": 5.6,
+    "resolutionX": 640,
+    "resolutionY": 480,
+    "sensorWidthMm": 3.58,
+    "sensorHeightMm": 2.69,
+    "externalId": "70"
+  },
+  {
+    "brand": "Player One",
+    "model": "Apollo-C",
+    "pixelSizeUm": 5.86,
+    "resolutionX": 1936,
+    "resolutionY": 1216,
+    "sensorWidthMm": 11.34,
+    "sensorHeightMm": 7.13,
+    "externalId": "9973"
+  },
+  {
+    "brand": "Player One",
+    "model": "Apollo-M",
+    "pixelSizeUm": 5.86,
+    "resolutionX": 1936,
+    "resolutionY": 1216,
+    "sensorWidthMm": 11.34,
+    "sensorHeightMm": 7.13,
+    "externalId": "9972"
+  },
+  {
+    "brand": "Player One",
+    "model": "Apollo-M MAX",
+    "pixelSizeUm": 9,
+    "resolutionX": 1608,
+    "resolutionY": 1104,
+    "sensorWidthMm": 14.47,
+    "sensorHeightMm": 9.94,
+    "externalId": "8706"
+  },
+  {
+    "brand": "Player One",
+    "model": "Apollo-M MINI",
+    "pixelSizeUm": 4.5,
+    "resolutionX": 1944,
+    "resolutionY": 1472,
+    "sensorWidthMm": 8.75,
+    "sensorHeightMm": 6.62,
+    "externalId": "8400"
+  },
+  {
+    "brand": "Player One",
+    "model": "Artemis C-Pro",
+    "pixelSizeUm": 4.63,
+    "resolutionX": 4144,
+    "resolutionY": 2824,
+    "sensorWidthMm": 19.19,
+    "sensorHeightMm": 13.08,
+    "externalId": "13964"
+  },
+  {
+    "brand": "Player One",
+    "model": "Artemis M-Pro",
+    "pixelSizeUm": 2.32,
+    "resolutionX": 8288,
+    "resolutionY": 5648,
+    "sensorWidthMm": 19.23,
+    "sensorHeightMm": 13.1,
+    "externalId": "13965"
+  },
+  {
+    "brand": "Player One",
+    "model": "Ceres-C",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1304,
+    "resolutionY": 976,
+    "sensorWidthMm": 4.89,
+    "sensorHeightMm": 3.66,
+    "externalId": "9977"
+  },
+  {
+    "brand": "Player One",
+    "model": "Ceres-M",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1284,
+    "resolutionY": 964,
+    "sensorWidthMm": 4.82,
+    "sensorHeightMm": 3.62,
+    "externalId": "9976"
+  },
+  {
+    "brand": "Player One",
+    "model": "Mars-C",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1944,
+    "resolutionY": 1096,
+    "sensorWidthMm": 5.64,
+    "sensorHeightMm": 3.18,
+    "externalId": "7335"
+  },
+  {
+    "brand": "Player One",
+    "model": "Mars-C II",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1936,
+    "resolutionY": 1100,
+    "sensorWidthMm": 5.61,
+    "sensorHeightMm": 3.19,
+    "externalId": "9971"
+  },
+  {
+    "brand": "Player One",
+    "model": "Mars-M",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1944,
+    "resolutionY": 1096,
+    "sensorWidthMm": 5.64,
+    "sensorHeightMm": 3.18,
+    "externalId": "7281"
+  },
+  {
+    "brand": "Player One",
+    "model": "Neptune-C",
+    "pixelSizeUm": 2.4,
+    "resolutionX": 3096,
+    "resolutionY": 2078,
+    "sensorWidthMm": 7.43,
+    "sensorHeightMm": 4.99,
+    "externalId": "6898"
+  },
+  {
+    "brand": "Player One",
+    "model": "Neptune-C II",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 2712,
+    "resolutionY": 1538,
+    "sensorWidthMm": 7.86,
+    "sensorHeightMm": 4.46,
+    "externalId": "6886"
+  },
+  {
+    "brand": "Player One",
+    "model": "Neptune-M",
+    "pixelSizeUm": 2.4,
+    "resolutionX": 3096,
+    "resolutionY": 2078,
+    "sensorWidthMm": 7.43,
+    "sensorHeightMm": 4.99,
+    "externalId": "7060"
+  },
+  {
+    "brand": "Player One",
+    "model": "Saturn-C SQR",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 3008,
+    "resolutionY": 3008,
+    "sensorWidthMm": 11.31,
+    "sensorHeightMm": 11.31,
+    "externalId": "9970"
+  },
+  {
+    "brand": "Player One",
+    "model": "Saturn-M SQR",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 3008,
+    "resolutionY": 3008,
+    "sensorWidthMm": 11.31,
+    "sensorHeightMm": 11.31,
+    "externalId": "9969"
+  },
+  {
+    "brand": "Player One",
+    "model": "Sedna-M",
+    "pixelSizeUm": 2.4,
+    "resolutionX": 3096,
+    "resolutionY": 2078,
+    "sensorWidthMm": 7.43,
+    "sensorHeightMm": 4.99,
+    "externalId": "9975"
+  },
+  {
+    "brand": "Player One",
+    "model": "Uranus-C",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 3856,
+    "resolutionY": 2180,
+    "sensorWidthMm": 11.18,
+    "sensorHeightMm": 6.32,
+    "externalId": "9479"
+  },
+  {
+    "brand": "Player One",
+    "model": "Xena-M",
+    "pixelSizeUm": 5.86,
+    "resolutionX": 1936,
+    "resolutionY": 1216,
+    "sensorWidthMm": 11.34,
+    "sensorHeightMm": 7.13,
+    "externalId": "9974"
+  },
+  {
+    "brand": "Point Grey",
+    "model": "Blackfly IMX249",
+    "pixelSizeUm": 5.86,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 11.25,
+    "sensorHeightMm": 6.33,
+    "externalId": "313"
+  },
+  {
+    "brand": "Point Grey",
+    "model": "Chameleon3 IMX264",
+    "pixelSizeUm": 3.45,
+    "resolutionX": 2448,
+    "resolutionY": 2048,
+    "sensorWidthMm": 8.45,
+    "sensorHeightMm": 7.07,
+    "externalId": "312"
+  },
+  {
+    "brand": "Point Grey",
+    "model": "Chameleon3 IMX265",
+    "pixelSizeUm": 3.45,
+    "resolutionX": 2048,
+    "resolutionY": 1536,
+    "sensorWidthMm": 7.07,
+    "sensorHeightMm": 5.3,
+    "externalId": "314"
+  },
+  {
+    "brand": "Point Grey Research",
+    "model": "Chameleon Color 1/3&quot;",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1296,
+    "resolutionY": 964,
+    "sensorWidthMm": 4.86,
+    "sensorHeightMm": 3.62,
+    "externalId": "149"
+  },
+  {
+    "brand": "Pt Grey",
+    "model": "Grasshopper",
+    "pixelSizeUm": 4.54,
+    "resolutionX": 1920,
+    "resolutionY": 1440,
+    "sensorWidthMm": 8.72,
+    "sensorHeightMm": 6.54,
+    "externalId": "195"
+  },
+  {
+    "brand": "QHY",
+    "model": "09000A",
+    "pixelSizeUm": 12,
+    "resolutionX": 3056,
+    "resolutionY": 3056,
+    "sensorWidthMm": 36.67,
+    "sensorHeightMm": 36.67,
+    "externalId": "5323"
+  },
+  {
+    "brand": "QHY",
+    "model": "10",
+    "pixelSizeUm": 6.05,
+    "resolutionX": 3900,
+    "resolutionY": 2616,
+    "sensorWidthMm": 23.59,
+    "sensorHeightMm": 15.83,
+    "externalId": "132"
+  },
+  {
+    "brand": "QHY",
+    "model": "11",
+    "pixelSizeUm": 9,
+    "resolutionX": 4032,
+    "resolutionY": 2688,
+    "sensorWidthMm": 36.29,
+    "sensorHeightMm": 24.19,
+    "externalId": "4392"
+  },
+  {
+    "brand": "QHY",
+    "model": "12",
+    "pixelSizeUm": 5.12,
+    "resolutionX": 4610,
+    "resolutionY": 3080,
+    "sensorWidthMm": 23.6,
+    "sensorHeightMm": 15.77,
+    "externalId": "133"
+  },
+  {
+    "brand": "QHY",
+    "model": "128C",
+    "pixelSizeUm": 5.97,
+    "resolutionX": 6036,
+    "resolutionY": 4028,
+    "sensorWidthMm": 36.03,
+    "sensorHeightMm": 24.05,
+    "externalId": "5311"
+  },
+  {
+    "brand": "QHY",
+    "model": "16200A",
+    "pixelSizeUm": 6,
+    "resolutionX": 4540,
+    "resolutionY": 3630,
+    "sensorWidthMm": 27.24,
+    "sensorHeightMm": 21.78,
+    "externalId": "170"
+  },
+  {
+    "brand": "QHY",
+    "model": "163M/C",
+    "pixelSizeUm": 3.8,
+    "resolutionX": 4656,
+    "resolutionY": 3522,
+    "sensorWidthMm": 17.69,
+    "sensorHeightMm": 13.38,
+    "externalId": "5310"
+  },
+  {
+    "brand": "QHY",
+    "model": "16803A",
+    "pixelSizeUm": 9,
+    "resolutionX": 4096,
+    "resolutionY": 4096,
+    "sensorWidthMm": 36.86,
+    "sensorHeightMm": 36.86,
+    "externalId": "5322"
+  },
+  {
+    "brand": "QHY",
+    "model": "168C",
+    "pixelSizeUm": 4.8,
+    "resolutionX": 4952,
+    "resolutionY": 3288,
+    "sensorWidthMm": 23.77,
+    "sensorHeightMm": 15.78,
+    "externalId": "5313"
+  },
+  {
+    "brand": "QHY",
+    "model": "174M/C/GPS",
+    "pixelSizeUm": 5.86,
+    "resolutionX": 1920,
+    "resolutionY": 1200,
+    "sensorWidthMm": 11.25,
+    "sensorHeightMm": 7.03,
+    "externalId": "5315"
+  },
+  {
+    "brand": "QHY",
+    "model": "178M/C",
+    "pixelSizeUm": 2.4,
+    "resolutionX": 3072,
+    "resolutionY": 2048,
+    "sensorWidthMm": 7.37,
+    "sensorHeightMm": 4.92,
+    "externalId": "5304"
+  },
+  {
+    "brand": "QHY",
+    "model": "183M/C",
+    "pixelSizeUm": 2.4,
+    "resolutionX": 5544,
+    "resolutionY": 3694,
+    "sensorWidthMm": 13.31,
+    "sensorHeightMm": 8.87,
+    "externalId": "5299"
+  },
+  {
+    "brand": "QHY",
+    "model": "21",
+    "pixelSizeUm": 4.5,
+    "resolutionX": 1940,
+    "resolutionY": 1460,
+    "sensorWidthMm": 8.73,
+    "sensorHeightMm": 6.57,
+    "externalId": "492"
+  },
+  {
+    "brand": "QHY",
+    "model": "22",
+    "pixelSizeUm": 4.5,
+    "resolutionX": 2758,
+    "resolutionY": 2208,
+    "sensorWidthMm": 12.41,
+    "sensorHeightMm": 9.94,
+    "externalId": "1752"
+  },
+  {
+    "brand": "QHY",
+    "model": "224C",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "4453"
+  },
+  {
+    "brand": "QHY",
+    "model": "23",
+    "pixelSizeUm": 3.69,
+    "resolutionX": 3388,
+    "resolutionY": 2712,
+    "sensorWidthMm": 12.5,
+    "sensorHeightMm": 10.01,
+    "externalId": "113"
+  },
+  {
+    "brand": "QHY",
+    "model": "247C",
+    "pixelSizeUm": 3.91,
+    "resolutionX": 6024,
+    "resolutionY": 4024,
+    "sensorWidthMm": 23.55,
+    "sensorHeightMm": 15.73,
+    "externalId": "5312"
+  },
+  {
+    "brand": "QHY",
+    "model": "268C PH/EB/Pro",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 6280,
+    "resolutionY": 4210,
+    "sensorWidthMm": 23.61,
+    "sensorHeightMm": 15.83,
+    "externalId": "5285"
+  },
+  {
+    "brand": "QHY",
+    "model": "27",
+    "pixelSizeUm": 5.5,
+    "resolutionX": 4964,
+    "resolutionY": 3332,
+    "sensorWidthMm": 27.3,
+    "sensorHeightMm": 18.33,
+    "externalId": "711"
+  },
+  {
+    "brand": "QHY",
+    "model": "28",
+    "pixelSizeUm": 7.4,
+    "resolutionX": 4932,
+    "resolutionY": 3300,
+    "sensorWidthMm": 36.5,
+    "sensorHeightMm": 24.42,
+    "externalId": "4611"
+  },
+  {
+    "brand": "QHY",
+    "model": "29",
+    "pixelSizeUm": 5.5,
+    "resolutionX": 6644,
+    "resolutionY": 4452,
+    "sensorWidthMm": 36.54,
+    "sensorHeightMm": 24.49,
+    "externalId": "4612"
+  },
+  {
+    "brand": "QHY",
+    "model": "290M/C",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 5.57,
+    "sensorHeightMm": 3.13,
+    "externalId": "5124"
+  },
+  {
+    "brand": "QHY",
+    "model": "294M/C (Bin 1x1)",
+    "pixelSizeUm": 2.32,
+    "resolutionX": 8340,
+    "resolutionY": 5644,
+    "sensorWidthMm": 19.35,
+    "sensorHeightMm": 13.09,
+    "externalId": "10572"
+  },
+  {
+    "brand": "QHY",
+    "model": "294M/C Pro",
+    "pixelSizeUm": 4.63,
+    "resolutionX": 4164,
+    "resolutionY": 2796,
+    "sensorWidthMm": 19.28,
+    "sensorHeightMm": 12.95,
+    "externalId": "5268"
+  },
+  {
+    "brand": "QHY",
+    "model": "367C Pro",
+    "pixelSizeUm": 4.88,
+    "resolutionX": 7376,
+    "resolutionY": 4938,
+    "sensorWidthMm": 35.99,
+    "sensorHeightMm": 24.1,
+    "externalId": "5309"
+  },
+  {
+    "brand": "QHY",
+    "model": "410C",
+    "pixelSizeUm": 5.94,
+    "resolutionX": 6072,
+    "resolutionY": 4044,
+    "sensorWidthMm": 36.07,
+    "sensorHeightMm": 24.02,
+    "externalId": "5308"
+  },
+  {
+    "brand": "QHY",
+    "model": "461",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 11760,
+    "resolutionY": 8896,
+    "sensorWidthMm": 44.22,
+    "sensorHeightMm": 33.45,
+    "externalId": "5171"
+  },
+  {
+    "brand": "QHY",
+    "model": "5",
+    "pixelSizeUm": 5.2,
+    "resolutionX": 1280,
+    "resolutionY": 1024,
+    "sensorWidthMm": 6.66,
+    "sensorHeightMm": 5.32,
+    "externalId": "156"
+  },
+  {
+    "brand": "QHY",
+    "model": "5-II-M",
+    "pixelSizeUm": 5.6,
+    "resolutionX": 1280,
+    "resolutionY": 1024,
+    "sensorWidthMm": 7.17,
+    "sensorHeightMm": 5.73,
+    "externalId": "928"
+  },
+  {
+    "brand": "QHY",
+    "model": "5-III-174M/C",
+    "pixelSizeUm": 5.86,
+    "resolutionX": 1920,
+    "resolutionY": 1200,
+    "sensorWidthMm": 11.25,
+    "sensorHeightMm": 7.03,
+    "externalId": "5201"
+  },
+  {
+    "brand": "QHY",
+    "model": "5-III-178M/C",
+    "pixelSizeUm": 2.4,
+    "resolutionX": 3072,
+    "resolutionY": 2048,
+    "sensorWidthMm": 7.37,
+    "sensorHeightMm": 4.92,
+    "externalId": "5245"
+  },
+  {
+    "brand": "QHY",
+    "model": "5-III-185C",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1920,
+    "resolutionY": 1200,
+    "sensorWidthMm": 7.2,
+    "sensorHeightMm": 4.5,
+    "externalId": "5082"
+  },
+  {
+    "brand": "QHY",
+    "model": "5-III-224C",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "4287"
+  },
+  {
+    "brand": "QHY",
+    "model": "5-III-290M/C",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 5.57,
+    "sensorHeightMm": 3.13,
+    "externalId": "2557"
+  },
+  {
+    "brand": "QHY",
+    "model": "5-III-462C",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 5.57,
+    "sensorHeightMm": 3.13,
+    "externalId": "5296"
+  },
+  {
+    "brand": "QHY",
+    "model": "5-III-715C",
+    "pixelSizeUm": 1.45,
+    "resolutionX": 3840,
+    "resolutionY": 2192,
+    "sensorWidthMm": 5.57,
+    "sensorHeightMm": 3.18,
+    "externalId": "11763"
+  },
+  {
+    "brand": "QHY",
+    "model": "550M/C/P",
+    "pixelSizeUm": 3.45,
+    "resolutionX": 2464,
+    "resolutionY": 2056,
+    "sensorWidthMm": 8.5,
+    "sensorHeightMm": 7.09,
+    "externalId": "5314"
+  },
+  {
+    "brand": "QHY",
+    "model": "5L-II-M/C",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "289"
+  },
+  {
+    "brand": "QHY",
+    "model": "5P-II-M/C",
+    "pixelSizeUm": 2.2,
+    "resolutionX": 2592,
+    "resolutionY": 1944,
+    "sensorWidthMm": 5.7,
+    "sensorHeightMm": 4.28,
+    "externalId": "112"
+  },
+  {
+    "brand": "QHY",
+    "model": "5R-II-C",
+    "pixelSizeUm": 5.6,
+    "resolutionX": 720,
+    "resolutionY": 576,
+    "sensorWidthMm": 4.03,
+    "sensorHeightMm": 3.23,
+    "externalId": "5317"
+  },
+  {
+    "brand": "QHY",
+    "model": "6",
+    "pixelSizeUm": 6.5,
+    "resolutionX": 752,
+    "resolutionY": 582,
+    "sensorWidthMm": 4.89,
+    "sensorHeightMm": 3.64,
+    "externalId": "226"
+  },
+  {
+    "brand": "QHY",
+    "model": "600M/C L/PH/Pro",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 9576,
+    "resolutionY": 6388,
+    "sensorWidthMm": 36.01,
+    "sensorHeightMm": 24.02,
+    "externalId": "5278"
+  },
+  {
+    "brand": "QHY",
+    "model": "695A",
+    "pixelSizeUm": 4.54,
+    "resolutionX": 2758,
+    "resolutionY": 2208,
+    "sensorWidthMm": 12.52,
+    "sensorHeightMm": 10.02,
+    "externalId": "5064"
+  },
+  {
+    "brand": "QHY",
+    "model": "8",
+    "pixelSizeUm": 7.8,
+    "resolutionX": 3000,
+    "resolutionY": 2000,
+    "sensorWidthMm": 23.4,
+    "sensorHeightMm": 15.6,
+    "externalId": "13"
+  },
+  {
+    "brand": "QHY",
+    "model": "814A",
+    "pixelSizeUm": 3.69,
+    "resolutionX": 3468,
+    "resolutionY": 2728,
+    "sensorWidthMm": 12.8,
+    "sensorHeightMm": 10.07,
+    "externalId": "3091"
+  },
+  {
+    "brand": "QHY",
+    "model": "8L/Pro",
+    "pixelSizeUm": 7.8,
+    "resolutionX": 3110,
+    "resolutionY": 2030,
+    "sensorWidthMm": 24.26,
+    "sensorHeightMm": 15.83,
+    "externalId": "66"
+  },
+  {
+    "brand": "QHY",
+    "model": "9/9S",
+    "pixelSizeUm": 5.4,
+    "resolutionX": 3358,
+    "resolutionY": 2536,
+    "sensorWidthMm": 18.13,
+    "sensorHeightMm": 13.69,
+    "externalId": "71"
+  },
+  {
+    "brand": "QHY",
+    "model": "90A",
+    "pixelSizeUm": 5.4,
+    "resolutionX": 3358,
+    "resolutionY": 2536,
+    "sensorWidthMm": 18.13,
+    "sensorHeightMm": 13.69,
+    "externalId": "5321"
+  },
+  {
+    "brand": "QHY",
+    "model": "IMG132E",
+    "pixelSizeUm": 3.63,
+    "resolutionX": 1329,
+    "resolutionY": 1049,
+    "sensorWidthMm": 4.82,
+    "sensorHeightMm": 3.81,
+    "externalId": "67"
+  },
+  {
+    "brand": "QHY",
+    "model": "miniCAM5",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "211"
+  },
+  {
+    "brand": "QSI",
+    "model": "532 wsg",
+    "pixelSizeUm": 6.8,
+    "resolutionX": 2184,
+    "resolutionY": 1472,
+    "sensorWidthMm": 14.85,
+    "sensorHeightMm": 10.01,
+    "externalId": "169"
+  },
+  {
+    "brand": "QSI",
+    "model": "583",
+    "pixelSizeUm": 5.4,
+    "resolutionX": 3326,
+    "resolutionY": 2504,
+    "sensorWidthMm": 17.96,
+    "sensorHeightMm": 13.52,
+    "externalId": "57"
+  },
+  {
+    "brand": "QSI",
+    "model": "6120",
+    "pixelSizeUm": 3.1,
+    "resolutionX": 4250,
+    "resolutionY": 2838,
+    "sensorWidthMm": 13.18,
+    "sensorHeightMm": 8.8,
+    "externalId": "92"
+  },
+  {
+    "brand": "QSI",
+    "model": "616",
+    "pixelSizeUm": 9,
+    "resolutionX": 1536,
+    "resolutionY": 1024,
+    "sensorWidthMm": 13.82,
+    "sensorHeightMm": 9.22,
+    "externalId": "1421"
+  },
+  {
+    "brand": "QSI",
+    "model": "6162",
+    "pixelSizeUm": 6,
+    "resolutionX": 4499,
+    "resolutionY": 3599,
+    "sensorWidthMm": 26.99,
+    "sensorHeightMm": 21.59,
+    "externalId": "5068"
+  },
+  {
+    "brand": "QSI",
+    "model": "632",
+    "pixelSizeUm": 6.8,
+    "resolutionX": 2184,
+    "resolutionY": 1472,
+    "sensorWidthMm": 14.85,
+    "sensorHeightMm": 10.01,
+    "externalId": "284"
+  },
+  {
+    "brand": "QSI",
+    "model": "660",
+    "pixelSizeUm": 4.54,
+    "resolutionX": 2758,
+    "resolutionY": 2208,
+    "sensorWidthMm": 12.52,
+    "sensorHeightMm": 10.02,
+    "externalId": "58"
+  },
+  {
+    "brand": "QSI",
+    "model": "683",
+    "pixelSizeUm": 5.4,
+    "resolutionX": 3326,
+    "resolutionY": 2504,
+    "sensorWidthMm": 17.96,
+    "sensorHeightMm": 13.52,
+    "externalId": "5"
+  },
+  {
+    "brand": "QSI",
+    "model": "690",
+    "pixelSizeUm": 3.69,
+    "resolutionX": 3388,
+    "resolutionY": 2712,
+    "sensorWidthMm": 12.5,
+    "sensorHeightMm": 10.01,
+    "externalId": "10"
+  },
+  {
+    "brand": "RasberryPi v2",
+    "model": "Sony IMX219 PQ CMOS",
+    "pixelSizeUm": 1.12,
+    "resolutionX": 3280,
+    "resolutionY": 2464,
+    "sensorWidthMm": 3.67,
+    "sensorHeightMm": 2.76,
+    "externalId": "1977"
+  },
+  {
+    "brand": "Raspberry Pi Camera",
+    "model": "version 1.3",
+    "pixelSizeUm": 1.4,
+    "resolutionX": 2592,
+    "resolutionY": 1944,
+    "sensorWidthMm": 3.63,
+    "sensorHeightMm": 2.72,
+    "externalId": "326"
+  },
+  {
+    "brand": "SBIG",
+    "model": "ST 8300C",
+    "pixelSizeUm": 5.4,
+    "resolutionX": 3326,
+    "resolutionY": 2504,
+    "sensorWidthMm": 17.96,
+    "sensorHeightMm": 13.52,
+    "externalId": "135"
+  },
+  {
+    "brand": "SBIG",
+    "model": "ST-1001E",
+    "pixelSizeUm": 24,
+    "resolutionX": 1024,
+    "resolutionY": 1024,
+    "sensorWidthMm": 24.58,
+    "sensorHeightMm": 24.58,
+    "externalId": "94"
+  },
+  {
+    "brand": "SBIG",
+    "model": "ST-10XME",
+    "pixelSizeUm": 6.8,
+    "resolutionX": 2184,
+    "resolutionY": 1472,
+    "sensorWidthMm": 14.85,
+    "sensorHeightMm": 10.01,
+    "externalId": "63"
+  },
+  {
+    "brand": "SBIG",
+    "model": "ST-2000XM",
+    "pixelSizeUm": 7.4,
+    "resolutionX": 1600,
+    "resolutionY": 1200,
+    "sensorWidthMm": 11.84,
+    "sensorHeightMm": 8.88,
+    "externalId": "93"
+  },
+  {
+    "brand": "SBIG",
+    "model": "ST-237",
+    "pixelSizeUm": 7.4,
+    "resolutionX": 640,
+    "resolutionY": 480,
+    "sensorWidthMm": 4.74,
+    "sensorHeightMm": 3.55,
+    "externalId": "200"
+  },
+  {
+    "brand": "SBIG",
+    "model": "ST-i",
+    "pixelSizeUm": 7.4,
+    "resolutionX": 648,
+    "resolutionY": 486,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "13971"
+  },
+  {
+    "brand": "SBIG",
+    "model": "STF-8300",
+    "pixelSizeUm": 5.4,
+    "resolutionX": 2,
+    "resolutionY": 2,
+    "sensorWidthMm": 0.01,
+    "sensorHeightMm": 0.01,
+    "externalId": "111"
+  },
+  {
+    "brand": "SBIG",
+    "model": "STF-8300M",
+    "pixelSizeUm": 5.2,
+    "resolutionX": 3326,
+    "resolutionY": 2504,
+    "sensorWidthMm": 17.3,
+    "sensorHeightMm": 13.02,
+    "externalId": "9"
+  },
+  {
+    "brand": "SBIG",
+    "model": "STL-1001e",
+    "pixelSizeUm": 24,
+    "resolutionX": 1024,
+    "resolutionY": 1024,
+    "sensorWidthMm": 24.58,
+    "sensorHeightMm": 24.58,
+    "externalId": "110"
+  },
+  {
+    "brand": "SBIG",
+    "model": "STX-16803",
+    "pixelSizeUm": 9,
+    "resolutionX": 4096,
+    "resolutionY": 4096,
+    "sensorWidthMm": 36.86,
+    "sensorHeightMm": 36.86,
+    "externalId": "89"
+  },
+  {
+    "brand": "Seestar",
+    "model": "S50 (IMX462)",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1080,
+    "resolutionY": 1920,
+    "sensorWidthMm": 3.13,
+    "sensorHeightMm": 5.57,
+    "externalId": "11694"
+  },
+  {
+    "brand": "Sony",
+    "model": "A100",
+    "pixelSizeUm": 6.1,
+    "resolutionX": 3872,
+    "resolutionY": 2592,
+    "sensorWidthMm": 23.62,
+    "sensorHeightMm": 15.81,
+    "externalId": "217"
+  },
+  {
+    "brand": "Sony",
+    "model": "A580",
+    "pixelSizeUm": 4.76,
+    "resolutionX": 4912,
+    "resolutionY": 3264,
+    "sensorWidthMm": 23.38,
+    "sensorHeightMm": 15.54,
+    "externalId": "274"
+  },
+  {
+    "brand": "Sony",
+    "model": "a6000",
+    "pixelSizeUm": 3.88,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 23.28,
+    "sensorHeightMm": 15.52,
+    "externalId": "8629"
+  },
+  {
+    "brand": "Sony",
+    "model": "A7CR",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 9504,
+    "resolutionY": 6336,
+    "sensorWidthMm": 35.74,
+    "sensorHeightMm": 23.82,
+    "externalId": "13955"
+  },
+  {
+    "brand": "Sony",
+    "model": "A7R",
+    "pixelSizeUm": 4.87,
+    "resolutionX": 7360,
+    "resolutionY": 4912,
+    "sensorWidthMm": 35.84,
+    "sensorHeightMm": 23.92,
+    "externalId": "1076"
+  },
+  {
+    "brand": "Sony",
+    "model": "A7s",
+    "pixelSizeUm": 8.4,
+    "resolutionX": 4240,
+    "resolutionY": 2832,
+    "sensorWidthMm": 35.62,
+    "sensorHeightMm": 23.79,
+    "externalId": "101"
+  },
+  {
+    "brand": "Sony",
+    "model": "Alpha 3000",
+    "pixelSizeUm": 4.3,
+    "resolutionX": 5456,
+    "resolutionY": 3632,
+    "sensorWidthMm": 23.46,
+    "sensorHeightMm": 15.62,
+    "externalId": "38"
+  },
+  {
+    "brand": "Sony",
+    "model": "Alpha 7 III",
+    "pixelSizeUm": 5.91,
+    "resolutionX": 6000,
+    "resolutionY": 4000,
+    "sensorWidthMm": 35.46,
+    "sensorHeightMm": 23.64,
+    "externalId": "1172"
+  },
+  {
+    "brand": "Sony",
+    "model": "Alpha 7R III",
+    "pixelSizeUm": 4.5,
+    "resolutionX": 7952,
+    "resolutionY": 5304,
+    "sensorWidthMm": 35.78,
+    "sensorHeightMm": 23.87,
+    "externalId": "1042"
+  },
+  {
+    "brand": "Sony",
+    "model": "Alpha a55",
+    "pixelSizeUm": 4.75,
+    "resolutionX": 4912,
+    "resolutionY": 3264,
+    "sensorWidthMm": 23.33,
+    "sensorHeightMm": 15.5,
+    "externalId": "60"
+  },
+  {
+    "brand": "Sony",
+    "model": "NEX 5N",
+    "pixelSizeUm": 5,
+    "resolutionX": 4592,
+    "resolutionY": 3056,
+    "sensorWidthMm": 22.96,
+    "sensorHeightMm": 15.28,
+    "externalId": "68"
+  },
+  {
+    "brand": "Sony",
+    "model": "Playstation Eye",
+    "pixelSizeUm": 6,
+    "resolutionX": 640,
+    "resolutionY": 480,
+    "sensorWidthMm": 3.84,
+    "sensorHeightMm": 2.88,
+    "externalId": "160"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "CoStar",
+    "pixelSizeUm": 5.2,
+    "resolutionX": 1304,
+    "resolutionY": 1024,
+    "sensorWidthMm": 6.78,
+    "sensorHeightMm": 5.32,
+    "externalId": "53"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "H16",
+    "pixelSizeUm": 7.4,
+    "resolutionX": 2048,
+    "resolutionY": 2048,
+    "sensorWidthMm": 15.16,
+    "sensorHeightMm": 15.16,
+    "externalId": "80"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Lodestar",
+    "pixelSizeUm": 8.2,
+    "resolutionX": 752,
+    "resolutionY": 580,
+    "sensorWidthMm": 6.17,
+    "sensorHeightMm": 4.87,
+    "externalId": "33"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Lodestar C",
+    "pixelSizeUm": 8.6,
+    "resolutionX": 752,
+    "resolutionY": 580,
+    "sensorWidthMm": 6.47,
+    "sensorHeightMm": 4.81,
+    "externalId": "34"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Lodestar Pro Mono",
+    "pixelSizeUm": 8.6,
+    "resolutionX": 752,
+    "resolutionY": 580,
+    "sensorWidthMm": 6.47,
+    "sensorHeightMm": 4.81,
+    "externalId": "617"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Lodestar X2",
+    "pixelSizeUm": 8.2,
+    "resolutionX": 752,
+    "resolutionY": 580,
+    "sensorWidthMm": 6.17,
+    "sensorHeightMm": 4.87,
+    "externalId": "32"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Superstar",
+    "pixelSizeUm": 4.65,
+    "resolutionX": 1392,
+    "resolutionY": 1040,
+    "sensorWidthMm": 6.47,
+    "sensorHeightMm": 4.84,
+    "externalId": "52"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "SX Trius CSX-249 CMOS",
+    "pixelSizeUm": 6,
+    "resolutionX": 1920,
+    "resolutionY": 1200,
+    "sensorWidthMm": 11.52,
+    "sensorHeightMm": 7.2,
+    "externalId": "2455"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "SX Trius CSX-290 CMOS",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1945,
+    "resolutionY": 1097,
+    "sensorWidthMm": 5.64,
+    "sensorHeightMm": 3.18,
+    "externalId": "2456"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "SX Trius CSX-304 CMOS",
+    "pixelSizeUm": 3.45,
+    "resolutionX": 4096,
+    "resolutionY": 3000,
+    "sensorWidthMm": 14.13,
+    "sensorHeightMm": 10.35,
+    "externalId": "2454"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "SXVR-H18",
+    "pixelSizeUm": 5.4,
+    "resolutionX": 3326,
+    "resolutionY": 2504,
+    "sensorWidthMm": 17.96,
+    "sensorHeightMm": 13.52,
+    "externalId": "59"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "SXVR-H9",
+    "pixelSizeUm": 6.45,
+    "resolutionX": 1392,
+    "resolutionY": 1040,
+    "sensorWidthMm": 8.98,
+    "sensorHeightMm": 6.71,
+    "externalId": "4782"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius PRO-834",
+    "pixelSizeUm": 3.1,
+    "resolutionX": 4240,
+    "resolutionY": 2824,
+    "sensorWidthMm": 13.14,
+    "sensorHeightMm": 8.75,
+    "externalId": "2397"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius SX-16",
+    "pixelSizeUm": 7.4,
+    "resolutionX": 2048,
+    "resolutionY": 2048,
+    "sensorWidthMm": 15.16,
+    "sensorHeightMm": 15.16,
+    "externalId": "51"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius SX-25C",
+    "pixelSizeUm": 7.8,
+    "resolutionX": 3024,
+    "resolutionY": 2016,
+    "sensorWidthMm": 23.59,
+    "sensorHeightMm": 15.72,
+    "externalId": "43"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius SX-26C",
+    "pixelSizeUm": 6.05,
+    "resolutionX": 3900,
+    "resolutionY": 2616,
+    "sensorWidthMm": 23.59,
+    "sensorHeightMm": 15.83,
+    "externalId": "44"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius SX-46",
+    "pixelSizeUm": 6,
+    "resolutionX": 4540,
+    "resolutionY": 3640,
+    "sensorWidthMm": 27.24,
+    "sensorHeightMm": 21.84,
+    "externalId": "925"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius SX-56",
+    "pixelSizeUm": 9,
+    "resolutionX": 4096,
+    "resolutionY": 4096,
+    "sensorWidthMm": 36.86,
+    "sensorHeightMm": 36.86,
+    "externalId": "924"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius SX-9",
+    "pixelSizeUm": 6.45,
+    "resolutionX": 1392,
+    "resolutionY": 1040,
+    "sensorWidthMm": 8.98,
+    "sensorHeightMm": 6.71,
+    "externalId": "48"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius SX/PRO-35",
+    "pixelSizeUm": 9,
+    "resolutionX": 4032,
+    "resolutionY": 2688,
+    "sensorWidthMm": 36.29,
+    "sensorHeightMm": 24.19,
+    "externalId": "45"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius SX/PRO-36",
+    "pixelSizeUm": 7.4,
+    "resolutionX": 4904,
+    "resolutionY": 3280,
+    "sensorWidthMm": 36.29,
+    "sensorHeightMm": 24.27,
+    "externalId": "46"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius SX/PRO-674",
+    "pixelSizeUm": 4.54,
+    "resolutionX": 1940,
+    "resolutionY": 1460,
+    "sensorWidthMm": 8.81,
+    "sensorHeightMm": 6.63,
+    "externalId": "49"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius SX/PRO-694",
+    "pixelSizeUm": 4.54,
+    "resolutionX": 2750,
+    "resolutionY": 2200,
+    "sensorWidthMm": 12.48,
+    "sensorHeightMm": 9.99,
+    "externalId": "35"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius SX/PRO-814",
+    "pixelSizeUm": 3.69,
+    "resolutionX": 3380,
+    "resolutionY": 2704,
+    "sensorWidthMm": 12.47,
+    "sensorHeightMm": 9.98,
+    "externalId": "47"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Trius SX/PRO-825",
+    "pixelSizeUm": 6.4,
+    "resolutionX": 1392,
+    "resolutionY": 1040,
+    "sensorWidthMm": 8.91,
+    "sensorHeightMm": 6.66,
+    "externalId": "1160"
+  },
+  {
+    "brand": "Starlight Xpress",
+    "model": "Ultrastar",
+    "pixelSizeUm": 6.45,
+    "resolutionX": 1392,
+    "resolutionY": 1040,
+    "sensorWidthMm": 8.98,
+    "sensorHeightMm": 6.71,
+    "externalId": "116"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SC305M",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1944,
+    "resolutionY": 1096,
+    "sensorWidthMm": 5.64,
+    "sensorHeightMm": 3.18,
+    "externalId": "13713"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SC311",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 5.57,
+    "sensorHeightMm": 3.13,
+    "externalId": "13716"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SC432M",
+    "pixelSizeUm": 9,
+    "resolutionX": 1608,
+    "resolutionY": 1104,
+    "sensorWidthMm": 14.47,
+    "sensorHeightMm": 9.94,
+    "externalId": "13728"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV105C",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 5.57,
+    "sensorHeightMm": 3.13,
+    "externalId": "13798"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV205C",
+    "pixelSizeUm": 1.45,
+    "resolutionX": 3264,
+    "resolutionY": 2160,
+    "sensorWidthMm": 4.73,
+    "sensorHeightMm": 3.13,
+    "externalId": "13745"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV305C/Pro",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 5.57,
+    "sensorHeightMm": 3.13,
+    "externalId": "13785"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV405CC",
+    "pixelSizeUm": 4.63,
+    "resolutionX": 4144,
+    "resolutionY": 2822,
+    "sensorWidthMm": 19.19,
+    "sensorHeightMm": 13.07,
+    "externalId": "13791"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV505C",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 2712,
+    "resolutionY": 1538,
+    "sensorWidthMm": 7.86,
+    "sensorHeightMm": 4.46,
+    "externalId": "13684"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV605CC/MC",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 3008,
+    "resolutionY": 3008,
+    "sensorWidthMm": 11.31,
+    "sensorHeightMm": 11.31,
+    "externalId": "13669"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV705C",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 3856,
+    "resolutionY": 2180,
+    "sensorWidthMm": 11.18,
+    "sensorHeightMm": 6.32,
+    "externalId": "13751"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV905C",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "13511"
+  },
+  {
+    "brand": "Toucam Pro",
+    "model": "SC4",
+    "pixelSizeUm": 9.9,
+    "resolutionX": 659,
+    "resolutionY": 494,
+    "sensorWidthMm": 6.52,
+    "sensorHeightMm": 4.89,
+    "externalId": "29"
+  },
+  {
+    "brand": "ToupTek",
+    "model": "571C Pro",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 6224,
+    "resolutionY": 4168,
+    "sensorWidthMm": 23.4,
+    "sensorHeightMm": 15.67,
+    "externalId": "13967"
+  },
+  {
+    "brand": "ToupTek",
+    "model": "GCMOS01200KMA Mono Imager/Guider",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "235"
+  },
+  {
+    "brand": "ToupTek",
+    "model": "GCMOS01200KPA Colour Imager/Guider",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "234"
+  },
+  {
+    "brand": "Unistellar",
+    "model": "Equinox 2",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 2048,
+    "resolutionY": 1536,
+    "sensorWidthMm": 5.94,
+    "sensorHeightMm": 4.45,
+    "externalId": "13934"
+  },
+  {
+    "brand": "Unistellar",
+    "model": "eVscope 1",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "11863"
+  },
+  {
+    "brand": "Unistellar",
+    "model": "eVscope 2",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 2048,
+    "resolutionY": 1536,
+    "sensorWidthMm": 5.94,
+    "sensorHeightMm": 4.45,
+    "externalId": "12373"
+  },
+  {
+    "brand": "Vaonis",
+    "model": "Vespera",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 5.57,
+    "sensorHeightMm": 3.13,
+    "externalId": "10627"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI034MC",
+    "pixelSizeUm": 5.6,
+    "resolutionX": 728,
+    "resolutionY": 512,
+    "sensorWidthMm": 4.08,
+    "sensorHeightMm": 2.87,
+    "externalId": "265"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI071MC-Pro",
+    "pixelSizeUm": 4.78,
+    "resolutionX": 4944,
+    "resolutionY": 3284,
+    "sensorWidthMm": 23.63,
+    "sensorHeightMm": 15.7,
+    "externalId": "438"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI094MC-Pro",
+    "pixelSizeUm": 4.88,
+    "resolutionX": 7736,
+    "resolutionY": 4928,
+    "sensorWidthMm": 37.75,
+    "sensorHeightMm": 24.05,
+    "externalId": "922"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI120MC-S",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "151"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI120MM/MC/Mini",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1280,
+    "resolutionY": 960,
+    "sensorWidthMm": 4.8,
+    "sensorHeightMm": 3.6,
+    "externalId": "7"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI128MC-Pro",
+    "pixelSizeUm": 5.97,
+    "resolutionX": 6032,
+    "resolutionY": 4032,
+    "sensorWidthMm": 36.01,
+    "sensorHeightMm": 24.07,
+    "externalId": "923"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI1600",
+    "pixelSizeUm": 3.8,
+    "resolutionX": 4656,
+    "resolutionY": 3520,
+    "sensorWidthMm": 17.69,
+    "sensorHeightMm": 13.38,
+    "externalId": "242"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI1600MM/MC/GT",
+    "pixelSizeUm": 3.8,
+    "resolutionX": 4656,
+    "resolutionY": 3520,
+    "sensorWidthMm": 17.69,
+    "sensorHeightMm": 13.38,
+    "externalId": "272"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI174MM/MC/Mini",
+    "pixelSizeUm": 5.86,
+    "resolutionX": 1936,
+    "resolutionY": 1216,
+    "sensorWidthMm": 11.34,
+    "sensorHeightMm": 7.13,
+    "externalId": "268"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI178MM/MC",
+    "pixelSizeUm": 2.4,
+    "resolutionX": 3096,
+    "resolutionY": 2080,
+    "sensorWidthMm": 7.43,
+    "sensorHeightMm": 4.99,
+    "externalId": "267"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI183MM/MC/GT",
+    "pixelSizeUm": 2.4,
+    "resolutionX": 5496,
+    "resolutionY": 3672,
+    "sensorWidthMm": 13.19,
+    "sensorHeightMm": 8.81,
+    "externalId": "1115"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI185MC",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1944,
+    "resolutionY": 1224,
+    "sensorWidthMm": 7.29,
+    "sensorHeightMm": 4.59,
+    "externalId": "185"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI220MM Mini",
+    "pixelSizeUm": 4,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 7.68,
+    "sensorHeightMm": 4.32,
+    "externalId": "10418"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI224MC",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1304,
+    "resolutionY": 976,
+    "sensorWidthMm": 4.89,
+    "sensorHeightMm": 3.66,
+    "externalId": "266"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI2400MC-Pro",
+    "pixelSizeUm": 5.94,
+    "resolutionX": 6072,
+    "resolutionY": 4042,
+    "sensorWidthMm": 36.07,
+    "sensorHeightMm": 24.01,
+    "externalId": "4300"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI2600MM/MC-Pro",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 6248,
+    "resolutionY": 4176,
+    "sensorWidthMm": 23.49,
+    "sensorHeightMm": 15.7,
+    "externalId": "3258"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI290MM/MC/Mini",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1936,
+    "resolutionY": 1096,
+    "sensorWidthMm": 5.61,
+    "sensorHeightMm": 3.18,
+    "externalId": "258"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI294MC Pro",
+    "pixelSizeUm": 4.63,
+    "resolutionX": 4144,
+    "resolutionY": 2822,
+    "sensorWidthMm": 19.19,
+    "sensorHeightMm": 13.07,
+    "externalId": "1134"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI294MM Pro (Bin1 mode)",
+    "pixelSizeUm": 2.31,
+    "resolutionX": 8288,
+    "resolutionY": 5644,
+    "sensorWidthMm": 19.15,
+    "sensorHeightMm": 13.04,
+    "externalId": "5842"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI294MM Pro (Bin2 mode)",
+    "pixelSizeUm": 4.63,
+    "resolutionX": 4144,
+    "resolutionY": 2822,
+    "sensorWidthMm": 19.19,
+    "sensorHeightMm": 13.07,
+    "externalId": "1154"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI385MC",
+    "pixelSizeUm": 3.75,
+    "resolutionX": 1936,
+    "resolutionY": 1096,
+    "sensorWidthMm": 7.26,
+    "sensorHeightMm": 4.11,
+    "externalId": "1131"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI432MM",
+    "pixelSizeUm": 9,
+    "resolutionX": 1608,
+    "resolutionY": 1104,
+    "sensorWidthMm": 14.47,
+    "sensorHeightMm": 9.94,
+    "externalId": "9662"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI462MC",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1936,
+    "resolutionY": 1096,
+    "sensorWidthMm": 5.61,
+    "sensorHeightMm": 3.18,
+    "externalId": "4400"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI482MC",
+    "pixelSizeUm": 5.8,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 11.14,
+    "sensorHeightMm": 6.26,
+    "externalId": "7873"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI485MC",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 3840,
+    "resolutionY": 2160,
+    "sensorWidthMm": 11.14,
+    "sensorHeightMm": 6.26,
+    "externalId": "8078"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI533MM/MC",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 3008,
+    "resolutionY": 3008,
+    "sensorWidthMm": 11.31,
+    "sensorHeightMm": 11.31,
+    "externalId": "3106"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI585MC AIR (Guide)",
+    "pixelSizeUm": 4,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 7.68,
+    "sensorHeightMm": 4.32,
+    "externalId": "9736"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI585MC AIR (Main)",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 3840,
+    "resolutionY": 2160,
+    "sensorWidthMm": 11.14,
+    "sensorHeightMm": 6.26,
+    "externalId": "9660"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI585MC/PRO",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 3840,
+    "resolutionY": 2160,
+    "sensorWidthMm": 11.14,
+    "sensorHeightMm": 6.26,
+    "externalId": "9791"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI6200MM/MC-Pro",
+    "pixelSizeUm": 3.76,
+    "resolutionX": 9576,
+    "resolutionY": 6388,
+    "sensorWidthMm": 36.01,
+    "sensorHeightMm": 24.02,
+    "externalId": "3264"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI662MC/MM",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1920,
+    "resolutionY": 1080,
+    "sensorWidthMm": 5.57,
+    "sensorHeightMm": 3.13,
+    "externalId": "9789"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI664MC",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 2704,
+    "resolutionY": 1536,
+    "sensorWidthMm": 7.84,
+    "sensorHeightMm": 4.45,
+    "externalId": "13146"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI676MC",
+    "pixelSizeUm": 2,
+    "resolutionX": 3552,
+    "resolutionY": 3552,
+    "sensorWidthMm": 7.1,
+    "sensorHeightMm": 7.1,
+    "externalId": "13972"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI678MC/MM",
+    "pixelSizeUm": 2,
+    "resolutionX": 3840,
+    "resolutionY": 2160,
+    "sensorWidthMm": 7.68,
+    "sensorHeightMm": 4.32,
+    "externalId": "9790"
+  },
+  {
+    "brand": "ZWO",
+    "model": "ASI715MC",
+    "pixelSizeUm": 1.45,
+    "resolutionX": 3864,
+    "resolutionY": 2192,
+    "sensorWidthMm": 5.6,
+    "sensorHeightMm": 3.18,
+    "externalId": "12761"
+  },
+  {
+    "brand": "ZWO",
+    "model": "Seestar S30 (IMX662)",
+    "pixelSizeUm": 2.9,
+    "resolutionX": 1080,
+    "resolutionY": 1920,
+    "sensorWidthMm": 3.13,
+    "sensorHeightMm": 5.57,
+    "externalId": "14901"
+  }
+]

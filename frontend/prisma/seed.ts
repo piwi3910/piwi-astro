@@ -13,6 +13,17 @@ interface TelescopeData {
   externalId: string;
 }
 
+interface CameraData {
+  brand: string;
+  model: string;
+  pixelSizeUm: number;
+  resolutionX: number;
+  resolutionY: number;
+  sensorWidthMm: number;
+  sensorHeightMm: number;
+  externalId: string;
+}
+
 // Messier catalog data - first 20 objects as example
 // In production, you'd import the full catalog from a data file
 const messierCatalog = [
@@ -100,6 +111,54 @@ async function main() {
 
   const totalTelescopes = await prisma.telescopeCatalog.count();
   console.log(`📊 Total telescopes in catalog: ${totalTelescopes}`);
+
+  // Seed Camera Catalog
+  console.log('\n📷 Seeding camera catalog...');
+  const cameraCatalogPath = path.join(__dirname, 'camera-catalog.json');
+
+  if (fs.existsSync(cameraCatalogPath)) {
+    const cameraData: CameraData[] = JSON.parse(
+      fs.readFileSync(cameraCatalogPath, 'utf-8')
+    );
+
+    console.log(`📡 Adding ${cameraData.length} cameras...`);
+
+    let addedCameras = 0;
+    let updatedCameras = 0;
+
+    for (const camera of cameraData) {
+      const result = await prisma.cameraCatalog.upsert({
+        where: {
+          brand_model_pixelSizeUm_resolutionX_resolutionY: {
+            brand: camera.brand,
+            model: camera.model,
+            pixelSizeUm: camera.pixelSizeUm,
+            resolutionX: camera.resolutionX,
+            resolutionY: camera.resolutionY,
+          },
+        },
+        update: {
+          sensorWidthMm: camera.sensorWidthMm,
+          sensorHeightMm: camera.sensorHeightMm,
+          externalId: camera.externalId,
+        },
+        create: camera,
+      });
+
+      if (result.createdAt.getTime() === result.updatedAt.getTime()) {
+        addedCameras++;
+      } else {
+        updatedCameras++;
+      }
+    }
+
+    console.log(`✅ Camera catalog: ${addedCameras} added, ${updatedCameras} updated`);
+  } else {
+    console.log('⚠️  Camera catalog JSON not found. Run parse-cameras.ts first.');
+  }
+
+  const totalCameras = await prisma.cameraCatalog.count();
+  console.log(`📊 Total cameras in catalog: ${totalCameras}`);
 
   // Seed Target Catalog
   console.log('\n🎯 Seeding target catalog...');

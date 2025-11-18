@@ -81,9 +81,33 @@ model Telescope {
   @@index([catalogId])
 }
 
+model CameraCatalog {
+  id             String  @id @default(uuid())
+  brand          String
+  model          String
+  pixelSizeUm    Float
+  resolutionX    Int
+  resolutionY    Int
+  sensorWidthMm  Float   @default(0) // Calculated or 0 if unknown
+  sensorHeightMm Float   @default(0) // Calculated or 0 if unknown
+  externalId     String? // Original ID from external source
+  isActive       Boolean @default(true) // For soft deletion
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  cameras        Camera[]
+
+  @@unique([brand, model, pixelSizeUm, resolutionX, resolutionY])
+  @@index([brand])
+  @@index([model])
+  @@index([isActive])
+}
+
 model Camera {
   id             String @id @default(uuid())
   userId         String
+  catalogId      String? // Reference to pre-populated catalog
   name           String
   brand          String?
   model          String?
@@ -95,10 +119,12 @@ model Camera {
   sensorType     String // CMOS, CCD, etc.
   notes          String?
 
-  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  rigs Rig[]
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  catalog CameraCatalog?  @relation(fields: [catalogId], references: [id], onDelete: SetNull)
+  rigs    Rig[]
 
   @@index([userId])
+  @@index([catalogId])
 }
 
 model Rig {
