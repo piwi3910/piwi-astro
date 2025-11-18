@@ -190,10 +190,6 @@ export function RigsTab(): JSX.Element {
                             <strong>Height:</strong> {rig.fovHeightArcmin.toFixed(2)}′
                             ({(rig.fovHeightArcmin / 60).toFixed(2)}°)
                           </Text>
-                          <Text size="sm">
-                            <strong>Pixel Scale:</strong> {rig.pixelScale.toFixed(2)}
-                            ″/px
-                          </Text>
                         </Stack>
                       </Box>
                       <PixelScaleGauge pixelScale={rig.pixelScale} />
