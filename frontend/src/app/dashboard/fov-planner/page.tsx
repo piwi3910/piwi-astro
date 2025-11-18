@@ -14,6 +14,7 @@ import {
   NumberInput,
   Loader,
   Center,
+  Button,
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 
@@ -84,6 +85,11 @@ export default function FOVPlannerPage(): JSX.Element {
   const [overlapPercent, setOverlapPercent] = useState<number>(20);
   const [imageLoading, setImageLoading] = useState<boolean>(false);
   const [imageError, setImageError] = useState<boolean>(false);
+  const [rotationDeg, setRotationDeg] = useState<number>(0);
+  const [fovOffsetX, setFovOffsetX] = useState<number>(0);
+  const [fovOffsetY, setFovOffsetY] = useState<number>(0);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null);
 
   const { data: rigs } = useQuery({
     queryKey: ['rigs'],
@@ -98,15 +104,33 @@ export default function FOVPlannerPage(): JSX.Element {
   const selectedRig = rigs?.find((r) => r.id === selectedRigId);
   const selectedTarget = userTargets?.find((ut) => ut.targetId === selectedTargetId)?.target;
 
-  // Generate DSS image URL for target (same method as target list)
-  const getDSSImageUrl = (target: Target | undefined, fovArcmin: number): string | null => {
+  // Calculate required image FOV for DSS request
+  // Returns FOV in arcminutes that is large enough to contain either the mosaic or the target,
+  // with extra buffer for dragging/repositioning
+  const getRequiredImageFOV = (
+    mosaicTotalArcmin: number,
+    targetSizeArcmin: number | null
+  ): number => {
+    // Start with the larger of mosaic total FOV or target size
+    const baseFOV = Math.max(
+      mosaicTotalArcmin,
+      targetSizeArcmin || 0
+    );
+
+    // Add 2x buffer for dragging capability
+    // This gives plenty of room to reposition the FOV
+    return baseFOV * 2;
+  };
+
+  // Generate DSS image URL for target
+  const getDSSImageUrl = (target: Target | undefined, imageFovArcmin: number): string | null => {
     if (!target) return null;
 
     const raDeg = target.raDeg;
     const decDeg = target.decDeg;
 
-    // Calculate FOV in degrees - use the mosaic total FOV or single panel FOV
-    const fovDeg = fovArcmin / 60;
+    // Calculate FOV in degrees
+    const fovDeg = imageFovArcmin / 60;
 
     const params = new URLSearchParams({
       hips: 'CDS/P/DSS2/color',
@@ -171,20 +195,24 @@ export default function FOVPlannerPage(): JSX.Element {
     const canvasWidth = 700;
     const canvasHeight = 500;
 
-    // Determine what to fit in the canvas (single FOV or total mosaic)
-    const displayWidth = mosaicData.totalWidth;
-    const displayHeight = mosaicData.totalHeight;
+    // Calculate the required image FOV (larger than mosaic for dragging room)
+    const mosaicDiagonal = Math.sqrt(
+      mosaicData.totalWidth ** 2 + mosaicData.totalHeight ** 2
+    );
+    const imageFovArcmin = getRequiredImageFOV(
+      mosaicDiagonal,
+      selectedTarget?.sizeMajorArcmin || null
+    );
 
-    // Scale to fit canvas with padding
-    const scaleX = (canvasWidth * 0.85) / displayWidth;
-    const scaleY = (canvasHeight * 0.85) / displayHeight;
-    const scale = Math.min(scaleX, scaleY);
+    // Scale factor: pixels per arcminute
+    // The image FOV fills the entire canvas
+    const scale = Math.min(canvasWidth, canvasHeight) / imageFovArcmin;
 
     // Center of canvas
     const centerX = canvasWidth / 2;
     const centerY = canvasHeight / 2;
 
-    // FOV dimensions in pixels
+    // FOV dimensions in pixels (scaled to match image)
     const fovWidthPx = mosaicData.fovWidth * scale;
     const fovHeightPx = mosaicData.fovHeight * scale;
 
@@ -196,10 +224,10 @@ export default function FOVPlannerPage(): JSX.Element {
       targetHeightPx = selectedTarget.sizeMajorArcmin * scale;
     }
 
-    // Panel positions in pixels
+    // Panel positions in pixels (relative to center, with offset applied)
     const panelsPx = mosaicData.panels.map(p => ({
-      x: centerX + p.x * scale,
-      y: centerY + p.y * scale,
+      x: centerX + (p.x + fovOffsetX) * scale,
+      y: centerY + (p.y + fovOffsetY) * scale,
     }));
 
     return {
@@ -215,14 +243,16 @@ export default function FOVPlannerPage(): JSX.Element {
       totalWidthArcmin: mosaicData.totalWidth,
       totalHeightArcmin: mosaicData.totalHeight,
       panelCount: mosaicData.panelCount,
+      imageFovArcmin, // Return this for DSS image request
+      scale, // Return scale for drag calculations
     };
   };
 
   const vizData = getVisualizationData();
 
-  // Get DSS image URL for visualization
+  // Get DSS image URL for visualization using calculated image FOV
   const dssImageUrl = vizData && selectedTarget
-    ? getDSSImageUrl(selectedTarget, Math.max(vizData.totalWidthArcmin, vizData.totalHeightArcmin) * 1.2)
+    ? getDSSImageUrl(selectedTarget, vizData.imageFovArcmin)
     : null;
 
   // Reset loading state when DSS image URL changes
@@ -235,6 +265,45 @@ export default function FOVPlannerPage(): JSX.Element {
       setImageError(false);
     }
   }, [dssImageUrl]);
+
+  // Reset FOV position and rotation when target or rig changes
+  useEffect(() => {
+    setFovOffsetX(0);
+    setFovOffsetY(0);
+    setRotationDeg(0);
+  }, [selectedRigId, selectedTargetId]);
+
+  // Drag handlers for FOV repositioning
+  const handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!vizData) return;
+    setIsDragging(true);
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!isDragging || !dragStart || !vizData) return;
+
+    const dx = e.clientX - dragStart.x;
+    const dy = e.clientY - dragStart.y;
+
+    // Convert pixel movement to arcminutes using scale
+    const offsetXArcmin = dx / vizData.scale;
+    const offsetYArcmin = dy / vizData.scale;
+
+    setFovOffsetX(fovOffsetX + offsetXArcmin);
+    setFovOffsetY(fovOffsetY + offsetYArcmin);
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setDragStart(null);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+    setDragStart(null);
+  };
 
   return (
     <Container size="xl" py="xl">
@@ -322,6 +391,46 @@ export default function FOVPlannerPage(): JSX.Element {
                 />
               </Grid.Col>
             </Grid>
+
+            <Text size="sm" fw={500} mt="md" mb="xs" c="dimmed">
+              Framing Controls
+            </Text>
+            <Grid>
+              <Grid.Col span={{ base: 12, sm: 6 }}>
+                <NumberInput
+                  label="Rotation"
+                  description="Rotate FOV to frame target"
+                  value={rotationDeg}
+                  onChange={(val) => setRotationDeg(Number(val) || 0)}
+                  min={0}
+                  max={360}
+                  step={1}
+                  suffix="°"
+                />
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, sm: 6 }}>
+                <Stack gap="xs">
+                  <Text size="sm" fw={500}>
+                    Position
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    Drag the FOV in the visualization to reposition
+                  </Text>
+                  {(fovOffsetX !== 0 || fovOffsetY !== 0) && (
+                    <Button
+                      size="xs"
+                      variant="light"
+                      onClick={() => {
+                        setFovOffsetX(0);
+                        setFovOffsetY(0);
+                      }}
+                    >
+                      Reset Position
+                    </Button>
+                  )}
+                </Stack>
+              </Grid.Col>
+            </Grid>
             {vizData && vizData.panelCount > 1 && (
               <Paper p="sm" mt="md" withBorder bg="dark.6">
                 <Group justify="space-between">
@@ -347,7 +456,14 @@ export default function FOVPlannerPage(): JSX.Element {
               <svg
                 width={vizData.canvasWidth}
                 height={vizData.canvasHeight}
-                style={{ border: '1px solid var(--mantine-color-gray-3)' }}
+                style={{
+                  border: '1px solid var(--mantine-color-gray-3)',
+                  cursor: isDragging ? 'grabbing' : 'grab'
+                }}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
               >
                 {/* Background */}
                 {dssImageUrl ? (
@@ -428,60 +544,62 @@ export default function FOVPlannerPage(): JSX.Element {
                   </>
                 )}
 
-                {/* FOV Panels (Mosaic Grid) */}
-                {vizData.panelsPx.map((panel, index) => (
-                  <g key={index}>
-                    <rect
-                      x={panel.x - vizData.fovWidthPx / 2}
-                      y={panel.y - vizData.fovHeightPx / 2}
-                      width={vizData.fovWidthPx}
-                      height={vizData.fovHeightPx}
-                      fill="none"
-                      stroke="#4dabf7"
-                      strokeWidth="2"
-                      strokeDasharray="5,5"
-                      opacity={vizData.panelCount > 1 ? 0.7 : 1}
-                    />
-                    {/* Panel number */}
-                    {vizData.panelCount > 1 && (
-                      <text
-                        x={panel.x}
-                        y={panel.y}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fill="#4dabf7"
-                        fontSize="14"
-                        fontWeight="bold"
-                      >
-                        {index + 1}
-                      </text>
-                    )}
-                  </g>
-                ))}
+                {/* FOV Panels (Mosaic Grid) - with rotation */}
+                <g transform={`rotate(${rotationDeg}, ${vizData.centerX}, ${vizData.centerY})`}>
+                  {vizData.panelsPx.map((panel, index) => (
+                    <g key={index}>
+                      <rect
+                        x={panel.x - vizData.fovWidthPx / 2}
+                        y={panel.y - vizData.fovHeightPx / 2}
+                        width={vizData.fovWidthPx}
+                        height={vizData.fovHeightPx}
+                        fill="none"
+                        stroke="#4dabf7"
+                        strokeWidth="2"
+                        strokeDasharray="5,5"
+                        opacity={vizData.panelCount > 1 ? 0.7 : 1}
+                      />
+                      {/* Panel number */}
+                      {vizData.panelCount > 1 && (
+                        <text
+                          x={panel.x}
+                          y={panel.y}
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          fill="#4dabf7"
+                          fontSize="14"
+                          fontWeight="bold"
+                        >
+                          {index + 1}
+                        </text>
+                      )}
+                    </g>
+                  ))}
 
-                {/* Center Crosshairs (only for single panel) */}
-                {vizData.panelCount === 1 && (
-                  <>
-                    <line
-                      x1={vizData.centerX - vizData.fovWidthPx / 2}
-                      y1={vizData.centerY}
-                      x2={vizData.centerX + vizData.fovWidthPx / 2}
-                      y2={vizData.centerY}
-                      stroke="#4dabf7"
-                      strokeWidth="1"
-                      opacity="0.5"
-                    />
-                    <line
-                      x1={vizData.centerX}
-                      y1={vizData.centerY - vizData.fovHeightPx / 2}
-                      x2={vizData.centerX}
-                      y2={vizData.centerY + vizData.fovHeightPx / 2}
-                      stroke="#4dabf7"
-                      strokeWidth="1"
-                      opacity="0.5"
-                    />
-                  </>
-                )}
+                  {/* Center Crosshairs (only for single panel) */}
+                  {vizData.panelCount === 1 && (
+                    <>
+                      <line
+                        x1={vizData.centerX + fovOffsetX * vizData.scale - vizData.fovWidthPx / 2}
+                        y1={vizData.centerY + fovOffsetY * vizData.scale}
+                        x2={vizData.centerX + fovOffsetX * vizData.scale + vizData.fovWidthPx / 2}
+                        y2={vizData.centerY + fovOffsetY * vizData.scale}
+                        stroke="#4dabf7"
+                        strokeWidth="1"
+                        opacity="0.5"
+                      />
+                      <line
+                        x1={vizData.centerX + fovOffsetX * vizData.scale}
+                        y1={vizData.centerY + fovOffsetY * vizData.scale - vizData.fovHeightPx / 2}
+                        x2={vizData.centerX + fovOffsetX * vizData.scale}
+                        y2={vizData.centerY + fovOffsetY * vizData.scale + vizData.fovHeightPx / 2}
+                        stroke="#4dabf7"
+                        strokeWidth="1"
+                        opacity="0.5"
+                      />
+                    </>
+                  )}
+                </g>
 
                 {/* Target Label (only show if no DSS image) */}
                 {selectedTarget && !dssImageUrl && vizData.targetWidthPx > 0 && (
