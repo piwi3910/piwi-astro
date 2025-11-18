@@ -1,0 +1,286 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Hashed password
+  name      String?
+
+  // Public profile fields
+  username           String   @unique
+  bio                String?
+  location           String?
+  website            String?
+  profileVisibility  String   @default("PUBLIC") // PUBLIC | PRIVATE
+  avatarUrl          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  telescopes   Telescope[]
+  cameras      Camera[]
+  rigs         Rig[]
+  sessions     Session[]
+  userTargets  UserTarget[]
+  images       ImageUpload[]
+  locations    Location[]
+
+  @@index([username])
+  @@index([email])
+}
+
+model Telescope {
+  id            String  @id @default(uuid())
+  userId        String
+  name          String
+  brand         String?
+  model         String?
+  focalLengthMm Float
+  apertureMm    Float
+  focalRatio    Float?
+  notes         String?
+
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rigs Rig[]
+
+  @@index([userId])
+}
+
+model Camera {
+  id             String @id @default(uuid())
+  userId         String
+  name           String
+  brand          String?
+  model          String?
+  sensorWidthMm  Float
+  sensorHeightMm Float
+  resolutionX    Int
+  resolutionY    Int
+  pixelSizeUm    Float
+  sensorType     String // CMOS, CCD, etc.
+  notes          String?
+
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rigs Rig[]
+
+  @@index([userId])
+}
+
+model Rig {
+  id                 String  @id @default(uuid())
+  userId             String
+  name               String
+  telescopeId        String
+  cameraId           String
+  reducerFactor      Float?  @default(1.0)
+  barlowFactor       Float?  @default(1.0)
+  rotationDegDefault Float?  @default(0.0)
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  telescope      Telescope       @relation(fields: [telescopeId], references: [id], onDelete: Cascade)
+  camera         Camera          @relation(fields: [cameraId], references: [id], onDelete: Cascade)
+  sessionTargets SessionTarget[]
+  images         ImageUpload[]
+
+  @@index([userId])
+  @@index([telescopeId])
+  @@index([cameraId])
+}
+
+model Target {
+  id              String  @id @default(uuid())
+  catalogId       String? @unique // M31, NGC224, etc.
+  name            String
+  type            String  // Galaxy, Nebula, Cluster, Planet, Moon, Comet, etc.
+  subType         String? // Specific subtype (Spiral Galaxy, Reflection Nebula, etc.)
+  raDeg           Float   @default(0) // Right Ascension in degrees (0 for dynamic objects)
+  decDeg          Float   @default(0) // Declination in degrees (0 for dynamic objects)
+  sizeMajorArcmin Float?  // Major axis in arcminutes
+  sizeMinorArcmin Float?  // Minor axis in arcminutes
+  magnitude       Float?
+  surfaceBrightness Float? // Surface brightness in mag/arcsec²
+  constellation   String?
+
+  // Dynamic object support (planets, moon, comets)
+  isDynamic       Boolean @default(false) // true for planets, moon, comets
+  solarSystemBody String? // "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Moon"
+
+  // Comet-specific data
+  cometType       String? // P (Periodic), N (Numbered), C (Long-period), etc.
+  perihelionDate  DateTime? // Date of perihelion passage
+  perihelionMag   Float? // Magnitude at perihelion
+  peakMag         Float? // Peak magnitude
+  peakMagDate     DateTime? // Date of peak magnitude
+  isObserved      Boolean @default(false) // Has observations in COBS
+  cobsId          Int? // COBS database ID
+
+  // Orbital elements (for comets and asteroids)
+  orbitalEpoch    Float? // Epoch in JD
+  eccentricity    Float? // e
+  semiMajorAxis   Float? // a (AU)
+  inclination     Float? // i (degrees)
+  argPerihelion   Float? // ω (degrees) - argument of perihelion
+  longAscNode     Float? // Ω (degrees) - longitude of ascending node
+  meanAnomaly     Float? // M (degrees)
+  perihelionDist  Float? // q (AU)
+  orbitalPeriod   Float? // Period in years
+
+  // Catalog cross-references
+  messierId       String? // M31, M42, etc.
+  ngcId           String? // NGC224, NGC1976, etc.
+  icId            String? // IC434, etc.
+  caldwellId      String? // C14, C55, etc.
+  otherNames      String? // Common names, comma-separated
+
+  // Image URLs (can be generated from DSS or stored)
+  previewImageUrl String? // Small preview image
+  thumbnailUrl    String? // Tiny thumbnail for list views
+
+  // Data source
+  catalogSource   String  @default("MANUAL") // MANUAL, OPENGC, SIMBAD, CALDWELL, SOLAR_SYSTEM, etc.
+  lastUpdated     DateTime @default(now())
+
+  userTargets    UserTarget[]
+  sessionTargets SessionTarget[]
+  images         ImageUpload[]
+
+  @@index([catalogId])
+  @@index([type])
+  @@index([constellation])
+  @@index([messierId])
+  @@index([ngcId])
+  @@index([magnitude])
+}
+
+model UserTarget {
+  id          String    @id @default(uuid())
+  userId      String
+  targetId    String
+  status      String    @default("WISHLIST") // WISHLIST | PLANNED | SHOT | PROCESSED
+  rating      Int?
+  notes       String?
+  firstShotAt DateTime?
+  lastShotAt  DateTime?
+  timesShot   Int       @default(0)
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  target Target @relation(fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetId])
+  @@index([userId])
+  @@index([targetId])
+  @@index([status])
+}
+
+model Session {
+  id               String    @id @default(uuid())
+  userId           String
+  name             String
+  locationName     String?
+  latitude         Float
+  longitude        Float
+  startTime        DateTime
+  endTime          DateTime
+  moonPhasePercent Float?
+  seeingEstimate   String?
+  notes            String?
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionTargets SessionTarget[]
+  images         ImageUpload[]
+
+  @@index([userId])
+  @@index([startTime])
+}
+
+model Location {
+  id           String   @id @default(uuid())
+  userId       String
+  name         String
+  latitude     Float
+  longitude    Float
+  bortleScale  Int?     // 1-9, Bortle Dark-Sky Scale
+  elevation    Float?   // Elevation in meters
+  timezone     String?  // IANA timezone identifier (e.g., "America/New_York")
+  notes        String?
+  isFavorite   Boolean  @default(false)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isFavorite])
+}
+
+model SessionTarget {
+  id        String  @id @default(uuid())
+  sessionId String
+  targetId  String
+  rigId     String?
+  planned   Boolean @default(true)
+  priority  Int     @default(0)
+  duration  Int?
+  notes     String?
+
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  target  Target  @relation(fields: [targetId], references: [id], onDelete: Cascade)
+  rig     Rig?    @relation(fields: [rigId], references: [id], onDelete: SetNull)
+
+  @@unique([sessionId, targetId])
+  @@index([sessionId])
+  @@index([targetId])
+  @@index([rigId])
+}
+
+model ImageUpload {
+  id       String @id @default(uuid())
+  userId   String
+  targetId String
+  sessionId String?
+  rigId     String?
+
+  // Storage
+  storageKey   String
+  url          String
+  thumbnailUrl String?
+
+  // Public/Private
+  visibility  String  @default("PRIVATE") // PUBLIC | PRIVATE | UNLISTED
+  title       String?
+  description String?
+  viewCount   Int     @default(0)
+  featured    Boolean @default(false)
+
+  // EXIF & Capture metadata
+  exposureTimeSec     Float?
+  totalIntegrationMin Float?
+  filter              String?
+  isoGain             String?
+
+  uploadedAt DateTime @default(now())
+  notes      String?
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  target  Target   @relation(fields: [targetId], references: [id], onDelete: Cascade)
+  session Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  rig     Rig?     @relation(fields: [rigId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([targetId])
+  @@index([sessionId])
+  @@index([visibility, uploadedAt])
+  @@index([featured])
+}

@@ -1,9 +1,13 @@
 import '@mantine/core/styles.css';
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+import '@mantine/dates/styles.css';
+import '@mantine/notifications/styles.css';
+import 'leaflet/dist/leaflet.css';
+import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import { Providers } from './providers';
 
 export const metadata = {
-  title: 'AstroPlanner - Astrophotography Planning & Portfolio',
+  title: 'piwi-astro - Astrophotography Planning & Portfolio',
   description: 'Plan your astrophotography sessions and showcase your work',
 };
 
@@ -13,12 +17,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }): JSX.Element {
   return (
-    <html lang="en">
-      <head>
-        <ColorSchemeScript />
-      </head>
-      <body>
-        <MantineProvider>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body suppressHydrationWarning>
+        <MantineProvider forceColorScheme="dark">
+          <Notifications />
           <Providers>{children}</Providers>
         </MantineProvider>
       </body>

@@ -1,0 +1,248 @@
+import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { z } from 'zod';
+import { prisma } from '@/lib/db/prisma';
+import { authOptions } from '@/lib/auth';
+import { uploadFile, getPresignedUrl } from '@/lib/minio';
+
+const uploadImageSchema = z.object({
+  targetId: z.string().uuid(),
+  sessionId: z.string().uuid().optional(),
+  rigId: z.string().uuid().optional(),
+  visibility: z.enum(['PUBLIC', 'PRIVATE', 'UNLISTED']).default('PRIVATE'),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  exposureTime: z.number().optional(),
+  integrationTime: z.number().optional(),
+  filter: z.string().optional(),
+  isoGain: z.string().optional(),
+  notes: z.string().optional(),
+});
+
+export async function GET(request: Request) {
+  const session = await getServerSession(authOptions);
+
+  const { searchParams } = new URL(request.url);
+  const targetId = searchParams.get('targetId');
+  const sessionId = searchParams.get('sessionId');
+  const visibility = searchParams.get('visibility');
+  const userId = searchParams.get('userId');
+  const search = searchParams.get('search');
+  const type = searchParams.get('type');
+  const constellation = searchParams.get('constellation');
+
+  // Build where clause based on filters and auth
+  const where: {
+    targetId?: string;
+    sessionId?: string;
+    visibility?: string;
+    userId?: string;
+    OR?: Array<any>;
+    AND?: Array<any>;
+    target?: {
+      type?: string;
+      constellation?: string;
+    };
+  } = {};
+
+  if (targetId) where.targetId = targetId;
+  if (sessionId) where.sessionId = sessionId;
+  if (visibility) where.visibility = visibility;
+  if (userId) where.userId = userId;
+
+  // Target filters
+  if (type || constellation) {
+    where.target = {};
+    if (type) where.target.type = type;
+    if (constellation) where.target.constellation = constellation;
+  }
+
+  // Search filter (searches title, description, target name, and username)
+  if (search) {
+    where.OR = [
+      { title: { contains: search, mode: 'insensitive' } },
+      { description: { contains: search, mode: 'insensitive' } },
+      { target: { name: { contains: search, mode: 'insensitive' } } },
+      { user: { name: { contains: search, mode: 'insensitive' } } },
+      { user: { username: { contains: search, mode: 'insensitive' } } },
+    ];
+  }
+
+  // If not authenticated, only show public images
+  if (!session?.user) {
+    where.visibility = 'PUBLIC';
+  } else {
+    // If authenticated but no specific filters, show user's images + public images
+    if (!userId && !targetId && !sessionId && !visibility) {
+      // If we have a search query, combine it with auth filter
+      if (search) {
+        where.AND = [
+          {
+            OR: [
+              { userId: (session.user as { id: string }).id },
+              { visibility: 'PUBLIC' },
+            ],
+          },
+          {
+            OR: where.OR, // search conditions
+          },
+        ];
+        delete where.OR; // Remove OR from top level since it's in AND now
+      } else {
+        where.OR = [
+          { userId: (session.user as { id: string }).id },
+          { visibility: 'PUBLIC' },
+        ];
+      }
+    }
+  }
+
+  const images = await prisma.imageUpload.findMany({
+    where,
+    include: {
+      target: true,
+      session: true,
+      rig: {
+        include: {
+          telescope: true,
+          camera: true,
+        },
+      },
+      user: {
+        select: {
+          id: true,
+          username: true,
+          name: true,
+        },
+      },
+    },
+    orderBy: {
+      uploadedAt: 'desc',
+    },
+  });
+
+  // Generate presigned URLs for private images
+  const imagesWithUrls = await Promise.all(
+    images.map(async (image) => {
+      const url =
+        image.visibility === 'PUBLIC'
+          ? `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET_NAME || 'astroplanner-images'}/${image.storageKey}`
+          : await getPresignedUrl(image.storageKey);
+
+      return {
+        ...image,
+        url,
+      };
+    })
+  );
+
+  return NextResponse.json(imagesWithUrls);
+}
+
+export async function POST(request: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const formData = await request.formData();
+    const file = formData.get('file') as File;
+
+    if (!file) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    }
+
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/tiff', 'image/fits'];
+    if (!validTypes.includes(file.type) && !file.name.toLowerCase().endsWith('.fits')) {
+      return NextResponse.json({ error: 'Invalid file type' }, { status: 400 });
+    }
+
+    // Validate file size (max 100MB)
+    const maxSize = 100 * 1024 * 1024;
+    if (file.size > maxSize) {
+      return NextResponse.json({ error: 'File too large (max 100MB)' }, { status: 400 });
+    }
+
+    // Extract metadata from form data
+    const metadata = {
+      targetId: formData.get('targetId') as string,
+      sessionId: formData.get('sessionId') as string | undefined,
+      rigId: formData.get('rigId') as string | undefined,
+      visibility: formData.get('visibility') as string | undefined,
+      title: formData.get('title') as string | undefined,
+      description: formData.get('description') as string | undefined,
+      exposureTime: formData.get('exposureTime')
+        ? parseFloat(formData.get('exposureTime') as string)
+        : undefined,
+      exposureCount: formData.get('exposureCount')
+        ? parseInt(formData.get('exposureCount') as string)
+        : undefined,
+      iso: formData.get('iso') ? parseInt(formData.get('iso') as string) : undefined,
+      focalLength: formData.get('focalLength')
+        ? parseFloat(formData.get('focalLength') as string)
+        : undefined,
+      aperture: formData.get('aperture')
+        ? parseFloat(formData.get('aperture') as string)
+        : undefined,
+    };
+
+    const data = uploadImageSchema.parse(metadata);
+
+    // Convert file to buffer
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Upload to MinIO
+    const storageKey = await uploadFile(
+      buffer,
+      file.name,
+      file.type || 'application/octet-stream',
+      data.visibility === 'PUBLIC'
+    );
+
+    const url =
+      data.visibility === 'PUBLIC'
+        ? `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET_NAME || 'astroplanner-images'}/${storageKey}`
+        : await getPresignedUrl(storageKey);
+
+    // Save to database
+    const imageUpload = await prisma.imageUpload.create({
+      data: {
+        userId: (session.user as { id: string }).id,
+        targetId: data.targetId,
+        sessionId: data.sessionId || null,
+        rigId: data.rigId || null,
+        storageKey,
+        url,
+        visibility: data.visibility || 'PRIVATE',
+        title: data.title || null,
+        description: data.description || null,
+        exposureTimeSec: data.exposureTime || null,
+        totalIntegrationMin: data.integrationTime || null,
+        filter: data.filter || null,
+        isoGain: data.isoGain || null,
+        notes: data.notes || null,
+      },
+      include: {
+        target: true,
+        session: true,
+        rig: {
+          include: {
+            telescope: true,
+            camera: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(imageUpload, { status: 201 });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.errors }, { status: 400 });
+    }
+    console.error('Error uploading image:', error);
+    throw error;
+  }
+}

@@ -11,6 +11,30 @@ AstroPlanner is a dual-purpose web application for astrophotographers:
 
 This dual nature (private tools + public showcase) is central to the architecture and must be reflected in the data model, routing, and privacy controls.
 
+## Claude Code Workflow
+
+**IMPORTANT: Parallel Agent Delegation**
+
+For all tasks and jobs in this project, Claude Code should delegate work to specialized agents running in parallel whenever possible. This includes:
+
+- **Feature Implementation**: Use multiple agents (frontend, backend, testing) simultaneously
+- **Bug Fixes**: Parallel investigation and resolution across affected components
+- **Refactoring**: Coordinate multiple agents to refactor related code in parallel
+- **Testing**: Run test creation, implementation, and verification concurrently
+- **Documentation**: Update docs in parallel with code changes
+
+**Benefits of Parallel Execution**:
+- Faster completion of complex tasks
+- Better separation of concerns (each agent focuses on their specialty)
+- More efficient use of development time
+- Comprehensive coverage across all aspects (code, tests, docs, security)
+
+**How to Apply**:
+- When receiving a task, immediately identify which specialized agents can work in parallel
+- Launch multiple agents in a single message using multiple Task tool calls
+- Only run agents sequentially when there are hard dependencies between tasks
+- Default to parallel execution unless sequential work is explicitly required
+
 ## Tech Stack
 
 ### Frontend

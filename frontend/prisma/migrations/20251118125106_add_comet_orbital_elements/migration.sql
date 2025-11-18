@@ -1,0 +1,17 @@
+-- AlterTable
+ALTER TABLE "Target" ADD COLUMN     "argPerihelion" DOUBLE PRECISION,
+ADD COLUMN     "cobsId" INTEGER,
+ADD COLUMN     "cometType" TEXT,
+ADD COLUMN     "eccentricity" DOUBLE PRECISION,
+ADD COLUMN     "inclination" DOUBLE PRECISION,
+ADD COLUMN     "isObserved" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "longAscNode" DOUBLE PRECISION,
+ADD COLUMN     "meanAnomaly" DOUBLE PRECISION,
+ADD COLUMN     "orbitalEpoch" DOUBLE PRECISION,
+ADD COLUMN     "orbitalPeriod" DOUBLE PRECISION,
+ADD COLUMN     "peakMag" DOUBLE PRECISION,
+ADD COLUMN     "peakMagDate" TIMESTAMP(3),
+ADD COLUMN     "perihelionDate" TIMESTAMP(3),
+ADD COLUMN     "perihelionDist" DOUBLE PRECISION,
+ADD COLUMN     "perihelionMag" DOUBLE PRECISION,
+ADD COLUMN     "semiMajorAxis" DOUBLE PRECISION;

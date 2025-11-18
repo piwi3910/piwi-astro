@@ -179,15 +179,15 @@ export function RigsTab(): JSX.Element {
                     </Text>
                     <Stack gap={4}>
                       <Text size="sm">
-                        <strong>Width:</strong> {rig.fov.fovWidthArcmin.toFixed(2)}′
-                        ({(rig.fov.fovWidthArcmin / 60).toFixed(2)}°)
+                        <strong>Width:</strong> {rig.fovWidthArcmin.toFixed(2)}′
+                        ({(rig.fovWidthArcmin / 60).toFixed(2)}°)
                       </Text>
                       <Text size="sm">
-                        <strong>Height:</strong> {rig.fov.fovHeightArcmin.toFixed(2)}′
-                        ({(rig.fov.fovHeightArcmin / 60).toFixed(2)}°)
+                        <strong>Height:</strong> {rig.fovHeightArcmin.toFixed(2)}′
+                        ({(rig.fovHeightArcmin / 60).toFixed(2)}°)
                       </Text>
                       <Text size="sm">
-                        <strong>Pixel Scale:</strong> {rig.fov.pixelScaleArcsecPerPixel.toFixed(2)}
+                        <strong>Pixel Scale:</strong> {rig.pixelScale.toFixed(2)}
                         ″/px
                       </Text>
                     </Stack>

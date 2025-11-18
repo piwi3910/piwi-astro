@@ -4,27 +4,16 @@
   "private": true,
   "description": "Astrophotography planning and portfolio platform",
   "scripts": {
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:backend": "npm run dev --workspace=backend",
-    "dev:frontend": "npm run dev --workspace=frontend",
-    "build": "npm run build:backend && npm run build:frontend",
-    "build:backend": "npm run build --workspace=backend",
-    "build:frontend": "npm run build --workspace=frontend",
-    "lint": "npm run lint:backend && npm run lint:frontend",
-    "lint:backend": "npm run lint --workspace=backend",
-    "lint:frontend": "npm run lint --workspace=frontend",
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm start",
+    "lint": "cd frontend && npm run lint",
+    "type-check": "cd frontend && npm run type-check",
+    "prisma:generate": "cd frontend && npm run prisma:generate",
+    "prisma:migrate": "cd frontend && npm run prisma:migrate",
+    "prisma:studio": "cd frontend && npm run prisma:studio",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
-    "docker:logs": "docker-compose logs -f",
-    "prisma:studio": "npm exec --workspace=backend -- prisma studio",
-    "prisma:migrate": "npm exec --workspace=backend -- prisma migrate dev",
-    "prisma:generate": "npm exec --workspace=backend -- prisma generate"
-  },
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
-  "devDependencies": {
-    "concurrently": "^8.2.2"
+    "docker:logs": "docker-compose logs -f"
   }
 }

@@ -1,0 +1,46 @@
+import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+
+/**
+ * Authentication utility for API routes
+ * Per Next.js 16 security recommendations, authentication is handled at the data access layer
+ */
+
+export async function requireAuth() {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user?.email) {
+    return {
+      authenticated: false,
+      session: null,
+      error: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
+    };
+  }
+
+  return {
+    authenticated: true,
+    session,
+    error: null,
+  };
+}
+
+export async function getUserId(): Promise<{ userId: string | null; error: NextResponse | null }> {
+  const { authenticated, session, error } = await requireAuth();
+
+  if (!authenticated || !session) {
+    return { userId: null, error };
+  }
+
+  // Extract userId from session (assuming it's stored in session.user.id)
+  const userId = (session.user as any).id;
+
+  if (!userId) {
+    return {
+      userId: null,
+      error: NextResponse.json({ error: 'User ID not found in session' }, { status: 500 }),
+    };
+  }
+
+  return { userId, error: null };
+}
