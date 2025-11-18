@@ -16,6 +16,7 @@ import {
   Card,
   Badge,
   Grid,
+  Box,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconPlus, IconEdit, IconTrash, IconRocket } from '@tabler/icons-react';
@@ -28,6 +29,7 @@ import {
   useCameras,
 } from '@/hooks/useGear';
 import type { Rig, CreateRigInput } from '@/types';
+import { PixelScaleGauge } from './PixelScaleGauge';
 
 export function RigsTab(): JSX.Element {
   const [opened, setOpened] = useState(false);
@@ -174,23 +176,28 @@ export function RigsTab(): JSX.Element {
                   )}
 
                   <Card mt="md" padding="sm" bg="dark.6" radius="sm">
-                    <Text size="sm" fw={500} mb="xs" c="dimmed">
-                      Field of View
-                    </Text>
-                    <Stack gap={4}>
-                      <Text size="sm">
-                        <strong>Width:</strong> {rig.fovWidthArcmin.toFixed(2)}′
-                        ({(rig.fovWidthArcmin / 60).toFixed(2)}°)
-                      </Text>
-                      <Text size="sm">
-                        <strong>Height:</strong> {rig.fovHeightArcmin.toFixed(2)}′
-                        ({(rig.fovHeightArcmin / 60).toFixed(2)}°)
-                      </Text>
-                      <Text size="sm">
-                        <strong>Pixel Scale:</strong> {rig.pixelScale.toFixed(2)}
-                        ″/px
-                      </Text>
-                    </Stack>
+                    <Group align="flex-start" gap="md">
+                      <Box style={{ flex: 1 }}>
+                        <Text size="sm" fw={500} mb="xs" c="dimmed">
+                          Field of View
+                        </Text>
+                        <Stack gap={4}>
+                          <Text size="sm">
+                            <strong>Width:</strong> {rig.fovWidthArcmin.toFixed(2)}′
+                            ({(rig.fovWidthArcmin / 60).toFixed(2)}°)
+                          </Text>
+                          <Text size="sm">
+                            <strong>Height:</strong> {rig.fovHeightArcmin.toFixed(2)}′
+                            ({(rig.fovHeightArcmin / 60).toFixed(2)}°)
+                          </Text>
+                          <Text size="sm">
+                            <strong>Pixel Scale:</strong> {rig.pixelScale.toFixed(2)}
+                            ″/px
+                          </Text>
+                        </Stack>
+                      </Box>
+                      <PixelScaleGauge pixelScale={rig.pixelScale} />
+                    </Group>
                   </Card>
                 </Stack>
               </Card>
