@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type {
   Telescope,
+  TelescopeCatalog,
   Camera,
   Rig,
   CreateTelescopeInput,
@@ -8,6 +9,15 @@ import type {
   CreateRigInput,
 } from '@/types';
 import * as gearApi from '@/lib/api/gear';
+
+// Telescope Catalog
+export function useTelescopeCatalog(search: string = '', limit: number = 20, offset: number = 0) {
+  return useQuery<{ telescopes: TelescopeCatalog[]; total: number; hasMore: boolean }>({
+    queryKey: ['telescope-catalog', search, limit, offset],
+    queryFn: () => gearApi.searchTelescopeCatalog(search, limit, offset),
+    staleTime: 5 * 60 * 1000, // 5 minutes - catalog doesn't change often
+  });
+}
 
 // Telescopes
 export function useTelescopes() {

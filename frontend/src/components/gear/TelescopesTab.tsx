@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Stack,
   Button,
@@ -13,29 +13,39 @@ import {
   Textarea,
   ActionIcon,
   Alert,
+  Divider,
+  Loader,
+  ScrollArea,
+  Badge,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconPlus, IconEdit, IconTrash, IconTelescope } from '@tabler/icons-react';
+import { useDebouncedValue } from '@mantine/hooks';
+import { IconPlus, IconEdit, IconTrash, IconTelescope, IconSearch } from '@tabler/icons-react';
 import {
   useTelescopes,
+  useTelescopeCatalog,
   useCreateTelescope,
   useUpdateTelescope,
   useDeleteTelescope,
 } from '@/hooks/useGear';
-import type { Telescope, CreateTelescopeInput } from '@/types';
+import type { Telescope, CreateTelescopeInput, TelescopeCatalog } from '@/types';
 
 export function TelescopesTab(): JSX.Element {
   const [opened, setOpened] = useState(false);
   const [editingTelescope, setEditingTelescope] = useState<Telescope | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [catalogSearch, setCatalogSearch] = useState('');
+  const [debouncedSearch] = useDebouncedValue(catalogSearch, 300);
 
   const { data: telescopes, isLoading } = useTelescopes();
+  const { data: catalogData, isLoading: isCatalogLoading } = useTelescopeCatalog(debouncedSearch, 50);
   const createMutation = useCreateTelescope();
   const updateMutation = useUpdateTelescope();
   const deleteMutation = useDeleteTelescope();
 
   const form = useForm<CreateTelescopeInput>({
     initialValues: {
+      catalogId: undefined,
       name: '',
       brand: '',
       model: '',
@@ -50,6 +60,8 @@ export function TelescopesTab(): JSX.Element {
       apertureMm: (value) => (value <= 0 ? 'Aperture must be positive' : null),
     },
   });
+
+  const catalogTelescopes = useMemo(() => catalogData?.telescopes || [], [catalogData]);
 
   const handleSubmit = async (values: CreateTelescopeInput): Promise<void> => {
     try {
@@ -92,7 +104,21 @@ export function TelescopesTab(): JSX.Element {
   const handleClose = (): void => {
     setOpened(false);
     setEditingTelescope(null);
+    setCatalogSearch('');
     form.reset();
+  };
+
+  const handleSelectFromCatalog = (catalogTelescope: TelescopeCatalog): void => {
+    form.setValues({
+      catalogId: catalogTelescope.id,
+      name: `${catalogTelescope.brand} ${catalogTelescope.model}`,
+      brand: catalogTelescope.brand,
+      model: catalogTelescope.model,
+      focalLengthMm: catalogTelescope.focalLengthMm,
+      apertureMm: catalogTelescope.apertureMm,
+      focalRatio: catalogTelescope.focalRatio,
+      notes: form.values.notes || '',
+    });
   };
 
   if (isLoading) {
@@ -171,64 +197,134 @@ export function TelescopesTab(): JSX.Element {
         opened={opened}
         onClose={handleClose}
         title={editingTelescope ? 'Edit Telescope' : 'Add Telescope'}
-        size="md"
+        size="lg"
       >
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack gap="md">
-            <TextInput
-              label="Name"
-              placeholder="My Telescope"
-              required
-              {...form.getInputProps('name')}
-            />
+        <Stack gap="md">
+          {!editingTelescope && (
+            <>
+              <Stack gap="xs">
+                <Text size="sm" fw={500}>
+                  Select from Catalog
+                </Text>
+                <TextInput
+                  placeholder="Search by brand or model..."
+                  leftSection={<IconSearch size={16} />}
+                  value={catalogSearch}
+                  onChange={(e) => setCatalogSearch(e.currentTarget.value)}
+                />
+                <ScrollArea h={200} type="auto">
+                  {isCatalogLoading ? (
+                    <Group justify="center" p="md">
+                      <Loader size="sm" />
+                    </Group>
+                  ) : catalogTelescopes.length > 0 ? (
+                    <Stack gap={4}>
+                      {catalogTelescopes.map((telescope) => (
+                        <Button
+                          key={telescope.id}
+                          variant="subtle"
+                          onClick={() => handleSelectFromCatalog(telescope)}
+                          styles={{
+                            root: {
+                              height: 'auto',
+                              padding: '8px 12px',
+                            },
+                            label: {
+                              display: 'block',
+                              textAlign: 'left',
+                              whiteSpace: 'normal',
+                            },
+                          }}
+                        >
+                          <Group justify="space-between" w="100%" wrap="nowrap">
+                            <Stack gap={0}>
+                              <Text size="sm" fw={500}>
+                                {telescope.brand} {telescope.model}
+                              </Text>
+                              <Text size="xs" c="dimmed">
+                                {telescope.apertureMm}mm f/{telescope.focalRatio.toFixed(1)}
+                              </Text>
+                            </Stack>
+                            <Badge size="sm" variant="light">
+                              {telescope.focalLengthMm}mm
+                            </Badge>
+                          </Group>
+                        </Button>
+                      ))}
+                    </Stack>
+                  ) : catalogSearch ? (
+                    <Text size="sm" c="dimmed" ta="center" p="md">
+                      No telescopes found matching &quot;{catalogSearch}&quot;
+                    </Text>
+                  ) : (
+                    <Text size="sm" c="dimmed" ta="center" p="md">
+                      Search for a telescope to get started
+                    </Text>
+                  )}
+                </ScrollArea>
+              </Stack>
 
-            <Group grow>
-              <TextInput label="Brand" placeholder="Celestron" {...form.getInputProps('brand')} />
-              <TextInput label="Model" placeholder="C8" {...form.getInputProps('model')} />
-            </Group>
+              <Divider label="Or enter custom telescope details" labelPosition="center" />
+            </>
+          )}
 
-            <Group grow>
-              <NumberInput
-                label="Focal Length (mm)"
-                placeholder="2000"
-                min={1}
+          <form onSubmit={form.onSubmit(handleSubmit)}>
+            <Stack gap="md">
+              <TextInput
+                label="Name"
+                placeholder="My Telescope"
                 required
-                {...form.getInputProps('focalLengthMm')}
+                {...form.getInputProps('name')}
               />
+
+              <Group grow>
+                <TextInput label="Brand" placeholder="Celestron" {...form.getInputProps('brand')} />
+                <TextInput label="Model" placeholder="C8" {...form.getInputProps('model')} />
+              </Group>
+
+              <Group grow>
+                <NumberInput
+                  label="Focal Length (mm)"
+                  placeholder="2000"
+                  min={1}
+                  required
+                  {...form.getInputProps('focalLengthMm')}
+                />
+                <NumberInput
+                  label="Aperture (mm)"
+                  placeholder="203"
+                  min={1}
+                  required
+                  {...form.getInputProps('apertureMm')}
+                />
+              </Group>
+
               <NumberInput
-                label="Aperture (mm)"
-                placeholder="203"
-                min={1}
-                required
-                {...form.getInputProps('apertureMm')}
+                label="F-Ratio (optional)"
+                placeholder="Auto-calculated if not provided"
+                min={0.1}
+                step={0.1}
+                decimalScale={2}
+                {...form.getInputProps('focalRatio')}
               />
-            </Group>
 
-            <NumberInput
-              label="F-Ratio (optional)"
-              placeholder="Auto-calculated if not provided"
-              min={0.1}
-              step={0.1}
-              decimalScale={2}
-              {...form.getInputProps('focalRatio')}
-            />
+              <Textarea
+                label="Notes"
+                placeholder="Additional information..."
+                {...form.getInputProps('notes')}
+              />
 
-            <Textarea
-              label="Notes"
-              placeholder="Additional information..."
-              {...form.getInputProps('notes')}
-            />
-
-            <Group justify="flex-end">
-              <Button variant="subtle" onClick={handleClose}>
-                Cancel
-              </Button>
-              <Button type="submit" loading={createMutation.isPending || updateMutation.isPending}>
-                {editingTelescope ? 'Update' : 'Create'}
-              </Button>
-            </Group>
-          </Stack>
-        </form>
+              <Group justify="flex-end">
+                <Button variant="subtle" onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button type="submit" loading={createMutation.isPending || updateMutation.isPending}>
+                  {editingTelescope ? 'Update' : 'Create'}
+                </Button>
+              </Group>
+            </Stack>
+          </form>
+        </Stack>
       </Modal>
 
       {/* Delete Confirmation Modal */}

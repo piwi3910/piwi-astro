@@ -40,9 +40,31 @@ model User {
   @@index([email])
 }
 
+model TelescopeCatalog {
+  id            String  @id @default(uuid())
+  brand         String
+  model         String
+  apertureMm    Float
+  focalLengthMm Float
+  focalRatio    Float
+  externalId    String? // Original ID from external source
+  isActive      Boolean @default(true) // For soft deletion
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  telescopes    Telescope[]
+
+  @@unique([brand, model, apertureMm, focalLengthMm])
+  @@index([brand])
+  @@index([model])
+  @@index([isActive])
+}
+
 model Telescope {
   id            String  @id @default(uuid())
   userId        String
+  catalogId     String? // Reference to pre-populated catalog
   name          String
   brand         String?
   model         String?
@@ -51,10 +73,12 @@ model Telescope {
   focalRatio    Float?
   notes         String?
 
-  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  rigs Rig[]
+  user    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  catalog TelescopeCatalog? @relation(fields: [catalogId], references: [id], onDelete: SetNull)
+  rigs    Rig[]
 
   @@index([userId])
+  @@index([catalogId])
 }
 
 model Camera {

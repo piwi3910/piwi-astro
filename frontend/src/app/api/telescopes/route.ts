@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db/prisma';
 import { authOptions } from '@/lib/auth';
 
 const telescopeSchema = z.object({
+  catalogId: z.string().uuid().optional(),
   name: z.string().min(1).max(100),
   brand: z.string().max(100).optional(),
   model: z.string().max(100).optional(),

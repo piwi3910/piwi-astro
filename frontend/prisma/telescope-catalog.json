@@ -1,0 +1,7386 @@
+[
+  {
+    "brand": "Acuter",
+    "model": "Maksy 60 Educational Discovery",
+    "apertureMm": 60,
+    "focalLengthMm": 750,
+    "focalRatio": 12.5,
+    "externalId": "29261"
+  },
+  {
+    "brand": "Acuter",
+    "model": "MaksyGo 60 Educational",
+    "apertureMm": 60,
+    "focalLengthMm": 750,
+    "focalRatio": 12.5,
+    "externalId": "20002"
+  },
+  {
+    "brand": "Acuter",
+    "model": "Newtony 50 (DIY)",
+    "apertureMm": 50,
+    "focalLengthMm": 200,
+    "focalRatio": 4,
+    "externalId": "22424"
+  },
+  {
+    "brand": "Acuter",
+    "model": "Solaris 80 White Light Solar",
+    "apertureMm": 80,
+    "focalLengthMm": 400,
+    "focalRatio": 5,
+    "externalId": "27589"
+  },
+  {
+    "brand": "Acuter",
+    "model": "Voyager Mak80",
+    "apertureMm": 80,
+    "focalLengthMm": 800,
+    "focalRatio": 10,
+    "externalId": "20856"
+  },
+  {
+    "brand": "AG Optical",
+    "model": "Convergent 10&quot; f5",
+    "apertureMm": 254,
+    "focalLengthMm": 1270,
+    "focalRatio": 5,
+    "externalId": "2573"
+  },
+  {
+    "brand": "AG Optical",
+    "model": "iDK 10&quot; f6.7",
+    "apertureMm": 254,
+    "focalLengthMm": 1702,
+    "focalRatio": 6.7,
+    "externalId": "597"
+  },
+  {
+    "brand": "AG Optical",
+    "model": "iDK 12.5&quot; f5",
+    "apertureMm": 317.5,
+    "focalLengthMm": 1570,
+    "focalRatio": 4.94,
+    "externalId": "3145"
+  },
+  {
+    "brand": "AG Optical",
+    "model": "iDK 12.5&quot; f6.8",
+    "apertureMm": 312,
+    "focalLengthMm": 2120,
+    "focalRatio": 6.79,
+    "externalId": "1034"
+  },
+  {
+    "brand": "AG Optical",
+    "model": "iDK 14.5 f5",
+    "apertureMm": 368.3,
+    "focalLengthMm": 1841,
+    "focalRatio": 5,
+    "externalId": "3144"
+  },
+  {
+    "brand": "AG Optical",
+    "model": "iDK 14.5&quot; f6.7",
+    "apertureMm": 368,
+    "focalLengthMm": 2464,
+    "focalRatio": 6.7,
+    "externalId": "4737"
+  },
+  {
+    "brand": "AG Optical",
+    "model": "iDK 17&quot; f6.7",
+    "apertureMm": 431.8,
+    "focalLengthMm": 2895.6,
+    "focalRatio": 6.71,
+    "externalId": "399"
+  },
+  {
+    "brand": "AG Optical",
+    "model": "iDK 18&quot; f6.7",
+    "apertureMm": 457.2,
+    "focalLengthMm": 3063.24,
+    "focalRatio": 6.7,
+    "externalId": "3795"
+  },
+  {
+    "brand": "Agena Astro",
+    "model": "StarGuider II 50mm Finder",
+    "apertureMm": 50,
+    "focalLengthMm": 162,
+    "focalRatio": 3.24,
+    "externalId": "3684"
+  },
+  {
+    "brand": "Airdrie Observatory",
+    "model": "Victorian Refractor",
+    "apertureMm": 150,
+    "focalLengthMm": 2250,
+    "focalRatio": 15,
+    "externalId": "3697"
+  },
+  {
+    "brand": "Altair",
+    "model": "60 EDF",
+    "apertureMm": 60,
+    "focalLengthMm": 350,
+    "focalRatio": 5.83,
+    "externalId": "2199"
+  },
+  {
+    "brand": "Altair",
+    "model": "60mm Mini Guider",
+    "apertureMm": 60,
+    "focalLengthMm": 225,
+    "focalRatio": 3.75,
+    "externalId": "90"
+  },
+  {
+    "brand": "Altair",
+    "model": "72 EDF",
+    "apertureMm": 72,
+    "focalLengthMm": 432,
+    "focalRatio": 6,
+    "externalId": "4889"
+  },
+  {
+    "brand": "Altair",
+    "model": "80mm Finder",
+    "apertureMm": 80,
+    "focalLengthMm": 328,
+    "focalRatio": 4.1,
+    "externalId": "457"
+  },
+  {
+    "brand": "Altair",
+    "model": "F4 Newtonian Astrograph",
+    "apertureMm": 254,
+    "focalLengthMm": 1016,
+    "focalRatio": 4,
+    "externalId": "1426"
+  },
+  {
+    "brand": "Altair",
+    "model": "Lightwave 60",
+    "apertureMm": 60,
+    "focalLengthMm": 420,
+    "focalRatio": 7,
+    "externalId": "167"
+  },
+  {
+    "brand": "Altair",
+    "model": "Lightwave 66 ED",
+    "apertureMm": 66,
+    "focalLengthMm": 400,
+    "focalRatio": 6.06,
+    "externalId": "353"
+  },
+  {
+    "brand": "Altair",
+    "model": "Lightwave 72 ED-R",
+    "apertureMm": 72,
+    "focalLengthMm": 432,
+    "focalRatio": 6,
+    "externalId": "251"
+  },
+  {
+    "brand": "Altair",
+    "model": "Lightwave 80 ED",
+    "apertureMm": 80,
+    "focalLengthMm": 500,
+    "focalRatio": 6.25,
+    "externalId": "2356"
+  },
+  {
+    "brand": "Altair",
+    "model": "RC-300 TT V3",
+    "apertureMm": 300,
+    "focalLengthMm": 2432,
+    "focalRatio": 8.11,
+    "externalId": "1287"
+  },
+  {
+    "brand": "Altair",
+    "model": "RC250TT",
+    "apertureMm": 250,
+    "focalLengthMm": 2000,
+    "focalRatio": 8,
+    "externalId": "169"
+  },
+  {
+    "brand": "Altair",
+    "model": "RC250TT",
+    "apertureMm": 250,
+    "focalLengthMm": 2000,
+    "focalRatio": 8,
+    "externalId": "660"
+  },
+  {
+    "brand": "Altair",
+    "model": "Starwave 110",
+    "apertureMm": 110,
+    "focalLengthMm": 770,
+    "focalRatio": 7,
+    "externalId": "1181"
+  },
+  {
+    "brand": "Altair",
+    "model": "Starwave 152 f5.9",
+    "apertureMm": 152,
+    "focalLengthMm": 896.8,
+    "focalRatio": 5.9,
+    "externalId": "2066"
+  },
+  {
+    "brand": "Altair",
+    "model": "Starwave 152 V3 &quot;Red Tube&quot; Achromat",
+    "apertureMm": 152,
+    "focalLengthMm": 900,
+    "focalRatio": 5.92,
+    "externalId": "2370"
+  },
+  {
+    "brand": "Altair",
+    "model": "Starwave 50mm Finder",
+    "apertureMm": 50,
+    "focalLengthMm": 206.6,
+    "focalRatio": 4.13,
+    "externalId": "2857"
+  },
+  {
+    "brand": "Altair",
+    "model": "Starwave 70 EDQ-R",
+    "apertureMm": 70,
+    "focalLengthMm": 350,
+    "focalRatio": 5,
+    "externalId": "2608"
+  },
+  {
+    "brand": "Altair",
+    "model": "Starwave 70ED",
+    "apertureMm": 70,
+    "focalLengthMm": 420,
+    "focalRatio": 6,
+    "externalId": "2379"
+  },
+  {
+    "brand": "Altair",
+    "model": "Starwave 80 ED",
+    "apertureMm": 80,
+    "focalLengthMm": 555,
+    "focalRatio": 6.94,
+    "externalId": "2353"
+  },
+  {
+    "brand": "Altair",
+    "model": "Starwave ASCENT 80ED F7",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "17573"
+  },
+  {
+    "brand": "Altair",
+    "model": "Wave 102 F7 ED Triplet",
+    "apertureMm": 102,
+    "focalLengthMm": 715,
+    "focalRatio": 7.01,
+    "externalId": "267"
+  },
+  {
+    "brand": "Altair",
+    "model": "Wave 115 ED",
+    "apertureMm": 115,
+    "focalLengthMm": 805,
+    "focalRatio": 7,
+    "externalId": "173"
+  },
+  {
+    "brand": "Altair",
+    "model": "Wave 125 EDF",
+    "apertureMm": 125,
+    "focalLengthMm": 975,
+    "focalRatio": 7.8,
+    "externalId": "7753"
+  },
+  {
+    "brand": "Altair",
+    "model": "Wave 130 EDT",
+    "apertureMm": 130,
+    "focalLengthMm": 905,
+    "focalRatio": 6.96,
+    "externalId": "535"
+  },
+  {
+    "brand": "Altair",
+    "model": "Wave 80",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "2929"
+  },
+  {
+    "brand": "Altair",
+    "model": "Wave 80EDT",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "6137"
+  },
+  {
+    "brand": "Apertura",
+    "model": "AD10 10&quot; Dobsonian",
+    "apertureMm": 254,
+    "focalLengthMm": 1250,
+    "focalRatio": 4.92,
+    "externalId": "5144"
+  },
+  {
+    "brand": "Apertura",
+    "model": "AD12 12&quot; Dobsonian",
+    "apertureMm": 305,
+    "focalLengthMm": 1520,
+    "focalRatio": 4.98,
+    "externalId": "5340"
+  },
+  {
+    "brand": "Apertura",
+    "model": "AD8 8&quot; Dobsonian",
+    "apertureMm": 203.2,
+    "focalLengthMm": 1200,
+    "focalRatio": 5.91,
+    "externalId": "5675"
+  },
+  {
+    "brand": "Apertura",
+    "model": "CarbonStar 150",
+    "apertureMm": 150,
+    "focalLengthMm": 600,
+    "focalRatio": 4,
+    "externalId": "33199"
+  },
+  {
+    "brand": "APM",
+    "model": "100 ED Doublet 45-Degree Binocular",
+    "apertureMm": 100,
+    "focalLengthMm": 550,
+    "focalRatio": 5.5,
+    "externalId": "2464"
+  },
+  {
+    "brand": "APM",
+    "model": "100 f5.5 Semi-Apo (gray)",
+    "apertureMm": 100,
+    "focalLengthMm": 550,
+    "focalRatio": 5.5,
+    "externalId": "2318"
+  },
+  {
+    "brand": "APM",
+    "model": "107/700",
+    "apertureMm": 107,
+    "focalLengthMm": 700,
+    "focalRatio": 6.54,
+    "externalId": "206"
+  },
+  {
+    "brand": "APM",
+    "model": "120 APO Binocular",
+    "apertureMm": 120,
+    "focalLengthMm": 660,
+    "focalRatio": 5.5,
+    "externalId": "785"
+  },
+  {
+    "brand": "APM",
+    "model": "123/738",
+    "apertureMm": 123,
+    "focalLengthMm": 738,
+    "focalRatio": 6,
+    "externalId": "1063"
+  },
+  {
+    "brand": "APM",
+    "model": "140 ED Doublet APO",
+    "apertureMm": 140,
+    "focalLengthMm": 980,
+    "focalRatio": 7,
+    "externalId": "1156"
+  },
+  {
+    "brand": "APM",
+    "model": "140/980",
+    "apertureMm": 140,
+    "focalLengthMm": 980,
+    "focalRatio": 7,
+    "externalId": "3955"
+  },
+  {
+    "brand": "APM",
+    "model": "152/1200",
+    "apertureMm": 152,
+    "focalLengthMm": 1200,
+    "focalRatio": 7.89,
+    "externalId": "442"
+  },
+  {
+    "brand": "APM",
+    "model": "203/1800",
+    "apertureMm": 203,
+    "focalLengthMm": 1800,
+    "focalRatio": 8.87,
+    "externalId": "1036"
+  },
+  {
+    "brand": "APM",
+    "model": "304/3600",
+    "apertureMm": 304,
+    "focalLengthMm": 3600,
+    "focalRatio": 11.84,
+    "externalId": "1037"
+  },
+  {
+    "brand": "APM",
+    "model": "80/480",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "229"
+  },
+  {
+    "brand": "APM",
+    "model": "LZOS 115 f7",
+    "apertureMm": 115,
+    "focalLengthMm": 805,
+    "focalRatio": 7,
+    "externalId": "797"
+  },
+  {
+    "brand": "APM",
+    "model": "LZOS 130/780",
+    "apertureMm": 130,
+    "focalLengthMm": 780,
+    "focalRatio": 6,
+    "externalId": "4702"
+  },
+  {
+    "brand": "APM",
+    "model": "LZOS 130/780",
+    "apertureMm": 130,
+    "focalLengthMm": 780,
+    "focalRatio": 6,
+    "externalId": "4598"
+  },
+  {
+    "brand": "APM",
+    "model": "LZOS 180 APO",
+    "apertureMm": 180,
+    "focalLengthMm": 1260,
+    "focalRatio": 7,
+    "externalId": "2764"
+  },
+  {
+    "brand": "APM",
+    "model": "MCT 406/4000",
+    "apertureMm": 406,
+    "focalLengthMm": 4000,
+    "focalRatio": 9.85,
+    "externalId": "1665"
+  },
+  {
+    "brand": "Aquila",
+    "model": "90/500",
+    "apertureMm": 90,
+    "focalLengthMm": 500,
+    "focalRatio": 5.56,
+    "externalId": "559"
+  },
+  {
+    "brand": "Artesky",
+    "model": "80ED f/7 APO",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "23808"
+  },
+  {
+    "brand": "Artesky",
+    "model": "ARTEC 200",
+    "apertureMm": 200,
+    "focalLengthMm": 780,
+    "focalRatio": 3.9,
+    "externalId": "1605"
+  },
+  {
+    "brand": "ASA",
+    "model": "10N",
+    "apertureMm": 254,
+    "focalLengthMm": 950,
+    "focalRatio": 3.74,
+    "externalId": "4791"
+  },
+  {
+    "brand": "ASA",
+    "model": "400RC",
+    "apertureMm": 400,
+    "focalLengthMm": 3200,
+    "focalRatio": 8,
+    "externalId": "3990"
+  },
+  {
+    "brand": "ASA",
+    "model": "CA400",
+    "apertureMm": 400,
+    "focalLengthMm": 3600,
+    "focalRatio": 9,
+    "externalId": "3479"
+  },
+  {
+    "brand": "ASA",
+    "model": "N-250",
+    "apertureMm": 250,
+    "focalLengthMm": 900,
+    "focalRatio": 3.6,
+    "externalId": "2697"
+  },
+  {
+    "brand": "Ascension",
+    "model": "102 f7",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "303"
+  },
+  {
+    "brand": "Ascension",
+    "model": "127ED APO",
+    "apertureMm": 127,
+    "focalLengthMm": 952,
+    "focalRatio": 7.5,
+    "externalId": "4388"
+  },
+  {
+    "brand": "Ascension",
+    "model": "80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "310"
+  },
+  {
+    "brand": "Ascension",
+    "model": "80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "17925"
+  },
+  {
+    "brand": "Askar",
+    "model": "103APO",
+    "apertureMm": 103,
+    "focalLengthMm": 700,
+    "focalRatio": 6.8,
+    "externalId": "31022"
+  },
+  {
+    "brand": "Askar",
+    "model": "107PHQ",
+    "apertureMm": 107,
+    "focalLengthMm": 740,
+    "focalRatio": 6.92,
+    "externalId": "19594"
+  },
+  {
+    "brand": "Askar",
+    "model": "120APO",
+    "apertureMm": 120,
+    "focalLengthMm": 840,
+    "focalRatio": 7,
+    "externalId": "30802"
+  },
+  {
+    "brand": "Askar",
+    "model": "130PHQ",
+    "apertureMm": 130,
+    "focalLengthMm": 1000,
+    "focalRatio": 7.69,
+    "externalId": "21902"
+  },
+  {
+    "brand": "Askar",
+    "model": "140APO",
+    "apertureMm": 140,
+    "focalLengthMm": 980,
+    "focalRatio": 7,
+    "externalId": "31028"
+  },
+  {
+    "brand": "Askar",
+    "model": "151PHQ",
+    "apertureMm": 151,
+    "focalLengthMm": 1057,
+    "focalRatio": 7,
+    "externalId": "34584"
+  },
+  {
+    "brand": "Askar",
+    "model": "160APO",
+    "apertureMm": 160,
+    "focalLengthMm": 1120,
+    "focalRatio": 7,
+    "externalId": "40278"
+  },
+  {
+    "brand": "Askar",
+    "model": "185APO",
+    "apertureMm": 185,
+    "focalLengthMm": 1295,
+    "focalRatio": 7,
+    "externalId": "30619"
+  },
+  {
+    "brand": "Askar",
+    "model": "230APO",
+    "apertureMm": 203,
+    "focalLengthMm": 1421,
+    "focalRatio": 7,
+    "externalId": "40277"
+  },
+  {
+    "brand": "Askar",
+    "model": "60F Flat-Field",
+    "apertureMm": 60,
+    "focalLengthMm": 408,
+    "focalRatio": 6.8,
+    "externalId": "40226"
+  },
+  {
+    "brand": "Askar",
+    "model": "65PHQ",
+    "apertureMm": 65,
+    "focalLengthMm": 416,
+    "focalRatio": 6.4,
+    "externalId": "24029"
+  },
+  {
+    "brand": "Askar",
+    "model": "71F Flat-Field",
+    "apertureMm": 71,
+    "focalLengthMm": 490,
+    "focalRatio": 6.9,
+    "externalId": "33454"
+  },
+  {
+    "brand": "Askar",
+    "model": "80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "40937"
+  },
+  {
+    "brand": "Askar",
+    "model": "80PHQ",
+    "apertureMm": 80,
+    "focalLengthMm": 600,
+    "focalRatio": 7.5,
+    "externalId": "20730"
+  },
+  {
+    "brand": "Askar",
+    "model": "91F Flat-Field",
+    "apertureMm": 91,
+    "focalLengthMm": 609,
+    "focalRatio": 6.69,
+    "externalId": "40380"
+  },
+  {
+    "brand": "Askar",
+    "model": "ACL200",
+    "apertureMm": 50,
+    "focalLengthMm": 200,
+    "focalRatio": 4,
+    "externalId": "12317"
+  },
+  {
+    "brand": "Askar",
+    "model": "FMA135",
+    "apertureMm": 30,
+    "focalLengthMm": 135,
+    "focalRatio": 4.5,
+    "externalId": "14632"
+  },
+  {
+    "brand": "Askar",
+    "model": "FMA180",
+    "apertureMm": 40,
+    "focalLengthMm": 180,
+    "focalRatio": 4.5,
+    "externalId": "11475"
+  },
+  {
+    "brand": "Askar",
+    "model": "FMA230",
+    "apertureMm": 50,
+    "focalLengthMm": 275,
+    "focalRatio": 5.5,
+    "externalId": "16832"
+  },
+  {
+    "brand": "Askar",
+    "model": "FMA230 with Reducer",
+    "apertureMm": 50,
+    "focalLengthMm": 230,
+    "focalRatio": 4.6,
+    "externalId": "16643"
+  },
+  {
+    "brand": "Askar",
+    "model": "FRA300",
+    "apertureMm": 60,
+    "focalLengthMm": 300,
+    "focalRatio": 5,
+    "externalId": "20069"
+  },
+  {
+    "brand": "Askar",
+    "model": "FRA400",
+    "apertureMm": 72,
+    "focalLengthMm": 400,
+    "focalRatio": 5.56,
+    "externalId": "10469"
+  },
+  {
+    "brand": "Askar",
+    "model": "FRA400C",
+    "apertureMm": 72,
+    "focalLengthMm": 400,
+    "focalRatio": 5.56,
+    "externalId": "41160"
+  },
+  {
+    "brand": "Askar",
+    "model": "FRA500",
+    "apertureMm": 90,
+    "focalLengthMm": 500,
+    "focalRatio": 5.56,
+    "externalId": "17005"
+  },
+  {
+    "brand": "Askar",
+    "model": "FRA600",
+    "apertureMm": 108,
+    "focalLengthMm": 600,
+    "focalRatio": 5.56,
+    "externalId": "13152"
+  },
+  {
+    "brand": "Askar",
+    "model": "SQA106",
+    "apertureMm": 106,
+    "focalLengthMm": 509,
+    "focalRatio": 4.8,
+    "externalId": "41124"
+  },
+  {
+    "brand": "Askar",
+    "model": "SQA55",
+    "apertureMm": 55,
+    "focalLengthMm": 264,
+    "focalRatio": 4.8,
+    "externalId": "34583"
+  },
+  {
+    "brand": "Askar",
+    "model": "SQA70",
+    "apertureMm": 70,
+    "focalLengthMm": 336,
+    "focalRatio": 4.8,
+    "externalId": "41123"
+  },
+  {
+    "brand": "Askar",
+    "model": "SQA85",
+    "apertureMm": 85,
+    "focalLengthMm": 408,
+    "focalRatio": 4.8,
+    "externalId": "41121"
+  },
+  {
+    "brand": "Askar",
+    "model": "V 60mm Extender",
+    "apertureMm": 60,
+    "focalLengthMm": 446,
+    "focalRatio": 7.43,
+    "externalId": "27064"
+  },
+  {
+    "brand": "Askar",
+    "model": "V 60mm Native/Flattener",
+    "apertureMm": 60,
+    "focalLengthMm": 360,
+    "focalRatio": 6,
+    "externalId": "26388"
+  },
+  {
+    "brand": "Askar",
+    "model": "V 60mm Reducer",
+    "apertureMm": 60,
+    "focalLengthMm": 270,
+    "focalRatio": 4.5,
+    "externalId": "26899"
+  },
+  {
+    "brand": "Askar",
+    "model": "V 80mm Extender",
+    "apertureMm": 80,
+    "focalLengthMm": 600,
+    "focalRatio": 7.5,
+    "externalId": "26643"
+  },
+  {
+    "brand": "Askar",
+    "model": "V 80mm Flattener",
+    "apertureMm": 80,
+    "focalLengthMm": 495,
+    "focalRatio": 6.19,
+    "externalId": "26641"
+  },
+  {
+    "brand": "Askar",
+    "model": "V 80mm Native",
+    "apertureMm": 80,
+    "focalLengthMm": 500,
+    "focalRatio": 6.25,
+    "externalId": "26387"
+  },
+  {
+    "brand": "Askar",
+    "model": "V 80mm Reducer",
+    "apertureMm": 80,
+    "focalLengthMm": 384,
+    "focalRatio": 4.8,
+    "externalId": "26642"
+  },
+  {
+    "brand": "Astelco",
+    "model": "TCC1",
+    "apertureMm": 1400,
+    "focalLengthMm": 16800,
+    "focalRatio": 12,
+    "externalId": "306"
+  },
+  {
+    "brand": "Astele",
+    "model": "70/925",
+    "apertureMm": 70,
+    "focalLengthMm": 925,
+    "focalRatio": 13.21,
+    "externalId": "2350"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "10” Maksutov",
+    "apertureMm": 254,
+    "focalLengthMm": 3708,
+    "focalRatio": 14.6,
+    "externalId": "3592"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "130 EDF",
+    "apertureMm": 130,
+    "focalLengthMm": 780,
+    "focalRatio": 6,
+    "externalId": "3340"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "130 EDT f/8",
+    "apertureMm": 130,
+    "focalLengthMm": 1040,
+    "focalRatio": 8,
+    "externalId": "8161"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "130 EDT f/8.35",
+    "apertureMm": 130,
+    "focalLengthMm": 1085,
+    "focalRatio": 8.35,
+    "externalId": "7429"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "155 f7",
+    "apertureMm": 155,
+    "focalLengthMm": 1085,
+    "focalRatio": 7,
+    "externalId": "1603"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "175 EDF F/8",
+    "apertureMm": 175,
+    "focalLengthMm": 1400,
+    "focalRatio": 8,
+    "externalId": "2649"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "AP 10&quot; Mak Cass",
+    "apertureMm": 250,
+    "focalLengthMm": 3650,
+    "focalRatio": 14.6,
+    "externalId": "2594"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "RH305",
+    "apertureMm": 305,
+    "focalLengthMm": 1159,
+    "focalRatio": 3.8,
+    "externalId": "1534"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "Starfire 130 EDF f/8",
+    "apertureMm": 130,
+    "focalLengthMm": 780,
+    "focalRatio": 6,
+    "externalId": "2986"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "Starfire 152 f9",
+    "apertureMm": 152,
+    "focalLengthMm": 1368,
+    "focalRatio": 9,
+    "externalId": "2004"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "Stowaway",
+    "apertureMm": 92,
+    "focalLengthMm": 604,
+    "focalRatio": 6.57,
+    "externalId": "1253"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "TMB 180",
+    "apertureMm": 180,
+    "focalLengthMm": 1635,
+    "focalRatio": 9.08,
+    "externalId": "3034"
+  },
+  {
+    "brand": "Astro Physics",
+    "model": "Traveler 105",
+    "apertureMm": 105,
+    "focalLengthMm": 610,
+    "focalRatio": 5.81,
+    "externalId": "1755"
+  },
+  {
+    "brand": "Astro Professional",
+    "model": "102/714",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "4903"
+  },
+  {
+    "brand": "Astro Professional",
+    "model": "110/770",
+    "apertureMm": 110,
+    "focalLengthMm": 770,
+    "focalRatio": 7,
+    "externalId": "3633"
+  },
+  {
+    "brand": "Astro Professional",
+    "model": "80/560",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "2212"
+  },
+  {
+    "brand": "Astro Systems",
+    "model": "10&quot; f4 Newtonian",
+    "apertureMm": 250,
+    "focalLengthMm": 1000,
+    "focalRatio": 4,
+    "externalId": "1244"
+  },
+  {
+    "brand": "Astro systems",
+    "model": "20&quot; f3.9 Dobsonian",
+    "apertureMm": 508,
+    "focalLengthMm": 1981,
+    "focalRatio": 3.9,
+    "externalId": "2118"
+  },
+  {
+    "brand": "Astro Systems",
+    "model": "8&quot; f5 Newtonian",
+    "apertureMm": 200,
+    "focalLengthMm": 1000,
+    "focalRatio": 5,
+    "externalId": "2470"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "12&quot; Astrograph",
+    "apertureMm": 304,
+    "focalLengthMm": 2432,
+    "focalRatio": 8,
+    "externalId": "626"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT106EDT",
+    "apertureMm": 106,
+    "focalLengthMm": 690,
+    "focalRatio": 6.51,
+    "externalId": "396"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT10INT",
+    "apertureMm": 254,
+    "focalLengthMm": 1016,
+    "focalRatio": 4,
+    "externalId": "2995"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT10RC",
+    "apertureMm": 254,
+    "focalLengthMm": 2000,
+    "focalRatio": 7.87,
+    "externalId": "1732"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT111ED",
+    "apertureMm": 7,
+    "focalLengthMm": 777,
+    "focalRatio": 111,
+    "externalId": "1030"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT115EDT",
+    "apertureMm": 115,
+    "focalLengthMm": 805,
+    "focalRatio": 7,
+    "externalId": "1839"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT12INT",
+    "apertureMm": 304.8,
+    "focalLengthMm": 1220,
+    "focalRatio": 4,
+    "externalId": "4025"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT130EDT",
+    "apertureMm": 130,
+    "focalLengthMm": 910,
+    "focalRatio": 7,
+    "externalId": "691"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT130EDT",
+    "apertureMm": 130,
+    "focalLengthMm": 910,
+    "focalRatio": 7,
+    "externalId": "1592"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT14RCT",
+    "apertureMm": 355,
+    "focalLengthMm": 2850,
+    "focalRatio": 8.03,
+    "externalId": "2094"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT152EDT",
+    "apertureMm": 152,
+    "focalLengthMm": 1216,
+    "focalRatio": 8,
+    "externalId": "4397"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT60ED",
+    "apertureMm": 60,
+    "focalLengthMm": 360,
+    "focalRatio": 6,
+    "externalId": "4099"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT65EDQ",
+    "apertureMm": 6.6,
+    "focalLengthMm": 420,
+    "focalRatio": 63.64,
+    "externalId": "562"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT65EDQ",
+    "apertureMm": 65,
+    "focalLengthMm": 422,
+    "focalRatio": 6.49,
+    "externalId": "2512"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT6RC",
+    "apertureMm": 150,
+    "focalLengthMm": 1350,
+    "focalRatio": 9,
+    "externalId": "156"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT72ED",
+    "apertureMm": 72,
+    "focalLengthMm": 430,
+    "focalRatio": 5.97,
+    "externalId": "424"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT72EDii",
+    "apertureMm": 72,
+    "focalLengthMm": 432,
+    "focalRatio": 6,
+    "externalId": "2853"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT80ED f/7",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "8091"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT80EDL",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "26812"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT80EDT",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "4148"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT8IN",
+    "apertureMm": 200,
+    "focalLengthMm": 800,
+    "focalRatio": 4,
+    "externalId": "423"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT8RC",
+    "apertureMm": 203,
+    "focalLengthMm": 1625,
+    "focalRatio": 8,
+    "externalId": "3265"
+  },
+  {
+    "brand": "Astro Tech",
+    "model": "AT92 APO",
+    "apertureMm": 92,
+    "focalLengthMm": 506,
+    "focalRatio": 5.5,
+    "externalId": "4672"
+  },
+  {
+    "brand": "Astro-Physics",
+    "model": "StarFire 180EDT",
+    "apertureMm": 180,
+    "focalLengthMm": 1620,
+    "focalRatio": 9,
+    "externalId": "9738"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "10&quot; f/4 CF Truss Imaging Newtonian",
+    "apertureMm": 254,
+    "focalLengthMm": 1016,
+    "focalRatio": 4,
+    "externalId": "33097"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "10&quot; f/8 Ritchey-Chrétien Astrograph",
+    "apertureMm": 254,
+    "focalLengthMm": 2000,
+    "focalRatio": 7.87,
+    "externalId": "32818"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "10&quot; f/8 Truss Ritchey-Chrétien Astrograph",
+    "apertureMm": 254,
+    "focalLengthMm": 2000,
+    "focalRatio": 7.87,
+    "externalId": "32551"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "12&quot; f/4 CF Truss Imaging Newtonian",
+    "apertureMm": 304,
+    "focalLengthMm": 1220,
+    "focalRatio": 4.01,
+    "externalId": "33036"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "12&quot; f/8 Truss Ritchey-Chrétien Astrograph",
+    "apertureMm": 304,
+    "focalLengthMm": 2432,
+    "focalRatio": 8,
+    "externalId": "32505"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "14&quot; f/8 Truss Ritchey-Chrétien Astrograph",
+    "apertureMm": 355,
+    "focalLengthMm": 2850,
+    "focalRatio": 8.03,
+    "externalId": "32504"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "16&quot; f/8 Truss Ritchey-Chrétien Astrograph",
+    "apertureMm": 406,
+    "focalLengthMm": 3250,
+    "focalRatio": 8,
+    "externalId": "32503"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "6&quot; f/4 Imaging Newtonian",
+    "apertureMm": 152,
+    "focalLengthMm": 610,
+    "focalRatio": 4.01,
+    "externalId": "33180"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "6&quot; f/9 Ritchey-Chrétien Astrograph",
+    "apertureMm": 152,
+    "focalLengthMm": 1370,
+    "focalRatio": 9.01,
+    "externalId": "33002"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "8&quot; F/4 Imaging Newtonian",
+    "apertureMm": 203,
+    "focalLengthMm": 800,
+    "focalRatio": 3.94,
+    "externalId": "33116"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "8&quot; f/8 Ritchey-Chrétien Astrograph",
+    "apertureMm": 203,
+    "focalLengthMm": 1625,
+    "focalRatio": 8,
+    "externalId": "32880"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT102ED",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "33585"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT102EDL",
+    "apertureMm": 102,
+    "focalLengthMm": 711,
+    "focalRatio": 6.97,
+    "externalId": "34026"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT111EDT",
+    "apertureMm": 111,
+    "focalLengthMm": 777,
+    "focalRatio": 7,
+    "externalId": "34179"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT115EDT",
+    "apertureMm": 115,
+    "focalLengthMm": 805,
+    "focalRatio": 7,
+    "externalId": "32110"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT125EDL",
+    "apertureMm": 125,
+    "focalLengthMm": 975,
+    "focalRatio": 7.8,
+    "externalId": "33957"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT130EDT",
+    "apertureMm": 130,
+    "focalLengthMm": 910,
+    "focalRatio": 7,
+    "externalId": "31939"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT150EDL",
+    "apertureMm": 150,
+    "focalLengthMm": 1200,
+    "focalRatio": 8,
+    "externalId": "33863"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT152EDT",
+    "apertureMm": 152,
+    "focalLengthMm": 1216,
+    "focalRatio": 8,
+    "externalId": "31870"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT60ED",
+    "apertureMm": 60,
+    "focalLengthMm": 360,
+    "focalRatio": 6,
+    "externalId": "33644"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT60EDP",
+    "apertureMm": 60,
+    "focalLengthMm": 300,
+    "focalRatio": 5,
+    "externalId": "34302"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT65EDQ",
+    "apertureMm": 65,
+    "focalLengthMm": 420,
+    "focalRatio": 6.46,
+    "externalId": "33761"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT6CC 6&quot; f/12 Classical Cassegrain",
+    "apertureMm": 150,
+    "focalLengthMm": 1836,
+    "focalRatio": 12.24,
+    "externalId": "32467"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT70ED",
+    "apertureMm": 70,
+    "focalLengthMm": 420,
+    "focalRatio": 6,
+    "externalId": "34516"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT72EDII",
+    "apertureMm": 72,
+    "focalLengthMm": 430,
+    "focalRatio": 5.97,
+    "externalId": "33441"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT80EDT",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "32398"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT90CFT",
+    "apertureMm": 90,
+    "focalLengthMm": 540,
+    "focalRatio": 6,
+    "externalId": "34498"
+  },
+  {
+    "brand": "Astro-Tech",
+    "model": "AT92",
+    "apertureMm": 92,
+    "focalLengthMm": 506,
+    "focalRatio": 5.5,
+    "externalId": "32168"
+  },
+  {
+    "brand": "Astronomers Without Borders",
+    "model": "Onesky",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "5008"
+  },
+  {
+    "brand": "Baader",
+    "model": "Travel Companion (from 2020)",
+    "apertureMm": 95,
+    "focalLengthMm": 580,
+    "focalRatio": 6.11,
+    "externalId": "8914"
+  },
+  {
+    "brand": "Baader",
+    "model": "Travel Companion (pre 2020)",
+    "apertureMm": 95,
+    "focalLengthMm": 560,
+    "focalRatio": 5.89,
+    "externalId": "1995"
+  },
+  {
+    "brand": "Barska",
+    "model": "Magnus 80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "11454"
+  },
+  {
+    "brand": "Borg",
+    "model": "107FL @ f/6",
+    "apertureMm": 107,
+    "focalLengthMm": 650,
+    "focalRatio": 6.07,
+    "externalId": "1330"
+  },
+  {
+    "brand": "Borg",
+    "model": "107FL F/3.9ED",
+    "apertureMm": 107,
+    "focalLengthMm": 420,
+    "focalRatio": 3.93,
+    "externalId": "3981"
+  },
+  {
+    "brand": "Borg",
+    "model": "107FL f/5.6",
+    "apertureMm": 107,
+    "focalLengthMm": 600,
+    "focalRatio": 5.61,
+    "externalId": "646"
+  },
+  {
+    "brand": "Borg",
+    "model": "36ED @ f/6.0",
+    "apertureMm": 36,
+    "focalLengthMm": 216,
+    "focalRatio": 6,
+    "externalId": "82"
+  },
+  {
+    "brand": "Borg",
+    "model": "45EDII @ f/5.0",
+    "apertureMm": 45,
+    "focalLengthMm": 227,
+    "focalRatio": 5.04,
+    "externalId": "83"
+  },
+  {
+    "brand": "Borg",
+    "model": "50FL @ f/5.6",
+    "apertureMm": 50,
+    "focalLengthMm": 280,
+    "focalRatio": 5.6,
+    "externalId": "5"
+  },
+  {
+    "brand": "Borg",
+    "model": "55FL @ f/3.6",
+    "apertureMm": 55,
+    "focalLengthMm": 200,
+    "focalRatio": 3.64,
+    "externalId": "761"
+  },
+  {
+    "brand": "Borg",
+    "model": "55FL @ f/4.5",
+    "apertureMm": 55,
+    "focalLengthMm": 250,
+    "focalRatio": 4.55,
+    "externalId": "756"
+  },
+  {
+    "brand": "Borg",
+    "model": "60ED @ f4",
+    "apertureMm": 60,
+    "focalLengthMm": 245,
+    "focalRatio": 4.08,
+    "externalId": "166"
+  },
+  {
+    "brand": "Borg",
+    "model": "67FL @ f/3.8",
+    "apertureMm": 67,
+    "focalLengthMm": 255,
+    "focalRatio": 3.81,
+    "externalId": "98"
+  },
+  {
+    "brand": "Borg",
+    "model": "67FL @ f/4.5",
+    "apertureMm": 67,
+    "focalLengthMm": 300,
+    "focalRatio": 4.48,
+    "externalId": "307"
+  },
+  {
+    "brand": "Borg",
+    "model": "71FL @ 3.7",
+    "apertureMm": 71,
+    "focalLengthMm": 264,
+    "focalRatio": 3.72,
+    "externalId": "155"
+  },
+  {
+    "brand": "Borg",
+    "model": "71FL @ f/3.9",
+    "apertureMm": 71,
+    "focalLengthMm": 277,
+    "focalRatio": 3.9,
+    "externalId": "80"
+  },
+  {
+    "brand": "Borg",
+    "model": "71FL @ f/4",
+    "apertureMm": 71,
+    "focalLengthMm": 280,
+    "focalRatio": 3.94,
+    "externalId": "762"
+  },
+  {
+    "brand": "Borg",
+    "model": "71FL @ f/5.6",
+    "apertureMm": 71,
+    "focalLengthMm": 400,
+    "focalRatio": 5.63,
+    "externalId": "757"
+  },
+  {
+    "brand": "Borg",
+    "model": "71FL @ f/6.0",
+    "apertureMm": 67,
+    "focalLengthMm": 426,
+    "focalRatio": 6.36,
+    "externalId": "81"
+  },
+  {
+    "brand": "Borg",
+    "model": "76-ED",
+    "apertureMm": 76,
+    "focalLengthMm": 500,
+    "focalRatio": 6.58,
+    "externalId": "1963"
+  },
+  {
+    "brand": "Borg",
+    "model": "77EDII @ f/4.3",
+    "apertureMm": 77,
+    "focalLengthMm": 331,
+    "focalRatio": 4.3,
+    "externalId": "75"
+  },
+  {
+    "brand": "Borg",
+    "model": "77EDII @ f/4.6",
+    "apertureMm": 77,
+    "focalLengthMm": 354,
+    "focalRatio": 4.6,
+    "externalId": "79"
+  },
+  {
+    "brand": "Borg",
+    "model": "77EDII @ f/6.6",
+    "apertureMm": 77,
+    "focalLengthMm": 510,
+    "focalRatio": 6.62,
+    "externalId": "758"
+  },
+  {
+    "brand": "Borg",
+    "model": "89ED @ f/4.3",
+    "apertureMm": 89,
+    "focalLengthMm": 382.7,
+    "focalRatio": 4.3,
+    "externalId": "76"
+  },
+  {
+    "brand": "Borg",
+    "model": "89ED @ f/4.7",
+    "apertureMm": 89,
+    "focalLengthMm": 418,
+    "focalRatio": 4.7,
+    "externalId": "77"
+  },
+  {
+    "brand": "Borg",
+    "model": "89ED @ f/6.7",
+    "apertureMm": 89,
+    "focalLengthMm": 600,
+    "focalRatio": 6.74,
+    "externalId": "759"
+  },
+  {
+    "brand": "Borg",
+    "model": "90FL @ f/3.6",
+    "apertureMm": 90,
+    "focalLengthMm": 324,
+    "focalRatio": 3.6,
+    "externalId": "102"
+  },
+  {
+    "brand": "Borg",
+    "model": "90FL @ f/4",
+    "apertureMm": 90,
+    "focalLengthMm": 360,
+    "focalRatio": 4,
+    "externalId": "763"
+  },
+  {
+    "brand": "Borg",
+    "model": "90FL @ f/5.6",
+    "apertureMm": 90,
+    "focalLengthMm": 500,
+    "focalRatio": 5.56,
+    "externalId": "760"
+  },
+  {
+    "brand": "Bresser",
+    "model": "6&quot; Planetary Dobsonian",
+    "apertureMm": 150,
+    "focalLengthMm": 1200,
+    "focalRatio": 8,
+    "externalId": "11828"
+  },
+  {
+    "brand": "Bresser",
+    "model": "AR-127S",
+    "apertureMm": 127,
+    "focalLengthMm": 635,
+    "focalRatio": 5,
+    "externalId": "706"
+  },
+  {
+    "brand": "Bresser",
+    "model": "AR-152S",
+    "apertureMm": 152,
+    "focalLengthMm": 760,
+    "focalRatio": 5,
+    "externalId": "1976"
+  },
+  {
+    "brand": "Bresser",
+    "model": "AR127L",
+    "apertureMm": 127,
+    "focalLengthMm": 1200,
+    "focalRatio": 9.45,
+    "externalId": "45"
+  },
+  {
+    "brand": "Bresser",
+    "model": "Messier 10&quot;",
+    "apertureMm": 254,
+    "focalLengthMm": 1270,
+    "focalRatio": 5,
+    "externalId": "1957"
+  },
+  {
+    "brand": "Bresser",
+    "model": "Messier 102/1000",
+    "apertureMm": 102,
+    "focalLengthMm": 1000,
+    "focalRatio": 9.8,
+    "externalId": "304"
+  },
+  {
+    "brand": "Bresser",
+    "model": "Messier 12&quot; Dobsonian",
+    "apertureMm": 305,
+    "focalLengthMm": 1525,
+    "focalRatio": 5,
+    "externalId": "2025"
+  },
+  {
+    "brand": "Bresser",
+    "model": "Messier AR-102XS/460 Refractor",
+    "apertureMm": 102,
+    "focalLengthMm": 460,
+    "focalRatio": 4.51,
+    "externalId": "34566"
+  },
+  {
+    "brand": "Bresser",
+    "model": "Messier AR-152L/1200",
+    "apertureMm": 152,
+    "focalLengthMm": 1200,
+    "focalRatio": 7.89,
+    "externalId": "26173"
+  },
+  {
+    "brand": "Bresser",
+    "model": "Messier Dobsonian",
+    "apertureMm": 203,
+    "focalLengthMm": 1218,
+    "focalRatio": 6,
+    "externalId": "601"
+  },
+  {
+    "brand": "Bresser",
+    "model": "Messier MC-127",
+    "apertureMm": 127,
+    "focalLengthMm": 1900,
+    "focalRatio": 14.96,
+    "externalId": "1012"
+  },
+  {
+    "brand": "Bresser-Messier",
+    "model": "R152s",
+    "apertureMm": 152,
+    "focalLengthMm": 760,
+    "focalRatio": 5,
+    "externalId": "381"
+  },
+  {
+    "brand": "Bushnell",
+    "model": "Voyager 114mm",
+    "apertureMm": 114,
+    "focalLengthMm": 900,
+    "focalRatio": 7.89,
+    "externalId": "34581"
+  },
+  {
+    "brand": "Canon",
+    "model": "200mm f 2.8 lens",
+    "apertureMm": 72,
+    "focalLengthMm": 200,
+    "focalRatio": 2.78,
+    "externalId": "334"
+  },
+  {
+    "brand": "Canon",
+    "model": "EF 50mm f/1.4",
+    "apertureMm": 36,
+    "focalLengthMm": 50,
+    "focalRatio": 1.39,
+    "externalId": "1110"
+  },
+  {
+    "brand": "Canon",
+    "model": "EF 85MM F/1.2L II USM",
+    "apertureMm": 70,
+    "focalLengthMm": 85,
+    "focalRatio": 1.21,
+    "externalId": "25321"
+  },
+  {
+    "brand": "Canon",
+    "model": "EF-S 24mm f/2.8 STM",
+    "apertureMm": 67.2,
+    "focalLengthMm": 24,
+    "focalRatio": 0.36,
+    "externalId": "34565"
+  },
+  {
+    "brand": "Canon",
+    "model": "RF 100-500MM F4.5-7.1 - 100mm",
+    "apertureMm": 72,
+    "focalLengthMm": 100,
+    "focalRatio": 1.39,
+    "externalId": "35341"
+  },
+  {
+    "brand": "Canon",
+    "model": "RF 100-500MM F4.5-7.1 - 500mm",
+    "apertureMm": 72,
+    "focalLengthMm": 500,
+    "focalRatio": 6.94,
+    "externalId": "35340"
+  },
+  {
+    "brand": "Celestron",
+    "model": "102 SLT",
+    "apertureMm": 102,
+    "focalLengthMm": 660,
+    "focalRatio": 6.47,
+    "externalId": "105"
+  },
+  {
+    "brand": "Celestron",
+    "model": "11&quot; Rowe-Ackermann Schmidt Astrograph",
+    "apertureMm": 279,
+    "focalLengthMm": 620,
+    "focalRatio": 2.22,
+    "externalId": "99"
+  },
+  {
+    "brand": "Celestron",
+    "model": "114 GT",
+    "apertureMm": 114,
+    "focalLengthMm": 1000,
+    "focalRatio": 8.77,
+    "externalId": "1825"
+  },
+  {
+    "brand": "Celestron",
+    "model": "127 SLT",
+    "apertureMm": 127,
+    "focalLengthMm": 1500,
+    "focalRatio": 11.81,
+    "externalId": "106"
+  },
+  {
+    "brand": "Celestron",
+    "model": "130 SLT",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "104"
+  },
+  {
+    "brand": "Celestron",
+    "model": "14&quot; Edge HD + Hyperstar",
+    "apertureMm": 355.6,
+    "focalLengthMm": 675,
+    "focalRatio": 1.9,
+    "externalId": "291"
+  },
+  {
+    "brand": "Celestron",
+    "model": "14&quot; Rowe-Ackermann Schmidt Astrograph",
+    "apertureMm": 355.6,
+    "focalLengthMm": 790,
+    "focalRatio": 2.22,
+    "externalId": "5741"
+  },
+  {
+    "brand": "Celestron",
+    "model": "80 SLT",
+    "apertureMm": 80,
+    "focalLengthMm": 900,
+    "focalRatio": 11.25,
+    "externalId": "1942"
+  },
+  {
+    "brand": "Celestron",
+    "model": "80ED-Onyx",
+    "apertureMm": 80,
+    "focalLengthMm": 500,
+    "focalRatio": 6.25,
+    "externalId": "1508"
+  },
+  {
+    "brand": "Celestron",
+    "model": "80mm Guidescope",
+    "apertureMm": 80,
+    "focalLengthMm": 600,
+    "focalRatio": 7.5,
+    "externalId": "34579"
+  },
+  {
+    "brand": "Celestron",
+    "model": "8” Rowe-Ackermann Schmidt Astrograph",
+    "apertureMm": 203.2,
+    "focalLengthMm": 400,
+    "focalRatio": 1.97,
+    "externalId": "5736"
+  },
+  {
+    "brand": "Celestron",
+    "model": "90 SLT",
+    "apertureMm": 90,
+    "focalLengthMm": 1250,
+    "focalRatio": 13.89,
+    "externalId": "103"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Advanced VX 5 SCT",
+    "apertureMm": 125,
+    "focalLengthMm": 1250,
+    "focalRatio": 10,
+    "externalId": "4562"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Astro Fi 102mm Maksutov",
+    "apertureMm": 102,
+    "focalLengthMm": 1325,
+    "focalRatio": 12.99,
+    "externalId": "10098"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Astro Fi 125mm/5&quot; SCT",
+    "apertureMm": 125,
+    "focalLengthMm": 1250,
+    "focalRatio": 10,
+    "externalId": "1746"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Astro Fi 130mm Newtonian",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "10611"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Astro Fi 6&quot; SCT",
+    "apertureMm": 150,
+    "focalLengthMm": 1500,
+    "focalRatio": 10,
+    "externalId": "8965"
+  },
+  {
+    "brand": "Celestron",
+    "model": "AstroMaster 114EQ",
+    "apertureMm": 114,
+    "focalLengthMm": 1000,
+    "focalRatio": 8.77,
+    "externalId": "1043"
+  },
+  {
+    "brand": "Celestron",
+    "model": "AstroMaster 130EQ",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "88"
+  },
+  {
+    "brand": "Celestron",
+    "model": "AstroMaster 70EQ/AZ",
+    "apertureMm": 70,
+    "focalLengthMm": 900,
+    "focalRatio": 12.86,
+    "externalId": "3133"
+  },
+  {
+    "brand": "Celestron",
+    "model": "AstroMaster 80AZS",
+    "apertureMm": 80,
+    "focalLengthMm": 400,
+    "focalRatio": 5,
+    "externalId": "14702"
+  },
+  {
+    "brand": "Celestron",
+    "model": "AstroMaster 80EQ",
+    "apertureMm": 80,
+    "focalLengthMm": 900,
+    "focalRatio": 11.25,
+    "externalId": "1044"
+  },
+  {
+    "brand": "Celestron",
+    "model": "AstroMaster 90 EQ/AZ",
+    "apertureMm": 90,
+    "focalLengthMm": 1000,
+    "focalRatio": 11.11,
+    "externalId": "123"
+  },
+  {
+    "brand": "Celestron",
+    "model": "AstroMaster LT 60AZ",
+    "apertureMm": 60,
+    "focalLengthMm": 700,
+    "focalRatio": 11.67,
+    "externalId": "862"
+  },
+  {
+    "brand": "Celestron",
+    "model": "AstroMaster LT 70AZ",
+    "apertureMm": 70,
+    "focalLengthMm": 700,
+    "focalRatio": 10,
+    "externalId": "1890"
+  },
+  {
+    "brand": "Celestron",
+    "model": "AstroMaster LT 76AZ",
+    "apertureMm": 76,
+    "focalLengthMm": 700,
+    "focalRatio": 9.21,
+    "externalId": "1889"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C100 ED",
+    "apertureMm": 100,
+    "focalLengthMm": 900,
+    "focalRatio": 9,
+    "externalId": "9"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C11 + Hyperstar v3",
+    "apertureMm": 279,
+    "focalLengthMm": 560,
+    "focalRatio": 2.01,
+    "externalId": "164"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C11 + Hyperstar v4",
+    "apertureMm": 279,
+    "focalLengthMm": 540,
+    "focalRatio": 1.94,
+    "externalId": "1731"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C11 EDGE HD",
+    "apertureMm": 279,
+    "focalLengthMm": 2800,
+    "focalRatio": 10.04,
+    "externalId": "120"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C11 EdgeHD + HyperStar v4",
+    "apertureMm": 279.4,
+    "focalLengthMm": 540,
+    "focalRatio": 1.93,
+    "externalId": "2040"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C11 SCT",
+    "apertureMm": 280,
+    "focalLengthMm": 2800,
+    "focalRatio": 10,
+    "externalId": "301"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C11 SCT",
+    "apertureMm": 279.4,
+    "focalLengthMm": 2800,
+    "focalRatio": 10.02,
+    "externalId": "4"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C14 EDGE HD",
+    "apertureMm": 356,
+    "focalLengthMm": 3910,
+    "focalRatio": 10.98,
+    "externalId": "119"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C14 SCT",
+    "apertureMm": 356,
+    "focalLengthMm": 3910,
+    "focalRatio": 10.98,
+    "externalId": "118"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C14 SCT",
+    "apertureMm": 355.5,
+    "focalLengthMm": 3910,
+    "focalRatio": 11,
+    "externalId": "1807"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C5 SCT (aka Spotting Scope)",
+    "apertureMm": 127,
+    "focalLengthMm": 1250,
+    "focalRatio": 9.84,
+    "externalId": "138"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C6 + Hyperstar v4",
+    "apertureMm": 150,
+    "focalLengthMm": 300,
+    "focalRatio": 2,
+    "externalId": "818"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C6 SCT",
+    "apertureMm": 150,
+    "focalLengthMm": 1500,
+    "focalRatio": 10,
+    "externalId": "117"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C6N",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "282"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C6R",
+    "apertureMm": 150,
+    "focalLengthMm": 1200,
+    "focalRatio": 8,
+    "externalId": "543"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C8 + Hyperstar v3",
+    "apertureMm": 203,
+    "focalLengthMm": 425,
+    "focalRatio": 2.09,
+    "externalId": "902"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C8 + Hyperstar v4",
+    "apertureMm": 203,
+    "focalLengthMm": 390,
+    "focalRatio": 1.92,
+    "externalId": "1203"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C8 EDGE HD",
+    "apertureMm": 203,
+    "focalLengthMm": 2032,
+    "focalRatio": 10.01,
+    "externalId": "122"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C8 Edge HD + Hyperstar v3",
+    "apertureMm": 203,
+    "focalLengthMm": 425,
+    "focalRatio": 2.09,
+    "externalId": "517"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C8 Edge HD + Hyperstar v4",
+    "apertureMm": 203,
+    "focalLengthMm": 390,
+    "focalRatio": 1.92,
+    "externalId": "664"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C8 SCT",
+    "apertureMm": 203.2,
+    "focalLengthMm": 2032,
+    "focalRatio": 10,
+    "externalId": "14"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 600,
+    "focalRatio": 7.5,
+    "externalId": "961"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C8N",
+    "apertureMm": 200,
+    "focalLengthMm": 1000,
+    "focalRatio": 5,
+    "externalId": "187"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C8N Advanced VX",
+    "apertureMm": 200,
+    "focalLengthMm": 1000,
+    "focalRatio": 5,
+    "externalId": "1954"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C9.25 + Hyperstar",
+    "apertureMm": 235,
+    "focalLengthMm": 540,
+    "focalRatio": 2.3,
+    "externalId": "510"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C9.25 EDGE HD",
+    "apertureMm": 235,
+    "focalLengthMm": 2350,
+    "focalRatio": 10,
+    "externalId": "121"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C9.25 SCT",
+    "apertureMm": 235,
+    "focalLengthMm": 2350,
+    "focalRatio": 10,
+    "externalId": "17"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C90 Mak",
+    "apertureMm": 90,
+    "focalLengthMm": 1250,
+    "focalRatio": 13.89,
+    "externalId": "1792"
+  },
+  {
+    "brand": "Celestron",
+    "model": "C925 Edge HD + Hyperstar",
+    "apertureMm": 235,
+    "focalLengthMm": 540,
+    "focalRatio": 2.3,
+    "externalId": "592"
+  },
+  {
+    "brand": "Celestron",
+    "model": "CPC 1100 Deluxe HD",
+    "apertureMm": 280,
+    "focalLengthMm": 2800,
+    "focalRatio": 10,
+    "externalId": "114"
+  },
+  {
+    "brand": "Celestron",
+    "model": "CPC 1100 Edge HD",
+    "apertureMm": 280,
+    "focalLengthMm": 2800,
+    "focalRatio": 10,
+    "externalId": "230"
+  },
+  {
+    "brand": "Celestron",
+    "model": "CPC 1100 GPS",
+    "apertureMm": 279,
+    "focalLengthMm": 2800,
+    "focalRatio": 10.04,
+    "externalId": "111"
+  },
+  {
+    "brand": "Celestron",
+    "model": "CPC 800 Deluxe HD",
+    "apertureMm": 203,
+    "focalLengthMm": 2032,
+    "focalRatio": 10.01,
+    "externalId": "116"
+  },
+  {
+    "brand": "Celestron",
+    "model": "CPC 800 GPS",
+    "apertureMm": 203,
+    "focalLengthMm": 2032,
+    "focalRatio": 10.01,
+    "externalId": "113"
+  },
+  {
+    "brand": "Celestron",
+    "model": "CPC 800 SCT",
+    "apertureMm": 203,
+    "focalLengthMm": 2032,
+    "focalRatio": 10.01,
+    "externalId": "425"
+  },
+  {
+    "brand": "Celestron",
+    "model": "CPC 925 Deluxe HD",
+    "apertureMm": 235,
+    "focalLengthMm": 2350,
+    "focalRatio": 10,
+    "externalId": "115"
+  },
+  {
+    "brand": "Celestron",
+    "model": "CPC 925 GPS",
+    "apertureMm": 235,
+    "focalLengthMm": 2350,
+    "focalRatio": 10,
+    "externalId": "112"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Firstscope 76",
+    "apertureMm": 76,
+    "focalLengthMm": 296.4,
+    "focalRatio": 3.9,
+    "externalId": "232"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexStar 102GT",
+    "apertureMm": 102,
+    "focalLengthMm": 1000,
+    "focalRatio": 9.8,
+    "externalId": "2846"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexStar 4SE",
+    "apertureMm": 102,
+    "focalLengthMm": 1325,
+    "focalRatio": 12.99,
+    "externalId": "107"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexStar 5 SLT",
+    "apertureMm": 127,
+    "focalLengthMm": 1250,
+    "focalRatio": 9.84,
+    "externalId": "4546"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexStar 5SE",
+    "apertureMm": 125,
+    "focalLengthMm": 1250,
+    "focalRatio": 10,
+    "externalId": "108"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexStar 6 SLT",
+    "apertureMm": 150,
+    "focalLengthMm": 1500,
+    "focalRatio": 10,
+    "externalId": "4547"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexStar 6SE",
+    "apertureMm": 150,
+    "focalLengthMm": 1500,
+    "focalRatio": 10,
+    "externalId": "109"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexStar 8SE",
+    "apertureMm": 203,
+    "focalLengthMm": 2032,
+    "focalRatio": 10.01,
+    "externalId": "110"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexStar Evolution 5",
+    "apertureMm": 125,
+    "focalLengthMm": 1250,
+    "focalRatio": 10,
+    "externalId": "4545"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexStar Evolution 6",
+    "apertureMm": 150,
+    "focalLengthMm": 1500,
+    "focalRatio": 10,
+    "externalId": "91"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexStar Evolution 8",
+    "apertureMm": 203.2,
+    "focalLengthMm": 2032,
+    "focalRatio": 10,
+    "externalId": "92"
+  },
+  {
+    "brand": "Celestron",
+    "model": "NexStar Evolution 9.25",
+    "apertureMm": 235,
+    "focalLengthMm": 2350,
+    "focalRatio": 10,
+    "externalId": "93"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Omni XLT 102",
+    "apertureMm": 102,
+    "focalLengthMm": 1000,
+    "focalRatio": 9.8,
+    "externalId": "142"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Omni XLT 120",
+    "apertureMm": 120,
+    "focalLengthMm": 1000,
+    "focalRatio": 8.33,
+    "externalId": "141"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Omni XLT 127",
+    "apertureMm": 127,
+    "focalLengthMm": 1250,
+    "focalRatio": 9.84,
+    "externalId": "143"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Omni XLT 150 (Newtonian)",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "139"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Omni XLT 150-R (Refractor)",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "140"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Origin",
+    "apertureMm": 152,
+    "focalLengthMm": 335,
+    "focalRatio": 2.2,
+    "externalId": "33497"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Powerseeker 70",
+    "apertureMm": 70,
+    "focalLengthMm": 700,
+    "focalRatio": 10,
+    "externalId": "1914"
+  },
+  {
+    "brand": "Celestron",
+    "model": "RASA 11&quot;",
+    "apertureMm": 279,
+    "focalLengthMm": 620,
+    "focalRatio": 2.22,
+    "externalId": "2729"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Skyprodigy 6 SCT",
+    "apertureMm": 155,
+    "focalLengthMm": 1550,
+    "focalRatio": 10,
+    "externalId": "288"
+  },
+  {
+    "brand": "Celestron",
+    "model": "StarSense Explorer 10&quot; Dobsonian",
+    "apertureMm": 254,
+    "focalLengthMm": 1200,
+    "focalRatio": 4.72,
+    "externalId": "33804"
+  },
+  {
+    "brand": "Celestron",
+    "model": "StarSense Explorer 114mm Tabletop Dob",
+    "apertureMm": 114,
+    "focalLengthMm": 450,
+    "focalRatio": 3.95,
+    "externalId": "33331"
+  },
+  {
+    "brand": "Celestron",
+    "model": "StarSense Explorer 12&quot; Dobsonian",
+    "apertureMm": 305,
+    "focalLengthMm": 1500,
+    "focalRatio": 4.92,
+    "externalId": "33805"
+  },
+  {
+    "brand": "Celestron",
+    "model": "StarSense Explorer 130mm Tabletop Dob",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "33253"
+  },
+  {
+    "brand": "Celestron",
+    "model": "StarSense Explorer 150mm Tabletop Dob",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "33167"
+  },
+  {
+    "brand": "Celestron",
+    "model": "StarSense Explorer 8&quot; Dobsonian",
+    "apertureMm": 203,
+    "focalLengthMm": 1200,
+    "focalRatio": 5.91,
+    "externalId": "33803"
+  },
+  {
+    "brand": "Celestron",
+    "model": "StarSense Explorer DX 100AZ Royal Observatory",
+    "apertureMm": 100,
+    "focalLengthMm": 660,
+    "focalRatio": 6.6,
+    "externalId": "36665"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Starsense Explorer DX 102AZ",
+    "apertureMm": 102,
+    "focalLengthMm": 660,
+    "focalRatio": 6.47,
+    "externalId": "33332"
+  },
+  {
+    "brand": "Celestron",
+    "model": "StarSense Explorer DX 130AZ",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "33465"
+  },
+  {
+    "brand": "Celestron",
+    "model": "StarSense Explorer DX 5&quot; SCT",
+    "apertureMm": 125,
+    "focalLengthMm": 1250,
+    "focalRatio": 10,
+    "externalId": "33531"
+  },
+  {
+    "brand": "Celestron",
+    "model": "StarSense Explorer LT 114AZ",
+    "apertureMm": 114,
+    "focalLengthMm": 1000,
+    "focalRatio": 8.77,
+    "externalId": "33409"
+  },
+  {
+    "brand": "Celestron",
+    "model": "StarSense Explorer LT 80 AZ",
+    "apertureMm": 80,
+    "focalLengthMm": 900,
+    "focalRatio": 11.25,
+    "externalId": "9694"
+  },
+  {
+    "brand": "Celestron",
+    "model": "Travel Scope 70",
+    "apertureMm": 70,
+    "focalLengthMm": 400,
+    "focalRatio": 5.71,
+    "externalId": "217"
+  },
+  {
+    "brand": "CFF",
+    "model": "92mm",
+    "apertureMm": 92,
+    "focalLengthMm": 550,
+    "focalRatio": 5.98,
+    "externalId": "1855"
+  },
+  {
+    "brand": "CFF Telescopes",
+    "model": "250mm CC f15",
+    "apertureMm": 250,
+    "focalLengthMm": 3750,
+    "focalRatio": 15,
+    "externalId": "1919"
+  },
+  {
+    "brand": "Coronado",
+    "model": "PST",
+    "apertureMm": 40,
+    "focalLengthMm": 400,
+    "focalRatio": 10,
+    "externalId": "144"
+  },
+  {
+    "brand": "Coronado",
+    "model": "Solarmax II 60",
+    "apertureMm": 60,
+    "focalLengthMm": 400,
+    "focalRatio": 6.67,
+    "externalId": "1845"
+  },
+  {
+    "brand": "Coronado",
+    "model": "SolarMax II 60mm",
+    "apertureMm": 60,
+    "focalLengthMm": 400,
+    "focalRatio": 6.67,
+    "externalId": "1867"
+  },
+  {
+    "brand": "Coronado",
+    "model": "SolarMax III 70mm",
+    "apertureMm": 70,
+    "focalLengthMm": 400,
+    "focalRatio": 5.71,
+    "externalId": "3225"
+  },
+  {
+    "brand": "Coronado",
+    "model": "SolarMax III 90mm",
+    "apertureMm": 90,
+    "focalLengthMm": 800,
+    "focalRatio": 8.89,
+    "externalId": "7805"
+  },
+  {
+    "brand": "Custom",
+    "model": "16&quot; f5 Dobsonian",
+    "apertureMm": 400,
+    "focalLengthMm": 2000,
+    "focalRatio": 5,
+    "externalId": "175"
+  },
+  {
+    "brand": "D &amp; G Optical",
+    "model": "Refractor",
+    "apertureMm": 127,
+    "focalLengthMm": 1905,
+    "focalRatio": 15,
+    "externalId": "1154"
+  },
+  {
+    "brand": "DarkStar",
+    "model": "14&quot; f4.5 Dobsonian",
+    "apertureMm": 355,
+    "focalLengthMm": 1600,
+    "focalRatio": 4.51,
+    "externalId": "8"
+  },
+  {
+    "brand": "David Lukehurst",
+    "model": "18&quot; F4 Dobsonian",
+    "apertureMm": 456,
+    "focalLengthMm": 1824,
+    "focalRatio": 4,
+    "externalId": "536"
+  },
+  {
+    "brand": "Daystar",
+    "model": "Solar Scout SS60-DS",
+    "apertureMm": 60,
+    "focalLengthMm": 930,
+    "focalRatio": 15.5,
+    "externalId": "3872"
+  },
+  {
+    "brand": "DWARFLAB",
+    "model": "DWARF II",
+    "apertureMm": 24,
+    "focalLengthMm": 100,
+    "focalRatio": 4.17,
+    "externalId": "25717"
+  },
+  {
+    "brand": "DWARFLAB",
+    "model": "DWARF III",
+    "apertureMm": 35,
+    "focalLengthMm": 150,
+    "focalRatio": 4.29,
+    "externalId": "33706"
+  },
+  {
+    "brand": "DWARFLAB",
+    "model": "DWARF III (Wide)",
+    "apertureMm": 3.4,
+    "focalLengthMm": 6.7,
+    "focalRatio": 1.97,
+    "externalId": "33707"
+  },
+  {
+    "brand": "Explore Scientific",
+    "model": "102mm ED APO Triplet Essential",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "376"
+  },
+  {
+    "brand": "Explore Scientific",
+    "model": "127ed",
+    "apertureMm": 127,
+    "focalLengthMm": 952,
+    "focalRatio": 7.5,
+    "externalId": "189"
+  },
+  {
+    "brand": "Explore Scientific",
+    "model": "208 f3.9 Newtonian",
+    "apertureMm": 208,
+    "focalLengthMm": 812,
+    "focalRatio": 3.9,
+    "externalId": "1844"
+  },
+  {
+    "brand": "Explore Scientific",
+    "model": "208mm f3.9",
+    "apertureMm": 205,
+    "focalLengthMm": 812,
+    "focalRatio": 3.96,
+    "externalId": "1925"
+  },
+  {
+    "brand": "Explore Scientific",
+    "model": "AR102",
+    "apertureMm": 102,
+    "focalLengthMm": 663,
+    "focalRatio": 6.5,
+    "externalId": "369"
+  },
+  {
+    "brand": "Explore Scientific",
+    "model": "AR127",
+    "apertureMm": 127,
+    "focalLengthMm": 826,
+    "focalRatio": 6.5,
+    "externalId": "462"
+  },
+  {
+    "brand": "Explore Scientific",
+    "model": "AR152",
+    "apertureMm": 152,
+    "focalLengthMm": 988,
+    "focalRatio": 6.5,
+    "externalId": "250"
+  },
+  {
+    "brand": "Explore Scientific",
+    "model": "Comet Hunter",
+    "apertureMm": 152,
+    "focalLengthMm": 731,
+    "focalRatio": 4.81,
+    "externalId": "252"
+  },
+  {
+    "brand": "Explore Scientific",
+    "model": "ED115 f/5.5",
+    "apertureMm": 115,
+    "focalLengthMm": 632,
+    "focalRatio": 5.5,
+    "externalId": "3546"
+  },
+  {
+    "brand": "Explore Scientific",
+    "model": "ED140 FPL53 f/6.5",
+    "apertureMm": 140,
+    "focalLengthMm": 910,
+    "focalRatio": 6.5,
+    "externalId": "12551"
+  },
+  {
+    "brand": "Explore Scientific",
+    "model": "ED80",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "12055"
+  },
+  {
+    "brand": "Explore Scientific",
+    "model": "ES 80 APO",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "332"
+  },
+  {
+    "brand": "Founder Optics",
+    "model": "Bino One FOS72",
+    "apertureMm": 72,
+    "focalLengthMm": 432,
+    "focalRatio": 6,
+    "externalId": "16746"
+  },
+  {
+    "brand": "Founder Optics",
+    "model": "Bino One FOS80",
+    "apertureMm": 80,
+    "focalLengthMm": 500,
+    "focalRatio": 6.25,
+    "externalId": "16747"
+  },
+  {
+    "brand": "Founder Optics",
+    "model": "Draco 62 Quintuplet",
+    "apertureMm": 62,
+    "focalLengthMm": 300,
+    "focalRatio": 4.84,
+    "externalId": "34523"
+  },
+  {
+    "brand": "Founder Optics",
+    "model": "FOT106 Triplet APO",
+    "apertureMm": 106,
+    "focalLengthMm": 636,
+    "focalRatio": 6,
+    "externalId": "13706"
+  },
+  {
+    "brand": "Founder Optics",
+    "model": "FOT86 Triplet APO",
+    "apertureMm": 86,
+    "focalLengthMm": 560,
+    "focalRatio": 6.51,
+    "externalId": "16921"
+  },
+  {
+    "brand": "GSO",
+    "model": "10&quot; Newton f5",
+    "apertureMm": 254,
+    "focalLengthMm": 1250,
+    "focalRatio": 4.92,
+    "externalId": "400"
+  },
+  {
+    "brand": "GSO",
+    "model": "12&quot; f4 Truss Newtonian",
+    "apertureMm": 302,
+    "focalLengthMm": 1204,
+    "focalRatio": 3.99,
+    "externalId": "1856"
+  },
+  {
+    "brand": "GSO",
+    "model": "12&quot; Newtonian (various)",
+    "apertureMm": 300,
+    "focalLengthMm": 1500,
+    "focalRatio": 5,
+    "externalId": "1931"
+  },
+  {
+    "brand": "GSO",
+    "model": "12&quot; RC (various)",
+    "apertureMm": 304,
+    "focalLengthMm": 2432,
+    "focalRatio": 8,
+    "externalId": "1891"
+  },
+  {
+    "brand": "GSO",
+    "model": "14&quot; RC (various)",
+    "apertureMm": 355,
+    "focalLengthMm": 2854,
+    "focalRatio": 8.04,
+    "externalId": "1881"
+  },
+  {
+    "brand": "GSO",
+    "model": "16&quot; RC (various)",
+    "apertureMm": 406,
+    "focalLengthMm": 3248,
+    "focalRatio": 8,
+    "externalId": "34598"
+  },
+  {
+    "brand": "GSO",
+    "model": "200mm f4",
+    "apertureMm": 200,
+    "focalLengthMm": 800,
+    "focalRatio": 4,
+    "externalId": "181"
+  },
+  {
+    "brand": "GSO",
+    "model": "6&quot; Newton f5",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "401"
+  },
+  {
+    "brand": "GSO",
+    "model": "8&quot; f/12 Classical Cassegrain",
+    "apertureMm": 203,
+    "focalLengthMm": 2346,
+    "focalRatio": 11.56,
+    "externalId": "14065"
+  },
+  {
+    "brand": "GSO",
+    "model": "Carbon Fibre Newton 8&quot; f/5",
+    "apertureMm": 200,
+    "focalLengthMm": 1000,
+    "focalRatio": 5,
+    "externalId": "521"
+  },
+  {
+    "brand": "GSO",
+    "model": "RC6",
+    "apertureMm": 152,
+    "focalLengthMm": 1370,
+    "focalRatio": 9.01,
+    "externalId": "276"
+  },
+  {
+    "brand": "GSO",
+    "model": "RC8 Carbon Fibre 8&quot; f/8",
+    "apertureMm": 203,
+    "focalLengthMm": 1625,
+    "focalRatio": 8,
+    "externalId": "727"
+  },
+  {
+    "brand": "Helios",
+    "model": "Apollo 150",
+    "apertureMm": 150,
+    "focalLengthMm": 1000,
+    "focalRatio": 6.67,
+    "externalId": "9461"
+  },
+  {
+    "brand": "Ikharos",
+    "model": "10&quot; RC",
+    "apertureMm": 254,
+    "focalLengthMm": 2032,
+    "focalRatio": 8,
+    "externalId": "261"
+  },
+  {
+    "brand": "Ikharos",
+    "model": "200mm RC",
+    "apertureMm": 200,
+    "focalLengthMm": 1600,
+    "focalRatio": 8,
+    "externalId": "151"
+  },
+  {
+    "brand": "IOptron",
+    "model": "Photron 6&quot; RC",
+    "apertureMm": 152,
+    "focalLengthMm": 1370,
+    "focalRatio": 9.01,
+    "externalId": "5635"
+  },
+  {
+    "brand": "IOptron",
+    "model": "Photron 8&quot; RC",
+    "apertureMm": 200,
+    "focalLengthMm": 1624,
+    "focalRatio": 8.12,
+    "externalId": "6112"
+  },
+  {
+    "brand": "Istar",
+    "model": "Perseus AT150-12",
+    "apertureMm": 150,
+    "focalLengthMm": 1800,
+    "focalRatio": 12,
+    "externalId": "28"
+  },
+  {
+    "brand": "Jscope",
+    "model": "80-L",
+    "apertureMm": 80,
+    "focalLengthMm": 1200,
+    "focalRatio": 15,
+    "externalId": "35038"
+  },
+  {
+    "brand": "Jscope",
+    "model": "80-S",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "35039"
+  },
+  {
+    "brand": "Levenhuk",
+    "model": "Ra FT72 ED",
+    "apertureMm": 72,
+    "focalLengthMm": 432,
+    "focalRatio": 6,
+    "externalId": "34573"
+  },
+  {
+    "brand": "Lulu",
+    "model": "80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 600,
+    "focalRatio": 7.5,
+    "externalId": "31067"
+  },
+  {
+    "brand": "Lunt",
+    "model": "130mm Universal",
+    "apertureMm": 130,
+    "focalLengthMm": 910,
+    "focalRatio": 7,
+    "externalId": "34597"
+  },
+  {
+    "brand": "Lunt",
+    "model": "80 THa",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "323"
+  },
+  {
+    "brand": "Lunt",
+    "model": "80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "34960"
+  },
+  {
+    "brand": "Lunt",
+    "model": "ED80",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "12468"
+  },
+  {
+    "brand": "Lunt",
+    "model": "LS100THa",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "504"
+  },
+  {
+    "brand": "Lunt",
+    "model": "LS35 THa",
+    "apertureMm": 35,
+    "focalLengthMm": 400,
+    "focalRatio": 11.43,
+    "externalId": "66"
+  },
+  {
+    "brand": "Lunt",
+    "model": "LS50 THa",
+    "apertureMm": 50,
+    "focalLengthMm": 350,
+    "focalRatio": 7,
+    "externalId": "67"
+  },
+  {
+    "brand": "Lunt",
+    "model": "LS60 THa",
+    "apertureMm": 60,
+    "focalLengthMm": 500,
+    "focalRatio": 8.33,
+    "externalId": "68"
+  },
+  {
+    "brand": "Meade",
+    "model": "10&quot; LX200",
+    "apertureMm": 254,
+    "focalLengthMm": 2540,
+    "focalRatio": 10,
+    "externalId": "204"
+  },
+  {
+    "brand": "Meade",
+    "model": "10&quot; LX850 f/8 ACF",
+    "apertureMm": 254,
+    "focalLengthMm": 2032,
+    "focalRatio": 8,
+    "externalId": "1409"
+  },
+  {
+    "brand": "Meade",
+    "model": "10&quot; LX90",
+    "apertureMm": 254,
+    "focalLengthMm": 2500,
+    "focalRatio": 9.84,
+    "externalId": "2508"
+  },
+  {
+    "brand": "Meade",
+    "model": "12&quot; LX200",
+    "apertureMm": 304,
+    "focalLengthMm": 3048,
+    "focalRatio": 10.03,
+    "externalId": "168"
+  },
+  {
+    "brand": "Meade",
+    "model": "12&quot; LX850 f/8 ACF",
+    "apertureMm": 304.8,
+    "focalLengthMm": 2438,
+    "focalRatio": 8,
+    "externalId": "5530"
+  },
+  {
+    "brand": "Meade",
+    "model": "12&quot; LX90",
+    "apertureMm": 305,
+    "focalLengthMm": 3048,
+    "focalRatio": 9.99,
+    "externalId": "2802"
+  },
+  {
+    "brand": "Meade",
+    "model": "130mm f7 Series 6000",
+    "apertureMm": 130,
+    "focalLengthMm": 910,
+    "focalRatio": 7,
+    "externalId": "1917"
+  },
+  {
+    "brand": "Meade",
+    "model": "14&quot; LX600 ACF",
+    "apertureMm": 14,
+    "focalLengthMm": 2845,
+    "focalRatio": 203.21,
+    "externalId": "1776"
+  },
+  {
+    "brand": "Meade",
+    "model": "14&quot; LX850 f/8 ACF",
+    "apertureMm": 355.8,
+    "focalLengthMm": 2845,
+    "focalRatio": 8,
+    "externalId": "1812"
+  },
+  {
+    "brand": "Meade",
+    "model": "16&quot; LX200",
+    "apertureMm": 406.4,
+    "focalLengthMm": 4064,
+    "focalRatio": 10,
+    "externalId": "198"
+  },
+  {
+    "brand": "Meade",
+    "model": "16&quot; LX850 f/8 ACF",
+    "apertureMm": 406,
+    "focalLengthMm": 3251,
+    "focalRatio": 8.01,
+    "externalId": "7733"
+  },
+  {
+    "brand": "Meade",
+    "model": "5000 80mm f6 Apo",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "260"
+  },
+  {
+    "brand": "Meade",
+    "model": "5000 series Triplet Apo",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "272"
+  },
+  {
+    "brand": "Meade",
+    "model": "6&quot; LX85 f/10 ACF",
+    "apertureMm": 152,
+    "focalLengthMm": 1524,
+    "focalRatio": 10.03,
+    "externalId": "4075"
+  },
+  {
+    "brand": "Meade",
+    "model": "6000 Series APO 70mm f/5",
+    "apertureMm": 70,
+    "focalLengthMm": 350,
+    "focalRatio": 5,
+    "externalId": "3191"
+  },
+  {
+    "brand": "Meade",
+    "model": "7&quot; LX200",
+    "apertureMm": 178,
+    "focalLengthMm": 2670,
+    "focalRatio": 15,
+    "externalId": "197"
+  },
+  {
+    "brand": "Meade",
+    "model": "8&quot; ACF",
+    "apertureMm": 203.5,
+    "focalLengthMm": 2000,
+    "focalRatio": 9.83,
+    "externalId": "188"
+  },
+  {
+    "brand": "Meade",
+    "model": "8&quot; LX200",
+    "apertureMm": 203,
+    "focalLengthMm": 2000,
+    "focalRatio": 9.85,
+    "externalId": "1793"
+  },
+  {
+    "brand": "Meade",
+    "model": "DS-114",
+    "apertureMm": 114,
+    "focalLengthMm": 910,
+    "focalRatio": 7.98,
+    "externalId": "1977"
+  },
+  {
+    "brand": "Meade",
+    "model": "ETX 105",
+    "apertureMm": 105,
+    "focalLengthMm": 1470,
+    "focalRatio": 14,
+    "externalId": "1779"
+  },
+  {
+    "brand": "Meade",
+    "model": "ETX-125",
+    "apertureMm": 125,
+    "focalLengthMm": 1900,
+    "focalRatio": 15.2,
+    "externalId": "331"
+  },
+  {
+    "brand": "Meade",
+    "model": "ETX-60",
+    "apertureMm": 60,
+    "focalLengthMm": 350,
+    "focalRatio": 5.83,
+    "externalId": "1900"
+  },
+  {
+    "brand": "Meade",
+    "model": "ETX-80",
+    "apertureMm": 80,
+    "focalLengthMm": 400,
+    "focalRatio": 5,
+    "externalId": "231"
+  },
+  {
+    "brand": "Meade",
+    "model": "ETX-90",
+    "apertureMm": 90,
+    "focalLengthMm": 1250,
+    "focalRatio": 13.89,
+    "externalId": "1926"
+  },
+  {
+    "brand": "Meade",
+    "model": "LightBridge 16&quot;",
+    "apertureMm": 406,
+    "focalLengthMm": 1829,
+    "focalRatio": 4.5,
+    "externalId": "2325"
+  },
+  {
+    "brand": "Meade",
+    "model": "LightBridge Mini",
+    "apertureMm": 114,
+    "focalLengthMm": 450,
+    "focalRatio": 3.95,
+    "externalId": "745"
+  },
+  {
+    "brand": "Meade",
+    "model": "LS 6 ACF",
+    "apertureMm": 152,
+    "focalLengthMm": 1520,
+    "focalRatio": 10,
+    "externalId": "194"
+  },
+  {
+    "brand": "Meade",
+    "model": "LX 800",
+    "apertureMm": 254,
+    "focalLengthMm": 2032,
+    "focalRatio": 8,
+    "externalId": "419"
+  },
+  {
+    "brand": "Meade",
+    "model": "LX10",
+    "apertureMm": 203.2,
+    "focalLengthMm": 2000,
+    "focalRatio": 9.84,
+    "externalId": "160"
+  },
+  {
+    "brand": "Meade",
+    "model": "LX200GPS 14&quot;",
+    "apertureMm": 356,
+    "focalLengthMm": 3556,
+    "focalRatio": 9.99,
+    "externalId": "287"
+  },
+  {
+    "brand": "Meade",
+    "model": "LX600",
+    "apertureMm": 305,
+    "focalLengthMm": 2438,
+    "focalRatio": 7.99,
+    "externalId": "397"
+  },
+  {
+    "brand": "Meade",
+    "model": "LX90 8&quot;",
+    "apertureMm": 203.2,
+    "focalLengthMm": 2000,
+    "focalRatio": 9.84,
+    "externalId": "312"
+  },
+  {
+    "brand": "Meade",
+    "model": "LXD SN-10 AT",
+    "apertureMm": 254,
+    "focalLengthMm": 1016,
+    "focalRatio": 4,
+    "externalId": "242"
+  },
+  {
+    "brand": "Meade",
+    "model": "RCX 400",
+    "apertureMm": 254,
+    "focalLengthMm": 2032,
+    "focalRatio": 8,
+    "externalId": "163"
+  },
+  {
+    "brand": "Meade",
+    "model": "RCX400 14&quot;",
+    "apertureMm": 356,
+    "focalLengthMm": 2845,
+    "focalRatio": 7.99,
+    "externalId": "1934"
+  },
+  {
+    "brand": "Meade",
+    "model": "SN8 Schmidt Newtonian",
+    "apertureMm": 203,
+    "focalLengthMm": 812,
+    "focalRatio": 4,
+    "externalId": "1788"
+  },
+  {
+    "brand": "NASA",
+    "model": "James Webb Space Telescope",
+    "apertureMm": 6500,
+    "focalLengthMm": 131400,
+    "focalRatio": 20.22,
+    "externalId": "21696"
+  },
+  {
+    "brand": "NASA",
+    "model": "MOSPO",
+    "apertureMm": 623,
+    "focalLengthMm": 12460,
+    "focalRatio": 20,
+    "externalId": "28451"
+  },
+  {
+    "brand": "Nikon",
+    "model": "NIKKOR Z 180-600mm f/5.6-6.3 VR - 600mm",
+    "apertureMm": 95,
+    "focalLengthMm": 600,
+    "focalRatio": 6.32,
+    "externalId": "37051"
+  },
+  {
+    "brand": "Obsession",
+    "model": "22&quot; UC",
+    "apertureMm": 559,
+    "focalLengthMm": 2337,
+    "focalRatio": 4.18,
+    "externalId": "26096"
+  },
+  {
+    "brand": "Obsession UC 18&quot;",
+    "model": "UC 18&quot;",
+    "apertureMm": 457,
+    "focalLengthMm": 1905,
+    "focalRatio": 4.17,
+    "externalId": "220"
+  },
+  {
+    "brand": "Omegon",
+    "model": "127 ED APO",
+    "apertureMm": 127,
+    "focalLengthMm": 952,
+    "focalRatio": 7.5,
+    "externalId": "1986"
+  },
+  {
+    "brand": "Omegon",
+    "model": "127mm Maksutov",
+    "apertureMm": 127,
+    "focalLengthMm": 1900,
+    "focalRatio": 14.96,
+    "externalId": "1828"
+  },
+  {
+    "brand": "Omegon",
+    "model": "72mm",
+    "apertureMm": 72,
+    "focalLengthMm": 350,
+    "focalRatio": 4.86,
+    "externalId": "1989"
+  },
+  {
+    "brand": "Omegon",
+    "model": "AC 102/660",
+    "apertureMm": 102,
+    "focalLengthMm": 660,
+    "focalRatio": 6.47,
+    "externalId": "33078"
+  },
+  {
+    "brand": "Omegon",
+    "model": "AC 90/1000",
+    "apertureMm": 90,
+    "focalLengthMm": 1000,
+    "focalRatio": 11.11,
+    "externalId": "33021"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Advanced 150/750",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "32228"
+  },
+  {
+    "brand": "Omegon",
+    "model": "APO AP 61/360 Triplet ED",
+    "apertureMm": 61,
+    "focalLengthMm": 360,
+    "focalRatio": 5.9,
+    "externalId": "29764"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Cassegrain Pro CC 203/2436",
+    "apertureMm": 203,
+    "focalLengthMm": 2436,
+    "focalRatio": 12,
+    "externalId": "28249"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Dobson Advanced N 152/1200",
+    "apertureMm": 152,
+    "focalLengthMm": 1200,
+    "focalRatio": 7.89,
+    "externalId": "33153"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Dobson Advanced X N 203/1200",
+    "apertureMm": 203,
+    "focalLengthMm": 1200,
+    "focalRatio": 5.91,
+    "externalId": "33507"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Dobson Advanced X N 304/1500",
+    "apertureMm": 304,
+    "focalLengthMm": 1500,
+    "focalRatio": 4.93,
+    "externalId": "33104"
+  },
+  {
+    "brand": "Omegon",
+    "model": "N 114/900",
+    "apertureMm": 114,
+    "focalLengthMm": 900,
+    "focalRatio": 7.89,
+    "externalId": "30875"
+  },
+  {
+    "brand": "Omegon",
+    "model": "N 130/920",
+    "apertureMm": 130,
+    "focalLengthMm": 920,
+    "focalRatio": 7.08,
+    "externalId": "31349"
+  },
+  {
+    "brand": "Omegon",
+    "model": "N 150/750",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "33226"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 104/650 ED Triplet",
+    "apertureMm": 104,
+    "focalLengthMm": 650,
+    "focalRatio": 6.25,
+    "externalId": "33169"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 108/600 Quintuplet",
+    "apertureMm": 108,
+    "focalLengthMm": 600,
+    "focalRatio": 5.56,
+    "externalId": "34259"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 108/600 Quintuplet",
+    "apertureMm": 108,
+    "focalLengthMm": 600,
+    "focalRatio": 5.56,
+    "externalId": "32800"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 110/660 ED",
+    "apertureMm": 110,
+    "focalLengthMm": 660,
+    "focalRatio": 6,
+    "externalId": "32077"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 40/180",
+    "apertureMm": 40,
+    "focalLengthMm": 180,
+    "focalRatio": 4.5,
+    "externalId": "33777"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 66/400 ED",
+    "apertureMm": 66,
+    "focalLengthMm": 400,
+    "focalRatio": 6.06,
+    "externalId": "34281"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 72/400 Quintuplet",
+    "apertureMm": 72,
+    "focalLengthMm": 400,
+    "focalRatio": 5.56,
+    "externalId": "29699"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 76/342 Triplet ED",
+    "apertureMm": 76,
+    "focalLengthMm": 342,
+    "focalRatio": 4.5,
+    "externalId": "31744"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 80/500 ED Carbon",
+    "apertureMm": 80,
+    "focalLengthMm": 500,
+    "focalRatio": 6.25,
+    "externalId": "33807"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 85/510 Triplet ED FCD-100",
+    "apertureMm": 85,
+    "focalLengthMm": 510,
+    "focalRatio": 6,
+    "externalId": "32476"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 85/560 ED Triplet",
+    "apertureMm": 85,
+    "focalLengthMm": 560,
+    "focalRatio": 6.59,
+    "externalId": "31683"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 94/517 Triplet ED",
+    "apertureMm": 94,
+    "focalLengthMm": 517,
+    "focalRatio": 5.5,
+    "externalId": "33742"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro APO AP 96/575 Triplet ED FCD-100",
+    "apertureMm": 96,
+    "focalLengthMm": 530,
+    "focalRatio": 5.52,
+    "externalId": "34485"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro Astrograph 154/600",
+    "apertureMm": 154,
+    "focalLengthMm": 600,
+    "focalRatio": 3.9,
+    "externalId": "34491"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro Astrograph 203/800",
+    "apertureMm": 203,
+    "focalLengthMm": 800,
+    "focalRatio": 3.94,
+    "externalId": "33473"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro Astrograph 254/1016",
+    "apertureMm": 254,
+    "focalLengthMm": 1016,
+    "focalRatio": 4,
+    "externalId": "34058"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Pro Astrograph N 150/420",
+    "apertureMm": 150,
+    "focalLengthMm": 420,
+    "focalRatio": 2.8,
+    "externalId": "34059"
+  },
+  {
+    "brand": "Omegon",
+    "model": "ProDob N 203/1200",
+    "apertureMm": 203,
+    "focalLengthMm": 1200,
+    "focalRatio": 5.91,
+    "externalId": "31417"
+  },
+  {
+    "brand": "Omegon",
+    "model": "ProDob N 254/1250 DOB II",
+    "apertureMm": 254,
+    "focalLengthMm": 1250,
+    "focalRatio": 4.92,
+    "externalId": "33922"
+  },
+  {
+    "brand": "Omegon",
+    "model": "ProDob N 304/1500 DOB II",
+    "apertureMm": 304,
+    "focalLengthMm": 1500,
+    "focalRatio": 4.93,
+    "externalId": "32106"
+  },
+  {
+    "brand": "Omegon",
+    "model": "ProNewton N 153/750",
+    "apertureMm": 153,
+    "focalLengthMm": 750,
+    "focalRatio": 4.9,
+    "externalId": "33778"
+  },
+  {
+    "brand": "Omegon",
+    "model": "ProNewton N 153/750",
+    "apertureMm": 153,
+    "focalLengthMm": 750,
+    "focalRatio": 4.9,
+    "externalId": "28652"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Ritchey-Chretien Pro RC 154/1370",
+    "apertureMm": 154,
+    "focalLengthMm": 1370,
+    "focalRatio": 8.9,
+    "externalId": "33743"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Ritchey-Chretien Pro RC 203/1624",
+    "apertureMm": 203,
+    "focalLengthMm": 1624,
+    "focalRatio": 8,
+    "externalId": "33927"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Ritchey-Chretien Pro RC 250/2000",
+    "apertureMm": 250,
+    "focalLengthMm": 2000,
+    "focalRatio": 8,
+    "externalId": "33464"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Ritchey-Chretien Pro RC 304/2432 Truss",
+    "apertureMm": 304,
+    "focalLengthMm": 2432,
+    "focalRatio": 8,
+    "externalId": "33440"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Ritchey-Chretien Pro RC 355/2845 Truss",
+    "apertureMm": 355,
+    "focalLengthMm": 2845,
+    "focalRatio": 8.01,
+    "externalId": "33427"
+  },
+  {
+    "brand": "Omegon",
+    "model": "Ritchey-Chretien Pro RC 406/3250 Truss",
+    "apertureMm": 406,
+    "focalLengthMm": 3250,
+    "focalRatio": 8,
+    "externalId": "33241"
+  },
+  {
+    "brand": "Orion",
+    "model": "10&quot; f/3.9 Newtonian Astrograph",
+    "apertureMm": 254,
+    "focalLengthMm": 1000,
+    "focalRatio": 3.94,
+    "externalId": "617"
+  },
+  {
+    "brand": "Orion",
+    "model": "110 Duplex",
+    "apertureMm": 110,
+    "focalLengthMm": 770,
+    "focalRatio": 7,
+    "externalId": "325"
+  },
+  {
+    "brand": "Orion",
+    "model": "120mm f/5.0 (short)",
+    "apertureMm": 120,
+    "focalLengthMm": 600,
+    "focalRatio": 5,
+    "externalId": "1811"
+  },
+  {
+    "brand": "Orion",
+    "model": "120mm f5 (short)",
+    "apertureMm": 120,
+    "focalLengthMm": 600,
+    "focalRatio": 5,
+    "externalId": "1971"
+  },
+  {
+    "brand": "Orion",
+    "model": "120mm f8.3 (long)",
+    "apertureMm": 120,
+    "focalLengthMm": 1000,
+    "focalRatio": 8.33,
+    "externalId": "1960"
+  },
+  {
+    "brand": "Orion",
+    "model": "150mm Maksutov",
+    "apertureMm": 150,
+    "focalLengthMm": 1800,
+    "focalRatio": 12,
+    "externalId": "1947"
+  },
+  {
+    "brand": "Orion",
+    "model": "50mm Guidescope",
+    "apertureMm": 50,
+    "focalLengthMm": 169,
+    "focalRatio": 3.38,
+    "externalId": "311"
+  },
+  {
+    "brand": "Orion",
+    "model": "6&quot; RC",
+    "apertureMm": 150,
+    "focalLengthMm": 1370,
+    "focalRatio": 9.13,
+    "externalId": "1916"
+  },
+  {
+    "brand": "Orion",
+    "model": "8&quot; f/3.9 Newtonian Astrograph",
+    "apertureMm": 203,
+    "focalLengthMm": 800,
+    "focalRatio": 3.94,
+    "externalId": "349"
+  },
+  {
+    "brand": "Orion",
+    "model": "8&quot; RC",
+    "apertureMm": 200,
+    "focalLengthMm": 1600,
+    "focalRatio": 8,
+    "externalId": "1859"
+  },
+  {
+    "brand": "Orion",
+    "model": "8&quot; Reflector F4.9",
+    "apertureMm": 203,
+    "focalLengthMm": 1000,
+    "focalRatio": 4.93,
+    "externalId": "539"
+  },
+  {
+    "brand": "Orion",
+    "model": "80ED APO f6.26",
+    "apertureMm": 80,
+    "focalLengthMm": 500,
+    "focalRatio": 6.25,
+    "externalId": "1905"
+  },
+  {
+    "brand": "Orion",
+    "model": "80EDT-CF",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "6210"
+  },
+  {
+    "brand": "Orion",
+    "model": "Apex 127",
+    "apertureMm": 127,
+    "focalLengthMm": 1540,
+    "focalRatio": 12.13,
+    "externalId": "174"
+  },
+  {
+    "brand": "Orion",
+    "model": "ED 80mm",
+    "apertureMm": 80,
+    "focalLengthMm": 600,
+    "focalRatio": 7.5,
+    "externalId": "377"
+  },
+  {
+    "brand": "Orion",
+    "model": "ED80T CF",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "193"
+  },
+  {
+    "brand": "Orion",
+    "model": "EON",
+    "apertureMm": 110,
+    "focalLengthMm": 660,
+    "focalRatio": 6,
+    "externalId": "534"
+  },
+  {
+    "brand": "Orion",
+    "model": "EON 115mm ED",
+    "apertureMm": 115,
+    "focalLengthMm": 805,
+    "focalRatio": 7,
+    "externalId": "373"
+  },
+  {
+    "brand": "Orion",
+    "model": "EON 130",
+    "apertureMm": 130,
+    "focalLengthMm": 910,
+    "focalRatio": 7,
+    "externalId": "324"
+  },
+  {
+    "brand": "Orion",
+    "model": "EON 80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 500,
+    "focalRatio": 6.25,
+    "externalId": "11675"
+  },
+  {
+    "brand": "Orion",
+    "model": "GoScope 80mm",
+    "apertureMm": 80,
+    "focalLengthMm": 350,
+    "focalRatio": 4.38,
+    "externalId": "1827"
+  },
+  {
+    "brand": "Orion",
+    "model": "Guidescope 60",
+    "apertureMm": 60,
+    "focalLengthMm": 240,
+    "focalRatio": 4,
+    "externalId": "1951"
+  },
+  {
+    "brand": "Orion",
+    "model": "Guidescope 60mm",
+    "apertureMm": 60,
+    "focalLengthMm": 240,
+    "focalRatio": 4,
+    "externalId": "1865"
+  },
+  {
+    "brand": "Orion",
+    "model": "Guidescope 70",
+    "apertureMm": 70,
+    "focalLengthMm": 279,
+    "focalRatio": 3.99,
+    "externalId": "1924"
+  },
+  {
+    "brand": "Orion",
+    "model": "Mini Guidescope",
+    "apertureMm": 50,
+    "focalLengthMm": 162,
+    "focalRatio": 3.24,
+    "externalId": "319"
+  },
+  {
+    "brand": "Orion",
+    "model": "Premium 110 ED",
+    "apertureMm": 110,
+    "focalLengthMm": 770,
+    "focalRatio": 7,
+    "externalId": "1932"
+  },
+  {
+    "brand": "Orion",
+    "model": "RC 8&quot;",
+    "apertureMm": 200,
+    "focalLengthMm": 1600,
+    "focalRatio": 8,
+    "externalId": "1955"
+  },
+  {
+    "brand": "Orion",
+    "model": "Short Tube 80",
+    "apertureMm": 80,
+    "focalLengthMm": 400,
+    "focalRatio": 5,
+    "externalId": "318"
+  },
+  {
+    "brand": "Orion",
+    "model": "SkyQuest XT10",
+    "apertureMm": 254,
+    "focalLengthMm": 1200,
+    "focalRatio": 4.72,
+    "externalId": "629"
+  },
+  {
+    "brand": "Orion",
+    "model": "SkyQuest XT10g",
+    "apertureMm": 254,
+    "focalLengthMm": 1200,
+    "focalRatio": 4.72,
+    "externalId": "191"
+  },
+  {
+    "brand": "Orion",
+    "model": "SpaceProbe 130ST EQ",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "268"
+  },
+  {
+    "brand": "Orion",
+    "model": "XT-10",
+    "apertureMm": 254,
+    "focalLengthMm": 1200,
+    "focalRatio": 4.72,
+    "externalId": "1787"
+  },
+  {
+    "brand": "Orion",
+    "model": "XT8",
+    "apertureMm": 203,
+    "focalLengthMm": 1256,
+    "focalRatio": 6.19,
+    "externalId": "316"
+  },
+  {
+    "brand": "Orion Optics",
+    "model": "10&quot; VX10",
+    "apertureMm": 250,
+    "focalLengthMm": 1200,
+    "focalRatio": 4.8,
+    "externalId": "26"
+  },
+  {
+    "brand": "Orion Optics",
+    "model": "12&quot; VX f4",
+    "apertureMm": 300,
+    "focalLengthMm": 1200,
+    "focalRatio": 4,
+    "externalId": "1826"
+  },
+  {
+    "brand": "Orion Optics",
+    "model": "300mm F/5.3 Newtonian",
+    "apertureMm": 300,
+    "focalLengthMm": 1590,
+    "focalRatio": 5.3,
+    "externalId": "29"
+  },
+  {
+    "brand": "Orion Optics",
+    "model": "ODK10",
+    "apertureMm": 250,
+    "focalLengthMm": 1700,
+    "focalRatio": 6.8,
+    "externalId": "54"
+  },
+  {
+    "brand": "Orion Optics",
+    "model": "ODK16",
+    "apertureMm": 400,
+    "focalLengthMm": 2720,
+    "focalRatio": 6.8,
+    "externalId": "1874"
+  },
+  {
+    "brand": "Orion Optics",
+    "model": "OMC 250",
+    "apertureMm": 250,
+    "focalLengthMm": 2250,
+    "focalRatio": 9,
+    "externalId": "352"
+  },
+  {
+    "brand": "Orion Optics",
+    "model": "OMC140",
+    "apertureMm": 140,
+    "focalLengthMm": 2000,
+    "focalRatio": 14.29,
+    "externalId": "410"
+  },
+  {
+    "brand": "Orion Optics",
+    "model": "VX6",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "205"
+  },
+  {
+    "brand": "Orion Optics",
+    "model": "VX6L",
+    "apertureMm": 150,
+    "focalLengthMm": 1200,
+    "focalRatio": 8,
+    "externalId": "836"
+  },
+  {
+    "brand": "Orion Optics",
+    "model": "VX8",
+    "apertureMm": 200,
+    "focalLengthMm": 900,
+    "focalRatio": 4.5,
+    "externalId": "837"
+  },
+  {
+    "brand": "Orion Optics UK",
+    "model": "250mm SPX",
+    "apertureMm": 250,
+    "focalLengthMm": 1600,
+    "focalRatio": 6.4,
+    "externalId": "71"
+  },
+  {
+    "brand": "Orion Optics UK",
+    "model": "DX300",
+    "apertureMm": 300,
+    "focalLengthMm": 1200,
+    "focalRatio": 4,
+    "externalId": "375"
+  },
+  {
+    "brand": "Orion Optics UK",
+    "model": "Europa 150",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "340"
+  },
+  {
+    "brand": "Orion Optics UK",
+    "model": "Europa 200",
+    "apertureMm": 203,
+    "focalLengthMm": 1200,
+    "focalRatio": 5.91,
+    "externalId": "293"
+  },
+  {
+    "brand": "Ostara",
+    "model": "102ED",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "32"
+  },
+  {
+    "brand": "Pentax",
+    "model": "105sdhf",
+    "apertureMm": 105,
+    "focalLengthMm": 700,
+    "focalRatio": 6.67,
+    "externalId": "338"
+  },
+  {
+    "brand": "Pentax",
+    "model": "75sdhf",
+    "apertureMm": 75,
+    "focalLengthMm": 500,
+    "focalRatio": 6.67,
+    "externalId": "339"
+  },
+  {
+    "brand": "Pentax",
+    "model": "DA18-135mm ED WR",
+    "apertureMm": 24.1,
+    "focalLengthMm": 135,
+    "focalRatio": 5.6,
+    "externalId": "18662"
+  },
+  {
+    "brand": "Pentax",
+    "model": "DA18-250mm ED",
+    "apertureMm": 39.7,
+    "focalLengthMm": 250,
+    "focalRatio": 6.3,
+    "externalId": "18663"
+  },
+  {
+    "brand": "Pentax",
+    "model": "DA50mm F1.8",
+    "apertureMm": 27.8,
+    "focalLengthMm": 50,
+    "focalRatio": 1.8,
+    "externalId": "18666"
+  },
+  {
+    "brand": "Pentax",
+    "model": "DA55-300mm ED PLM WR",
+    "apertureMm": 47.6,
+    "focalLengthMm": 300,
+    "focalRatio": 6.3,
+    "externalId": "18664"
+  },
+  {
+    "brand": "Pentax",
+    "model": "M50mm F1.7",
+    "apertureMm": 29.4,
+    "focalLengthMm": 50,
+    "focalRatio": 1.7,
+    "externalId": "18665"
+  },
+  {
+    "brand": "Pentax",
+    "model": "PF-80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 520,
+    "focalRatio": 6.5,
+    "externalId": "5210"
+  },
+  {
+    "brand": "PlaneWave",
+    "model": "12.5&quot; CDK",
+    "apertureMm": 320,
+    "focalLengthMm": 2541,
+    "focalRatio": 7.94,
+    "externalId": "1851"
+  },
+  {
+    "brand": "PlaneWave",
+    "model": "14&quot; CDK",
+    "apertureMm": 356,
+    "focalLengthMm": 2563,
+    "focalRatio": 7.2,
+    "externalId": "393"
+  },
+  {
+    "brand": "PlaneWave",
+    "model": "17&quot; CDK",
+    "apertureMm": 432,
+    "focalLengthMm": 2939,
+    "focalRatio": 6.8,
+    "externalId": "394"
+  },
+  {
+    "brand": "Planewave",
+    "model": "24&quot; RC",
+    "apertureMm": 610,
+    "focalLengthMm": 3962,
+    "focalRatio": 6.5,
+    "externalId": "1912"
+  },
+  {
+    "brand": "Planewave",
+    "model": "CDK700",
+    "apertureMm": 700,
+    "focalLengthMm": 4531,
+    "focalRatio": 6.47,
+    "externalId": "4340"
+  },
+  {
+    "brand": "PlaneWave",
+    "model": "PW1000",
+    "apertureMm": 1000,
+    "focalLengthMm": 6000,
+    "focalRatio": 6,
+    "externalId": "533"
+  },
+  {
+    "brand": "Primaluce",
+    "model": "Airy APO 65F",
+    "apertureMm": 65,
+    "focalLengthMm": 420,
+    "focalRatio": 6.46,
+    "externalId": "1025"
+  },
+  {
+    "brand": "QHY",
+    "model": "Mini Guidescope",
+    "apertureMm": 30,
+    "focalLengthMm": 130,
+    "focalRatio": 4.33,
+    "externalId": "816"
+  },
+  {
+    "brand": "Questar",
+    "model": "3.5",
+    "apertureMm": 89,
+    "focalLengthMm": 1280,
+    "focalRatio": 14.38,
+    "externalId": "33206"
+  },
+  {
+    "brand": "Questar",
+    "model": "7",
+    "apertureMm": 178,
+    "focalLengthMm": 2425,
+    "focalRatio": 13.62,
+    "externalId": "33065"
+  },
+  {
+    "brand": "Radian",
+    "model": "Raptor 61",
+    "apertureMm": 61,
+    "focalLengthMm": 275,
+    "focalRatio": 4.51,
+    "externalId": "11125"
+  },
+  {
+    "brand": "Relevation",
+    "model": "Dobsonian 12&quot;  f/5",
+    "apertureMm": 305,
+    "focalLengthMm": 1520,
+    "focalRatio": 4.98,
+    "externalId": "835"
+  },
+  {
+    "brand": "Revelation",
+    "model": "12&quot; f5 Dobsonian",
+    "apertureMm": 304,
+    "focalLengthMm": 1520,
+    "focalRatio": 5,
+    "externalId": "21"
+  },
+  {
+    "brand": "RVO",
+    "model": "Horizon 80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "23207"
+  },
+  {
+    "brand": "Samyang",
+    "model": "135mm f/2 ED UMC",
+    "apertureMm": 67.5,
+    "focalLengthMm": 135,
+    "focalRatio": 2,
+    "externalId": "1674"
+  },
+  {
+    "brand": "Saxon",
+    "model": "10&quot; Deepsky Dobsonian",
+    "apertureMm": 254,
+    "focalLengthMm": 1200,
+    "focalRatio": 4.72,
+    "externalId": "34574"
+  },
+  {
+    "brand": "Saxon",
+    "model": "8&quot; Dobsonian Telescope",
+    "apertureMm": 203,
+    "focalLengthMm": 1200,
+    "focalRatio": 5.91,
+    "externalId": "179"
+  },
+  {
+    "brand": "Saxon",
+    "model": "AstroSeeker 127/1500 MAK",
+    "apertureMm": 127,
+    "focalLengthMm": 1500,
+    "focalRatio": 11.81,
+    "externalId": "26928"
+  },
+  {
+    "brand": "Saxon",
+    "model": "FCD100 80ED APO Triplet",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "6961"
+  },
+  {
+    "brand": "Seestar",
+    "model": "S50",
+    "apertureMm": 50,
+    "focalLengthMm": 250,
+    "focalRatio": 5,
+    "externalId": "26927"
+  },
+  {
+    "brand": "SharpStar",
+    "model": "100QII",
+    "apertureMm": 100,
+    "focalLengthMm": 580,
+    "focalRatio": 5.8,
+    "externalId": "8176"
+  },
+  {
+    "brand": "SharpStar",
+    "model": "107H APO",
+    "apertureMm": 107,
+    "focalLengthMm": 700,
+    "focalRatio": 6.54,
+    "externalId": "182"
+  },
+  {
+    "brand": "SharpStar",
+    "model": "121SDQ",
+    "apertureMm": 121,
+    "focalLengthMm": 678,
+    "focalRatio": 5.6,
+    "externalId": "6710"
+  },
+  {
+    "brand": "SharpStar",
+    "model": "13028HNT",
+    "apertureMm": 130,
+    "focalLengthMm": 364,
+    "focalRatio": 2.8,
+    "externalId": "16925"
+  },
+  {
+    "brand": "SharpStar",
+    "model": "140PH",
+    "apertureMm": 140,
+    "focalLengthMm": 910,
+    "focalRatio": 6.5,
+    "externalId": "6424"
+  },
+  {
+    "brand": "SharpStar",
+    "model": "15028HNT",
+    "apertureMm": 150,
+    "focalLengthMm": 420,
+    "focalRatio": 2.8,
+    "externalId": "11946"
+  },
+  {
+    "brand": "SharpStar",
+    "model": "20032PNT",
+    "apertureMm": 200,
+    "focalLengthMm": 640,
+    "focalRatio": 3.2,
+    "externalId": "7843"
+  },
+  {
+    "brand": "SharpStar",
+    "model": "61EDPH II f/5.5",
+    "apertureMm": 61,
+    "focalLengthMm": 335,
+    "focalRatio": 5.49,
+    "externalId": "10140"
+  },
+  {
+    "brand": "SharpStar",
+    "model": "61EDPH III f/5.9",
+    "apertureMm": 61,
+    "focalLengthMm": 360,
+    "focalRatio": 5.9,
+    "externalId": "26723"
+  },
+  {
+    "brand": "SharpStar",
+    "model": "76EDPH",
+    "apertureMm": 76,
+    "focalLengthMm": 418,
+    "focalRatio": 5.5,
+    "externalId": "11659"
+  },
+  {
+    "brand": "SharpStar",
+    "model": "94EDPH",
+    "apertureMm": 94,
+    "focalLengthMm": 517,
+    "focalRatio": 5.5,
+    "externalId": "11255"
+  },
+  {
+    "brand": "Sharpstar",
+    "model": "SCA260",
+    "apertureMm": 260,
+    "focalLengthMm": 1300,
+    "focalRatio": 5,
+    "externalId": "12849"
+  },
+  {
+    "brand": "Sharpstar",
+    "model": "Z4",
+    "apertureMm": 100,
+    "focalLengthMm": 550,
+    "focalRatio": 5.5,
+    "externalId": "22857"
+  },
+  {
+    "brand": "Sky Rover",
+    "model": "80EDT",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "8669"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "9x50 Finder",
+    "apertureMm": 50,
+    "focalLengthMm": 180,
+    "focalRatio": 3.6,
+    "externalId": "505"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Capricorn 70",
+    "apertureMm": 70,
+    "focalLengthMm": 900,
+    "focalRatio": 12.86,
+    "externalId": "34586"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Equinox 100 Pro",
+    "apertureMm": 100,
+    "focalLengthMm": 900,
+    "focalRatio": 9,
+    "externalId": "135"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Equinox 120 Pro",
+    "apertureMm": 120,
+    "focalLengthMm": 900,
+    "focalRatio": 7.5,
+    "externalId": "136"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Equinox 66 ED",
+    "apertureMm": 66,
+    "focalLengthMm": 400,
+    "focalRatio": 6.06,
+    "externalId": "313"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Equinox 80 Pro",
+    "apertureMm": 80,
+    "focalLengthMm": 500,
+    "focalRatio": 6.25,
+    "externalId": "55"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Equinox 80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 500,
+    "focalRatio": 6.25,
+    "externalId": "7299"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Esprit 100 Quintuplet",
+    "apertureMm": 100,
+    "focalLengthMm": 500,
+    "focalRatio": 5,
+    "externalId": "165"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Esprit 100ED",
+    "apertureMm": 100,
+    "focalLengthMm": 550,
+    "focalRatio": 5.5,
+    "externalId": "227"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Esprit 120ED",
+    "apertureMm": 120,
+    "focalLengthMm": 840,
+    "focalRatio": 7,
+    "externalId": "74"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Esprit 150ED",
+    "apertureMm": 150,
+    "focalLengthMm": 1050,
+    "focalRatio": 7,
+    "externalId": "161"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Esprit 80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 400,
+    "focalRatio": 5,
+    "externalId": "69"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "EvoGuide 50ED",
+    "apertureMm": 50,
+    "focalLengthMm": 242,
+    "focalRatio": 4.84,
+    "externalId": "2676"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Evolux 62ED",
+    "apertureMm": 62,
+    "focalLengthMm": 400,
+    "focalRatio": 6.45,
+    "externalId": "8154"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Evolux 82ED",
+    "apertureMm": 82,
+    "focalLengthMm": 530,
+    "focalRatio": 6.46,
+    "externalId": "9656"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Evostar 100ED DS-Pro",
+    "apertureMm": 100,
+    "focalLengthMm": 900,
+    "focalRatio": 9,
+    "externalId": "46"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Evostar 102",
+    "apertureMm": 102,
+    "focalLengthMm": 1000,
+    "focalRatio": 9.8,
+    "externalId": "35378"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Evostar 120",
+    "apertureMm": 120,
+    "focalLengthMm": 1000,
+    "focalRatio": 8.33,
+    "externalId": "185"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Evostar 120ED DS-Pro",
+    "apertureMm": 120,
+    "focalLengthMm": 900,
+    "focalRatio": 7.5,
+    "externalId": "23"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Evostar 150",
+    "apertureMm": 150,
+    "focalLengthMm": 1200,
+    "focalRatio": 8,
+    "externalId": "211"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Evostar 150ED DS-Pro",
+    "apertureMm": 150,
+    "focalLengthMm": 1200,
+    "focalRatio": 8,
+    "externalId": "5698"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Evostar 72ED",
+    "apertureMm": 72,
+    "focalLengthMm": 420,
+    "focalRatio": 5.83,
+    "externalId": "2654"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Evostar 80ED DS-Pro",
+    "apertureMm": 80,
+    "focalLengthMm": 600,
+    "focalRatio": 7.5,
+    "externalId": "3"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Evostar 90 f10",
+    "apertureMm": 90,
+    "focalLengthMm": 900,
+    "focalRatio": 10,
+    "externalId": "72"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Evostar 90/660",
+    "apertureMm": 90,
+    "focalLengthMm": 660,
+    "focalRatio": 7.33,
+    "externalId": "19571"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Explorer 130 / 130M",
+    "apertureMm": 130,
+    "focalLengthMm": 900,
+    "focalRatio": 6.92,
+    "externalId": "460"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Explorer 130P / P-DS",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "38"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Explorer 150P / P-DS",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "39"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Explorer 150PDS",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "53"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Explorer 150PL",
+    "apertureMm": 150,
+    "focalLengthMm": 1200,
+    "focalRatio": 8,
+    "externalId": "40"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Explorer 190MN DS-Pro",
+    "apertureMm": 190,
+    "focalLengthMm": 1000,
+    "focalRatio": 5.26,
+    "externalId": "18"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Explorer 200P / P-DS",
+    "apertureMm": 200,
+    "focalLengthMm": 1000,
+    "focalRatio": 5,
+    "externalId": "41"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Explorer 250P / P-DS",
+    "apertureMm": 250,
+    "focalLengthMm": 1200,
+    "focalRatio": 4.8,
+    "externalId": "42"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Explorer 300P / P-DS",
+    "apertureMm": 305,
+    "focalLengthMm": 1500,
+    "focalRatio": 4.92,
+    "externalId": "19"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "HAC125",
+    "apertureMm": 125,
+    "focalLengthMm": 250,
+    "focalRatio": 2,
+    "externalId": "34564"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Heliostar 100Ha",
+    "apertureMm": 100,
+    "focalLengthMm": 800,
+    "focalRatio": 8,
+    "externalId": "39126"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Heliostar 76Ha",
+    "apertureMm": 76,
+    "focalLengthMm": 630,
+    "focalRatio": 8.29,
+    "externalId": "38950"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Heritage 100P",
+    "apertureMm": 100,
+    "focalLengthMm": 400,
+    "focalRatio": 4,
+    "externalId": "202"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Heritage 130P",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "48"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Heritage 150P",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "10054"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Heritage 90 Virtuoso",
+    "apertureMm": 90,
+    "focalLengthMm": 1250,
+    "focalRatio": 13.89,
+    "externalId": "57"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Heritage-114p Virtuoso",
+    "apertureMm": 114,
+    "focalLengthMm": 500,
+    "focalRatio": 4.39,
+    "externalId": "387"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Infinity-76P",
+    "apertureMm": 76,
+    "focalLengthMm": 300,
+    "focalRatio": 3.95,
+    "externalId": "27338"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Mercury 70/500",
+    "apertureMm": 70,
+    "focalLengthMm": 500,
+    "focalRatio": 7.14,
+    "externalId": "35309"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Mercury 707",
+    "apertureMm": 70,
+    "focalLengthMm": 700,
+    "focalRatio": 10,
+    "externalId": "1581"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Quattro 10&quot; 250P f/4",
+    "apertureMm": 254,
+    "focalLengthMm": 1000,
+    "focalRatio": 3.94,
+    "externalId": "36"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Quattro 12&quot; 300P f/4",
+    "apertureMm": 300,
+    "focalLengthMm": 1200,
+    "focalRatio": 4,
+    "externalId": "8984"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Quattro 6&quot; 150P f/3.45 (Coma Corrector)",
+    "apertureMm": 150,
+    "focalLengthMm": 518,
+    "focalRatio": 3.45,
+    "externalId": "27009"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Quattro 6&quot; 150P f/4",
+    "apertureMm": 150,
+    "focalLengthMm": 600,
+    "focalRatio": 4,
+    "externalId": "27053"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Quattro 8&quot; 200P f/4",
+    "apertureMm": 205,
+    "focalLengthMm": 800,
+    "focalRatio": 3.9,
+    "externalId": "33"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skyhawk 1145PS",
+    "apertureMm": 114,
+    "focalLengthMm": 500,
+    "focalRatio": 4.39,
+    "externalId": "15898"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skyliner / Classic 150P",
+    "apertureMm": 153,
+    "focalLengthMm": 1200,
+    "focalRatio": 7.84,
+    "externalId": "2"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skyliner / Classic 200P",
+    "apertureMm": 203,
+    "focalLengthMm": 1200,
+    "focalRatio": 5.91,
+    "externalId": "1"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skyliner / Classic 300P",
+    "apertureMm": 305,
+    "focalLengthMm": 1500,
+    "focalRatio": 4.92,
+    "externalId": "59"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skyliner 250P Flextube",
+    "apertureMm": 254,
+    "focalLengthMm": 1200,
+    "focalRatio": 4.72,
+    "externalId": "34582"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skyliner 250PX",
+    "apertureMm": 254,
+    "focalLengthMm": 1200,
+    "focalRatio": 4.72,
+    "externalId": "52"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skyliner 300P Flextube",
+    "apertureMm": 305,
+    "focalLengthMm": 1500,
+    "focalRatio": 4.92,
+    "externalId": "243"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skyliner 350P",
+    "apertureMm": 355,
+    "focalLengthMm": 1600,
+    "focalRatio": 4.51,
+    "externalId": "499"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skyliner 350P FlexTube",
+    "apertureMm": 355,
+    "focalLengthMm": 1650,
+    "focalRatio": 4.65,
+    "externalId": "6593"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skyliner 400P",
+    "apertureMm": 406,
+    "focalLengthMm": 1800,
+    "focalRatio": 4.43,
+    "externalId": "158"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skyliner 400P Flextube",
+    "apertureMm": 406,
+    "focalLengthMm": 1800,
+    "focalRatio": 4.43,
+    "externalId": "498"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skymax 102",
+    "apertureMm": 102,
+    "focalLengthMm": 1300,
+    "focalRatio": 12.75,
+    "externalId": "1945"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skymax 127",
+    "apertureMm": 127,
+    "focalLengthMm": 1500,
+    "focalRatio": 11.81,
+    "externalId": "320"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skymax 127",
+    "apertureMm": 127,
+    "focalLengthMm": 1500,
+    "focalRatio": 11.81,
+    "externalId": "70"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skymax 150 Pro",
+    "apertureMm": 150,
+    "focalLengthMm": 1800,
+    "focalRatio": 12,
+    "externalId": "137"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Skymax 180 PRO",
+    "apertureMm": 180,
+    "focalLengthMm": 2700,
+    "focalRatio": 15,
+    "externalId": "50"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Star Discovery 150P",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "157"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Star Discovery 90i",
+    "apertureMm": 90,
+    "focalLengthMm": 900,
+    "focalRatio": 10,
+    "externalId": "2845"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Stargate 450P",
+    "apertureMm": 458,
+    "focalLengthMm": 1900,
+    "focalRatio": 4.15,
+    "externalId": "3485"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Stargate 500P",
+    "apertureMm": 508,
+    "focalLengthMm": 2000,
+    "focalRatio": 3.94,
+    "externalId": "3486"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Starlux 190mm Maksutov-Newtonian",
+    "apertureMm": 190,
+    "focalLengthMm": 1000,
+    "focalRatio": 5.26,
+    "externalId": "34519"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "StarQuest-130P",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "9191"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Startravel 120",
+    "apertureMm": 120,
+    "focalLengthMm": 600,
+    "focalRatio": 5,
+    "externalId": "65"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Startravel 150",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "172"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Startravel 80",
+    "apertureMm": 80,
+    "focalLengthMm": 400,
+    "focalRatio": 5,
+    "externalId": "152"
+  },
+  {
+    "brand": "Sky-Watcher",
+    "model": "Startravel-102",
+    "apertureMm": 102,
+    "focalLengthMm": 500,
+    "focalRatio": 4.9,
+    "externalId": "210"
+  },
+  {
+    "brand": "SkyVision",
+    "model": "NC 300 Cassegrain",
+    "apertureMm": 300,
+    "focalLengthMm": 4800,
+    "focalRatio": 16,
+    "externalId": "20796"
+  },
+  {
+    "brand": "SkyVision",
+    "model": "NC 300 Newtonian",
+    "apertureMm": 300,
+    "focalLengthMm": 1080,
+    "focalRatio": 3.6,
+    "externalId": "20795"
+  },
+  {
+    "brand": "Solomark",
+    "model": "F60 Guidescope",
+    "apertureMm": 60,
+    "focalLengthMm": 215,
+    "focalRatio": 3.58,
+    "externalId": "1956"
+  },
+  {
+    "brand": "Starbase",
+    "model": "80mm f/10 Refractor",
+    "apertureMm": 80,
+    "focalLengthMm": 800,
+    "focalRatio": 10,
+    "externalId": "18279"
+  },
+  {
+    "brand": "Starfield",
+    "model": "102 ED Doublet",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "9551"
+  },
+  {
+    "brand": "Starfield",
+    "model": "30mm Guidescope f/4",
+    "apertureMm": 30,
+    "focalLengthMm": 120,
+    "focalRatio": 4,
+    "externalId": "8783"
+  },
+  {
+    "brand": "Starfield",
+    "model": "50mm Guidescope f/4.1",
+    "apertureMm": 50,
+    "focalLengthMm": 205,
+    "focalRatio": 4.1,
+    "externalId": "5757"
+  },
+  {
+    "brand": "Starfield",
+    "model": "60mm Guidescope f/3.8",
+    "apertureMm": 60,
+    "focalLengthMm": 228,
+    "focalRatio": 3.8,
+    "externalId": "6359"
+  },
+  {
+    "brand": "Starfield",
+    "model": "Dobsonian 10&quot;",
+    "apertureMm": 254,
+    "focalLengthMm": 1250,
+    "focalRatio": 4.92,
+    "externalId": "23428"
+  },
+  {
+    "brand": "Starfield",
+    "model": "Dobsonian 12&quot;",
+    "apertureMm": 305,
+    "focalLengthMm": 1520,
+    "focalRatio": 4.98,
+    "externalId": "24238"
+  },
+  {
+    "brand": "Starfield",
+    "model": "Dobsonian 8&quot;",
+    "apertureMm": 203.2,
+    "focalLengthMm": 1200,
+    "focalRatio": 5.91,
+    "externalId": "23795"
+  },
+  {
+    "brand": "Starfield",
+    "model": "Dobsonian Truss 16&quot;",
+    "apertureMm": 406.4,
+    "focalLengthMm": 1800,
+    "focalRatio": 4.43,
+    "externalId": "24691"
+  },
+  {
+    "brand": "Starfield",
+    "model": "ED80 f/7",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "9108"
+  },
+  {
+    "brand": "Starfield",
+    "model": "Gear 115MM EDT F/7",
+    "apertureMm": 115,
+    "focalLengthMm": 805,
+    "focalRatio": 7,
+    "externalId": "26166"
+  },
+  {
+    "brand": "Starfield",
+    "model": "Gear 80MM EDT F/6",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "31252"
+  },
+  {
+    "brand": "Starfield",
+    "model": "Gear 90MM EDT F/6",
+    "apertureMm": 90,
+    "focalLengthMm": 540,
+    "focalRatio": 6,
+    "externalId": "31145"
+  },
+  {
+    "brand": "Starfield",
+    "model": "Gear60Q Quad",
+    "apertureMm": 60,
+    "focalLengthMm": 300,
+    "focalRatio": 5,
+    "externalId": "31143"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "10&quot; F/12 M-LRC Classical Cassegrains Truss",
+    "apertureMm": 250,
+    "focalLengthMm": 3045,
+    "focalRatio": 12.18,
+    "externalId": "11258"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "10&quot; f/4 Imaging Newtonian",
+    "apertureMm": 254,
+    "focalLengthMm": 1016,
+    "focalRatio": 4,
+    "externalId": "19840"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "10&quot; f/5 Dobsonian",
+    "apertureMm": 254,
+    "focalLengthMm": 1250,
+    "focalRatio": 4.92,
+    "externalId": "16464"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "10&quot; F/8 Ritchey-Chrétien",
+    "apertureMm": 250,
+    "focalLengthMm": 2000,
+    "focalRatio": 8,
+    "externalId": "11254"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "12&quot; f/12 M-LRC Classical Cassegrain",
+    "apertureMm": 304,
+    "focalLengthMm": 3648,
+    "focalRatio": 12,
+    "externalId": "31624"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "12&quot; f/5 Dobsonian",
+    "apertureMm": 304,
+    "focalLengthMm": 1520,
+    "focalRatio": 5,
+    "externalId": "16465"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "12&quot; F/8 Ritchey-Chrétien",
+    "apertureMm": 300,
+    "focalLengthMm": 2400,
+    "focalRatio": 8,
+    "externalId": "17140"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "16&quot; f/4.5 Truss Dobsonian",
+    "apertureMm": 406,
+    "focalLengthMm": 1829,
+    "focalRatio": 4.5,
+    "externalId": "16467"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "350mm f/8 RC",
+    "apertureMm": 350,
+    "focalLengthMm": 2800,
+    "focalRatio": 8,
+    "externalId": "23676"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "4.5&quot; f/12 Classical Cassegrain",
+    "apertureMm": 114,
+    "focalLengthMm": 1368,
+    "focalRatio": 12,
+    "externalId": "35103"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "400mm f/8 RC",
+    "apertureMm": 400,
+    "focalLengthMm": 3200,
+    "focalRatio": 8,
+    "externalId": "23677"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "6&quot; F/12 M-CRF Classical Cassegrain",
+    "apertureMm": 153,
+    "focalLengthMm": 1836,
+    "focalRatio": 12,
+    "externalId": "11256"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "6&quot; f/4 Imaging Newtonian",
+    "apertureMm": 154,
+    "focalLengthMm": 600,
+    "focalRatio": 3.9,
+    "externalId": "19838"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "6&quot; f/5 M-LRN Newtonian",
+    "apertureMm": 150,
+    "focalLengthMm": 750,
+    "focalRatio": 5,
+    "externalId": "26146"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "6&quot; f/8 Dobsonian",
+    "apertureMm": 152,
+    "focalLengthMm": 1200,
+    "focalRatio": 7.89,
+    "externalId": "16466"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "6&quot; F/9 M-CRF Ritchey-Chrétien",
+    "apertureMm": 153,
+    "focalLengthMm": 1370,
+    "focalRatio": 8.95,
+    "externalId": "11233"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "8&quot; F/12 M-LRS Classical Cassegrain",
+    "apertureMm": 200,
+    "focalLengthMm": 2436,
+    "focalRatio": 12.18,
+    "externalId": "11257"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "8&quot; f/4 Imaging Newtonian",
+    "apertureMm": 203,
+    "focalLengthMm": 800,
+    "focalRatio": 3.94,
+    "externalId": "19839"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "8&quot; f/6 Dobsonian",
+    "apertureMm": 203,
+    "focalLengthMm": 1200,
+    "focalRatio": 5.91,
+    "externalId": "16425"
+  },
+  {
+    "brand": "StellaLyra",
+    "model": "8&quot; F/8 M-LRS Ritchey-Chrétien",
+    "apertureMm": 200,
+    "focalLengthMm": 1600,
+    "focalRatio": 8,
+    "externalId": "11253"
+  },
+  {
+    "brand": "StellaMira",
+    "model": "104mm ED2 Triplet",
+    "apertureMm": 104,
+    "focalLengthMm": 650,
+    "focalRatio": 6.25,
+    "externalId": "7500"
+  },
+  {
+    "brand": "StellaMira",
+    "model": "110mm f/6",
+    "apertureMm": 110,
+    "focalLengthMm": 660,
+    "focalRatio": 6,
+    "externalId": "21322"
+  },
+  {
+    "brand": "StellaMira",
+    "model": "125mm ED Doublet f/7.8",
+    "apertureMm": 125,
+    "focalLengthMm": 975,
+    "focalRatio": 7.8,
+    "externalId": "28923"
+  },
+  {
+    "brand": "StellaMira",
+    "model": "66mm f/6",
+    "apertureMm": 66,
+    "focalLengthMm": 400,
+    "focalRatio": 6.06,
+    "externalId": "18323"
+  },
+  {
+    "brand": "StellaMira",
+    "model": "80mm ED f/10",
+    "apertureMm": 80,
+    "focalLengthMm": 800,
+    "focalRatio": 10,
+    "externalId": "7502"
+  },
+  {
+    "brand": "StellaMira",
+    "model": "80mm f/6.25",
+    "apertureMm": 80,
+    "focalLengthMm": 500,
+    "focalRatio": 6.25,
+    "externalId": "18324"
+  },
+  {
+    "brand": "StellaMira",
+    "model": "85mm ED2 Triplet",
+    "apertureMm": 85,
+    "focalLengthMm": 560,
+    "focalRatio": 6.59,
+    "externalId": "7501"
+  },
+  {
+    "brand": "StellaMira",
+    "model": "90mm ED Triplet",
+    "apertureMm": 90,
+    "focalLengthMm": 540,
+    "focalRatio": 6,
+    "externalId": "17298"
+  },
+  {
+    "brand": "StellaMira",
+    "model": "StellaMira 86mm ED Quadruplet f/7",
+    "apertureMm": 86,
+    "focalLengthMm": 602,
+    "focalRatio": 7,
+    "externalId": "37436"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "102T",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "209"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "80mm APO Triplet",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "299"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "90mm f7 APO",
+    "apertureMm": 90,
+    "focalLengthMm": 630,
+    "focalRatio": 7,
+    "externalId": "1813"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "Access",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "5033"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "Finderscope 13x80 RA",
+    "apertureMm": 80,
+    "focalLengthMm": 300,
+    "focalRatio": 3.75,
+    "externalId": "1906"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SV-SV60EDS",
+    "apertureMm": 60,
+    "focalLengthMm": 330,
+    "focalRatio": 5.5,
+    "externalId": "415"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SV105T",
+    "apertureMm": 105,
+    "focalLengthMm": 735,
+    "focalRatio": 7,
+    "externalId": "237"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SV110ED 25SV",
+    "apertureMm": 110,
+    "focalLengthMm": 770,
+    "focalRatio": 7,
+    "externalId": "1800"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SV125-Access ED (doublet)",
+    "apertureMm": 125,
+    "focalLengthMm": 975,
+    "focalRatio": 7.8,
+    "externalId": "5059"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SV60EDS",
+    "apertureMm": 60,
+    "focalLengthMm": 330,
+    "focalRatio": 5.5,
+    "externalId": "413"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SV70T",
+    "apertureMm": 70,
+    "focalLengthMm": 420,
+    "focalRatio": 6,
+    "externalId": "643"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SV80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "1283"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SV80ED Nighthawk Next Generation",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "21226"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVA 130T",
+    "apertureMm": 130,
+    "focalLengthMm": 910,
+    "focalRatio": 7,
+    "externalId": "1991"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVQ-100",
+    "apertureMm": 100,
+    "focalLengthMm": 580,
+    "focalRatio": 5.8,
+    "externalId": "284"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVR 90T",
+    "apertureMm": 90,
+    "focalLengthMm": 630,
+    "focalRatio": 7,
+    "externalId": "1904"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVR90T-25SV",
+    "apertureMm": 90,
+    "focalLengthMm": 630,
+    "focalRatio": 7,
+    "externalId": "866"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVX080T",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "15462"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVX090T",
+    "apertureMm": 90,
+    "focalLengthMm": 540,
+    "focalRatio": 6,
+    "externalId": "26191"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVX102T",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "15461"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVX102T-R",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "14404"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVX127D",
+    "apertureMm": 127,
+    "focalLengthMm": 1016,
+    "focalRatio": 8,
+    "externalId": "14179"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVX130T",
+    "apertureMm": 130,
+    "focalLengthMm": 910,
+    "focalRatio": 7,
+    "externalId": "15101"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVX140T",
+    "apertureMm": 140,
+    "focalLengthMm": 938,
+    "focalRatio": 6.7,
+    "externalId": "15460"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVX152T (triplet)",
+    "apertureMm": 152,
+    "focalLengthMm": 1200,
+    "focalRatio": 7.89,
+    "externalId": "5058"
+  },
+  {
+    "brand": "Stellarvue",
+    "model": "SVX180T",
+    "apertureMm": 180,
+    "focalLengthMm": 1260,
+    "focalRatio": 7,
+    "externalId": "26242"
+  },
+  {
+    "brand": "Stellavue",
+    "model": "130T-IS",
+    "apertureMm": 130,
+    "focalLengthMm": 910,
+    "focalRatio": 7,
+    "externalId": "1843"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "MK105",
+    "apertureMm": 105,
+    "focalLengthMm": 1365,
+    "focalRatio": 13,
+    "externalId": "33196"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SA401",
+    "apertureMm": 85,
+    "focalLengthMm": 450,
+    "focalRatio": 5.29,
+    "externalId": "35089"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SA405",
+    "apertureMm": 80,
+    "focalLengthMm": 450,
+    "focalRatio": 5.63,
+    "externalId": "34903"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV106 60mm",
+    "apertureMm": 60,
+    "focalLengthMm": 240,
+    "focalRatio": 4,
+    "externalId": "33178"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV165 Mini Guide Scope",
+    "apertureMm": 30,
+    "focalLengthMm": 120,
+    "focalRatio": 4,
+    "externalId": "18652"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV17 Spotting Scope",
+    "apertureMm": 70,
+    "focalLengthMm": 380,
+    "focalRatio": 5.43,
+    "externalId": "33042"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV406P",
+    "apertureMm": 80,
+    "focalLengthMm": 430,
+    "focalRatio": 5.38,
+    "externalId": "35058"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV41 Mak Spotting Scope",
+    "apertureMm": 70,
+    "focalLengthMm": 780,
+    "focalRatio": 11.14,
+    "externalId": "33041"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV41 Pro",
+    "apertureMm": 80,
+    "focalLengthMm": 800,
+    "focalRatio": 10,
+    "externalId": "35082"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV410",
+    "apertureMm": 56,
+    "focalLengthMm": 189,
+    "focalRatio": 3.38,
+    "externalId": "34888"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV46P",
+    "apertureMm": 80,
+    "focalLengthMm": 400,
+    "focalRatio": 5,
+    "externalId": "34876"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV48P",
+    "apertureMm": 90,
+    "focalLengthMm": 500,
+    "focalRatio": 5.56,
+    "externalId": "33197"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV501P 60mm",
+    "apertureMm": 60,
+    "focalLengthMm": 400,
+    "focalRatio": 6.67,
+    "externalId": "35111"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV501P 70mm",
+    "apertureMm": 70,
+    "focalLengthMm": 400,
+    "focalRatio": 5.71,
+    "externalId": "35257"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV502",
+    "apertureMm": 50,
+    "focalLengthMm": 360,
+    "focalRatio": 7.2,
+    "externalId": "35240"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV503 102ED",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "33193"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV503 70ED",
+    "apertureMm": 70,
+    "focalLengthMm": 420,
+    "focalRatio": 6,
+    "externalId": "33194"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV503 80ED",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "35185"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV510 Solar",
+    "apertureMm": 60,
+    "focalLengthMm": 400,
+    "focalRatio": 6.67,
+    "externalId": "35187"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV550 122 APO",
+    "apertureMm": 122,
+    "focalLengthMm": 854,
+    "focalRatio": 7,
+    "externalId": "33191"
+  },
+  {
+    "brand": "SVBONY",
+    "model": "SV550 80 APO",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "33195"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "106ED",
+    "apertureMm": 106,
+    "focalLengthMm": 530,
+    "focalRatio": 5,
+    "externalId": "150"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "CN212 Cassegrain",
+    "apertureMm": 212,
+    "focalLengthMm": 2635,
+    "focalRatio": 12.43,
+    "externalId": "214"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "CN212 Newton",
+    "apertureMm": 212,
+    "focalLengthMm": 835,
+    "focalRatio": 3.94,
+    "externalId": "215"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "Epsilon 130/ED",
+    "apertureMm": 130,
+    "focalLengthMm": 430,
+    "focalRatio": 3.31,
+    "externalId": "146"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "Epsilon 130D",
+    "apertureMm": 130,
+    "focalLengthMm": 430,
+    "focalRatio": 3.31,
+    "externalId": "1814"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "Epsilon 160/ED",
+    "apertureMm": 160,
+    "focalLengthMm": 530,
+    "focalRatio": 3.31,
+    "externalId": "5634"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "Epsilon 180/ED",
+    "apertureMm": 180,
+    "focalLengthMm": 500,
+    "focalRatio": 2.78,
+    "externalId": "145"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FC-100DC",
+    "apertureMm": 100,
+    "focalLengthMm": 740,
+    "focalRatio": 7.4,
+    "externalId": "257"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FC-100DL",
+    "apertureMm": 100,
+    "focalLengthMm": 900,
+    "focalRatio": 9,
+    "externalId": "1961"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FC-60",
+    "apertureMm": 60,
+    "focalLengthMm": 500,
+    "focalRatio": 8.33,
+    "externalId": "1962"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FC-76DCU",
+    "apertureMm": 76,
+    "focalLengthMm": 570,
+    "focalRatio": 7.5,
+    "externalId": "2093"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FC-76DS",
+    "apertureMm": 76,
+    "focalLengthMm": 570,
+    "focalRatio": 7.5,
+    "externalId": "2946"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FC-76DS + 76D-RD",
+    "apertureMm": 76,
+    "focalLengthMm": 417,
+    "focalRatio": 5.49,
+    "externalId": "148"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FCT-65D",
+    "apertureMm": 65,
+    "focalLengthMm": 400,
+    "focalRatio": 6.15,
+    "externalId": "11048"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FCT-65D + FU Reducer",
+    "apertureMm": 65,
+    "focalLengthMm": 260,
+    "focalRatio": 4,
+    "externalId": "35214"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FOA-60",
+    "apertureMm": 60,
+    "focalLengthMm": 530,
+    "focalRatio": 8.83,
+    "externalId": "2944"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FOA-60Q",
+    "apertureMm": 60,
+    "focalLengthMm": 901,
+    "focalRatio": 15.02,
+    "externalId": "2945"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FS 102",
+    "apertureMm": 102,
+    "focalLengthMm": 820,
+    "focalRatio": 8.04,
+    "externalId": "1804"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FS-128",
+    "apertureMm": 128,
+    "focalLengthMm": 1040,
+    "focalRatio": 8.13,
+    "externalId": "1668"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FS-60CB",
+    "apertureMm": 60,
+    "focalLengthMm": 355,
+    "focalRatio": 5.92,
+    "externalId": "147"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FS-60Q",
+    "apertureMm": 60,
+    "focalLengthMm": 600,
+    "focalRatio": 10,
+    "externalId": "1595"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FS-78",
+    "apertureMm": 78,
+    "focalLengthMm": 630,
+    "focalRatio": 8.08,
+    "externalId": "1631"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FSQ-106",
+    "apertureMm": 106,
+    "focalLengthMm": 530,
+    "focalRatio": 5,
+    "externalId": "16"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FSQ-106EDX4",
+    "apertureMm": 106,
+    "focalLengthMm": 530,
+    "focalRatio": 5,
+    "externalId": "298"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FSQ-130ED",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "1915"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "FSQ-85EDX",
+    "apertureMm": 85,
+    "focalLengthMm": 450,
+    "focalRatio": 5.29,
+    "externalId": "62"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "Mewlon 180C",
+    "apertureMm": 180,
+    "focalLengthMm": 2160,
+    "focalRatio": 12,
+    "externalId": "1928"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "Mewlon 210",
+    "apertureMm": 210,
+    "focalLengthMm": 2415,
+    "focalRatio": 11.5,
+    "externalId": "1191"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "Mewlon 250",
+    "apertureMm": 250,
+    "focalLengthMm": 3000,
+    "focalRatio": 12,
+    "externalId": "659"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "Sky-90",
+    "apertureMm": 90,
+    "focalLengthMm": 500,
+    "focalRatio": 5.56,
+    "externalId": "1981"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "TOA130",
+    "apertureMm": 130,
+    "focalLengthMm": 1000,
+    "focalRatio": 7.69,
+    "externalId": "228"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "TOA150",
+    "apertureMm": 150,
+    "focalLengthMm": 1100,
+    "focalRatio": 7.33,
+    "externalId": "525"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "TSA-102",
+    "apertureMm": 102,
+    "focalLengthMm": 816,
+    "focalRatio": 8,
+    "externalId": "85"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "TSA-120",
+    "apertureMm": 120,
+    "focalLengthMm": 900,
+    "focalRatio": 7.5,
+    "externalId": "226"
+  },
+  {
+    "brand": "Takahashi",
+    "model": "TSC225",
+    "apertureMm": 225,
+    "focalLengthMm": 2700,
+    "focalRatio": 12,
+    "externalId": "285"
+  },
+  {
+    "brand": "Tal",
+    "model": "100RS",
+    "apertureMm": 100,
+    "focalLengthMm": 1000,
+    "focalRatio": 10,
+    "externalId": "56"
+  },
+  {
+    "brand": "TAL",
+    "model": "150P8",
+    "apertureMm": 150,
+    "focalLengthMm": 1200,
+    "focalRatio": 8,
+    "externalId": "32490"
+  },
+  {
+    "brand": "TAL",
+    "model": "200K",
+    "apertureMm": 200,
+    "focalLengthMm": 1700,
+    "focalRatio": 8.5,
+    "externalId": "176"
+  },
+  {
+    "brand": "TEC",
+    "model": "APO110FL F/5.6",
+    "apertureMm": 110,
+    "focalLengthMm": 616,
+    "focalRatio": 5.6,
+    "externalId": "20988"
+  },
+  {
+    "brand": "TEC",
+    "model": "APO140FL F/7",
+    "apertureMm": 140,
+    "focalLengthMm": 980,
+    "focalRatio": 7,
+    "externalId": "236"
+  },
+  {
+    "brand": "TEC",
+    "model": "APO160ED F/8",
+    "apertureMm": 160,
+    "focalLengthMm": 1280,
+    "focalRatio": 8,
+    "externalId": "1972"
+  },
+  {
+    "brand": "TEC",
+    "model": "APO160FL F/11",
+    "apertureMm": 160,
+    "focalLengthMm": 1760,
+    "focalRatio": 11,
+    "externalId": "32089"
+  },
+  {
+    "brand": "TEC",
+    "model": "APO160FL F/7",
+    "apertureMm": 160,
+    "focalLengthMm": 1120,
+    "focalRatio": 7,
+    "externalId": "1993"
+  },
+  {
+    "brand": "TEC",
+    "model": "APO180FL F/7",
+    "apertureMm": 180,
+    "focalLengthMm": 1260,
+    "focalRatio": 7,
+    "externalId": "33190"
+  },
+  {
+    "brand": "TEC",
+    "model": "APO200FL F/11",
+    "apertureMm": 200,
+    "focalLengthMm": 2200,
+    "focalRatio": 11,
+    "externalId": "32088"
+  },
+  {
+    "brand": "TEC",
+    "model": "APO200FL F/8",
+    "apertureMm": 200,
+    "focalLengthMm": 1600,
+    "focalRatio": 8,
+    "externalId": "1395"
+  },
+  {
+    "brand": "TEC",
+    "model": "APO250VT F/8.8",
+    "apertureMm": 250,
+    "focalLengthMm": 2200,
+    "focalRatio": 8.8,
+    "externalId": "31826"
+  },
+  {
+    "brand": "TEC",
+    "model": "MC300/15",
+    "apertureMm": 300,
+    "focalLengthMm": 4500,
+    "focalRatio": 15,
+    "externalId": "28344"
+  },
+  {
+    "brand": "Tecnosky",
+    "model": "80ED Carbon Fiber",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "5313"
+  },
+  {
+    "brand": "Tecnosky",
+    "model": "ED 80/480",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "5684"
+  },
+  {
+    "brand": "Tele Vue",
+    "model": "NP101is",
+    "apertureMm": 101,
+    "focalLengthMm": 540,
+    "focalRatio": 5.35,
+    "externalId": "448"
+  },
+  {
+    "brand": "Tele Vue",
+    "model": "NP127fli",
+    "apertureMm": 127,
+    "focalLengthMm": 680,
+    "focalRatio": 5.35,
+    "externalId": "32812"
+  },
+  {
+    "brand": "Tele Vue",
+    "model": "NP127is",
+    "apertureMm": 127,
+    "focalLengthMm": 660,
+    "focalRatio": 5.2,
+    "externalId": "391"
+  },
+  {
+    "brand": "Tele Vue",
+    "model": "Pronto",
+    "apertureMm": 70,
+    "focalLengthMm": 480,
+    "focalRatio": 6.86,
+    "externalId": "33495"
+  },
+  {
+    "brand": "Tele Vue",
+    "model": "TV-102",
+    "apertureMm": 102,
+    "focalLengthMm": 880,
+    "focalRatio": 8.63,
+    "externalId": "540"
+  },
+  {
+    "brand": "Tele Vue",
+    "model": "TV-60",
+    "apertureMm": 60,
+    "focalLengthMm": 360,
+    "focalRatio": 6,
+    "externalId": "26669"
+  },
+  {
+    "brand": "Tele Vue",
+    "model": "TV-85",
+    "apertureMm": 85,
+    "focalLengthMm": 600,
+    "focalRatio": 7.06,
+    "externalId": "1901"
+  },
+  {
+    "brand": "TMB",
+    "model": "100/800",
+    "apertureMm": 100,
+    "focalLengthMm": 800,
+    "focalRatio": 8,
+    "externalId": "414"
+  },
+  {
+    "brand": "TMB",
+    "model": "130",
+    "apertureMm": 130,
+    "focalLengthMm": 910,
+    "focalRatio": 7,
+    "externalId": "445"
+  },
+  {
+    "brand": "TMB",
+    "model": "80mm Super APO",
+    "apertureMm": 80,
+    "focalLengthMm": 600,
+    "focalRatio": 7.5,
+    "externalId": "14147"
+  },
+  {
+    "brand": "TMB/APM",
+    "model": "152",
+    "apertureMm": 152,
+    "focalLengthMm": 1200,
+    "focalRatio": 7.89,
+    "externalId": "186"
+  },
+  {
+    "brand": "TPO",
+    "model": "16&quot; RC",
+    "apertureMm": 406.4,
+    "focalLengthMm": 3250,
+    "focalRatio": 8,
+    "externalId": "1983"
+  },
+  {
+    "brand": "TPO",
+    "model": "UltraWide 180",
+    "apertureMm": 40,
+    "focalLengthMm": 180,
+    "focalRatio": 4.5,
+    "externalId": "34576"
+  },
+  {
+    "brand": "TS",
+    "model": "Photoline 150mm f/8 APO",
+    "apertureMm": 150,
+    "focalLengthMm": 1200,
+    "focalRatio": 8,
+    "externalId": "32751"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "102 APO",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "1927"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "102 f/11 ED",
+    "apertureMm": 102,
+    "focalLengthMm": 1122,
+    "focalRatio": 11,
+    "externalId": "25507"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "115mm APO",
+    "apertureMm": 115,
+    "focalLengthMm": 805,
+    "focalRatio": 7,
+    "externalId": "1862"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "130Q f5",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "1950"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "150mm Newtonian f5",
+    "apertureMm": 5,
+    "focalLengthMm": 150,
+    "focalRatio": 30,
+    "externalId": "1885"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "152mm f5.9",
+    "apertureMm": 152,
+    "focalLengthMm": 900,
+    "focalRatio": 5.92,
+    "externalId": "1841"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "50mm APO f6.6",
+    "apertureMm": 50,
+    "focalLengthMm": 330,
+    "focalRatio": 6.6,
+    "externalId": "1935"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "60/234mm Richfield Refractor",
+    "apertureMm": 60,
+    "focalLengthMm": 234,
+    "focalRatio": 3.9,
+    "externalId": "356"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "8&quot; f/5 ONTC",
+    "apertureMm": 203,
+    "focalLengthMm": 1000,
+    "focalRatio": 4.93,
+    "externalId": "1785"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "8&quot; f/5 ONTC Newtonian",
+    "apertureMm": 200,
+    "focalLengthMm": 1000,
+    "focalRatio": 5,
+    "externalId": "342"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "80/600mm f7.5",
+    "apertureMm": 80,
+    "focalLengthMm": 600,
+    "focalRatio": 7.5,
+    "externalId": "1824"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "94 mm f/5.5 Triplet Apo",
+    "apertureMm": 94,
+    "focalLengthMm": 517,
+    "focalRatio": 5.5,
+    "externalId": "15145"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "94EDPH f/4.4",
+    "apertureMm": 94,
+    "focalLengthMm": 414,
+    "focalRatio": 4.4,
+    "externalId": "15146"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "APO71Q",
+    "apertureMm": 71,
+    "focalLengthMm": 347,
+    "focalRatio": 4.89,
+    "externalId": "412"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "ED APO 90/500",
+    "apertureMm": 90,
+    "focalLengthMm": 500,
+    "focalRatio": 5.56,
+    "externalId": "351"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "Imaging Star 100",
+    "apertureMm": 100,
+    "focalLengthMm": 580,
+    "focalRatio": 5.8,
+    "externalId": "1964"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "Imaging Star 130mm f5",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "1871"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "Imaging star 70mm f/6.78 quadruplet ED",
+    "apertureMm": 70,
+    "focalLengthMm": 474,
+    "focalRatio": 6.77,
+    "externalId": "354"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "Imaging Star 71 (f4.9)",
+    "apertureMm": 71,
+    "focalLengthMm": 347,
+    "focalRatio": 4.89,
+    "externalId": "1870"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "INED70",
+    "apertureMm": 70,
+    "focalLengthMm": 420,
+    "focalRatio": 6,
+    "externalId": "180"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "TLAPO 1027 FT",
+    "apertureMm": 102,
+    "focalLengthMm": 714,
+    "focalRatio": 7,
+    "externalId": "444"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "TS ED70Q",
+    "apertureMm": 70,
+    "focalLengthMm": 474,
+    "focalRatio": 6.77,
+    "externalId": "44"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "TS Imaging Star 65mm f/6,5 Quadruplet Astrograph",
+    "apertureMm": 65,
+    "focalLengthMm": 420,
+    "focalRatio": 6.46,
+    "externalId": "337"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "TS65 Quad",
+    "apertureMm": 65,
+    "focalLengthMm": 420,
+    "focalRatio": 6.46,
+    "externalId": "275"
+  },
+  {
+    "brand": "TS Optics",
+    "model": "TSAPO81Q",
+    "apertureMm": 80,
+    "focalLengthMm": 352,
+    "focalRatio": 4.4,
+    "externalId": "207"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "80PHQ 80mm f/6.8 Quintuplet Apo",
+    "apertureMm": 80,
+    "focalLengthMm": 544,
+    "focalRatio": 6.8,
+    "externalId": "34589"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "CF-APO 70/420mm FPL55 Triplet",
+    "apertureMm": 70,
+    "focalLengthMm": 420,
+    "focalRatio": 6,
+    "externalId": "2088"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 106mm f/6.6 Triplet APO",
+    "apertureMm": 106,
+    "focalLengthMm": 700,
+    "focalRatio": 6.6,
+    "externalId": "28008"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 107mm f/6.5 FPL53 Triplet Apo",
+    "apertureMm": 107,
+    "focalLengthMm": 700,
+    "focalRatio": 6.54,
+    "externalId": "582"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 115mm f/6.95 Triplet EDT",
+    "apertureMm": 115,
+    "focalLengthMm": 800,
+    "focalRatio": 6.96,
+    "externalId": "956"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 125 mm f/7.8",
+    "apertureMm": 125,
+    "focalLengthMm": 975,
+    "focalRatio": 7.8,
+    "externalId": "4236"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 130 mm f/7 EDT Triplet APO",
+    "apertureMm": 130,
+    "focalLengthMm": 910,
+    "focalRatio": 7,
+    "externalId": "336"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 140mm f/6.5 Super Triplet APO",
+    "apertureMm": 140,
+    "focalLengthMm": 910,
+    "focalRatio": 6.5,
+    "externalId": "34082"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 60mm f/5.5",
+    "apertureMm": 60,
+    "focalLengthMm": 330,
+    "focalRatio": 5.5,
+    "externalId": "32982"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 60mm f/6 FPL53 APO",
+    "apertureMm": 60,
+    "focalLengthMm": 360,
+    "focalRatio": 6,
+    "externalId": "34520"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 72/432mm APO",
+    "apertureMm": 72,
+    "focalLengthMm": 432,
+    "focalRatio": 6,
+    "externalId": "31666"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 80mm f/6 Triplet FPL53",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "222"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 80mm f/6.25 FPL53 APO",
+    "apertureMm": 80,
+    "focalLengthMm": 500,
+    "focalRatio": 6.25,
+    "externalId": "34122"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 80mm f/7 FPL53 Doublet Apo",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "34023"
+  },
+  {
+    "brand": "TS-Optics",
+    "model": "Photoline 90mm f/6.6",
+    "apertureMm": 90,
+    "focalLengthMm": 600,
+    "focalRatio": 6.67,
+    "externalId": "1198"
+  },
+  {
+    "brand": "Unistellar",
+    "model": "Equinox 2",
+    "apertureMm": 114,
+    "focalLengthMm": 450,
+    "focalRatio": 3.95,
+    "externalId": "33095"
+  },
+  {
+    "brand": "Unistellar",
+    "model": "eVscope / 2",
+    "apertureMm": 114,
+    "focalLengthMm": 450,
+    "focalRatio": 3.95,
+    "externalId": "31278"
+  },
+  {
+    "brand": "Unistellar",
+    "model": "Odyssey / Pro",
+    "apertureMm": 85,
+    "focalLengthMm": 320,
+    "focalRatio": 3.76,
+    "externalId": "31093"
+  },
+  {
+    "brand": "Ursa Major",
+    "model": "102mm Tabletop Dobsonian",
+    "apertureMm": 102,
+    "focalLengthMm": 640,
+    "focalRatio": 6.27,
+    "externalId": "23927"
+  },
+  {
+    "brand": "Ursa Major",
+    "model": "6&quot; f/8 Dobsonian",
+    "apertureMm": 152,
+    "focalLengthMm": 1200,
+    "focalRatio": 7.89,
+    "externalId": "20099"
+  },
+  {
+    "brand": "Ursa Major",
+    "model": "8&quot; f/6 Dobsonian",
+    "apertureMm": 203,
+    "focalLengthMm": 1200,
+    "focalRatio": 5.91,
+    "externalId": "20100"
+  },
+  {
+    "brand": "Ursa Major",
+    "model": "80mm Tabletop Dobsonian",
+    "apertureMm": 80,
+    "focalLengthMm": 500,
+    "focalRatio": 6.25,
+    "externalId": "23926"
+  },
+  {
+    "brand": "Vaonis",
+    "model": "Vespera",
+    "apertureMm": 50,
+    "focalLengthMm": 200,
+    "focalRatio": 4,
+    "externalId": "22410"
+  },
+  {
+    "brand": "Vixen",
+    "model": "140 SS Neo-Achromat",
+    "apertureMm": 140,
+    "focalLengthMm": 800,
+    "focalRatio": 5.71,
+    "externalId": "438"
+  },
+  {
+    "brand": "Vixen",
+    "model": "AX 103S",
+    "apertureMm": 103,
+    "focalLengthMm": 825,
+    "focalRatio": 8.01,
+    "externalId": "283"
+  },
+  {
+    "brand": "Vixen",
+    "model": "BT-ED70S-A",
+    "apertureMm": 70,
+    "focalLengthMm": 400,
+    "focalRatio": 5.71,
+    "externalId": "358"
+  },
+  {
+    "brand": "Vixen",
+    "model": "BT126SS-A",
+    "apertureMm": 126,
+    "focalLengthMm": 625,
+    "focalRatio": 4.96,
+    "externalId": "308"
+  },
+  {
+    "brand": "Vixen",
+    "model": "BT81S-A",
+    "apertureMm": 81,
+    "focalLengthMm": 480,
+    "focalRatio": 5.93,
+    "externalId": "357"
+  },
+  {
+    "brand": "Vixen",
+    "model": "ED 102 SS",
+    "apertureMm": 102,
+    "focalLengthMm": 663,
+    "focalRatio": 6.5,
+    "externalId": "31"
+  },
+  {
+    "brand": "Vixen",
+    "model": "ED115S",
+    "apertureMm": 115,
+    "focalLengthMm": 890,
+    "focalRatio": 7.74,
+    "externalId": "31416"
+  },
+  {
+    "brand": "Vixen",
+    "model": "ED80 SF",
+    "apertureMm": 80,
+    "focalLengthMm": 600,
+    "focalRatio": 7.5,
+    "externalId": "1806"
+  },
+  {
+    "brand": "Vixen",
+    "model": "ED81s",
+    "apertureMm": 81,
+    "focalLengthMm": 625,
+    "focalRatio": 7.72,
+    "externalId": "386"
+  },
+  {
+    "brand": "Vixen",
+    "model": "FL102S",
+    "apertureMm": 102,
+    "focalLengthMm": 920,
+    "focalRatio": 9.02,
+    "externalId": "3110"
+  },
+  {
+    "brand": "Vixen",
+    "model": "R130Sf",
+    "apertureMm": 130,
+    "focalLengthMm": 650,
+    "focalRatio": 5,
+    "externalId": "196"
+  },
+  {
+    "brand": "Vixen",
+    "model": "R135S",
+    "apertureMm": 135,
+    "focalLengthMm": 720,
+    "focalRatio": 5.33,
+    "externalId": "355"
+  },
+  {
+    "brand": "Vixen",
+    "model": "R200SS",
+    "apertureMm": 200,
+    "focalLengthMm": 800,
+    "focalRatio": 4,
+    "externalId": "839"
+  },
+  {
+    "brand": "Vixen",
+    "model": "RR200SS",
+    "apertureMm": 200,
+    "focalLengthMm": 800,
+    "focalRatio": 4,
+    "externalId": "537"
+  },
+  {
+    "brand": "Vixen",
+    "model": "SD103S",
+    "apertureMm": 103,
+    "focalLengthMm": 795,
+    "focalRatio": 7.72,
+    "externalId": "5713"
+  },
+  {
+    "brand": "Vixen",
+    "model": "VC200L",
+    "apertureMm": 200,
+    "focalLengthMm": 1800,
+    "focalRatio": 9,
+    "externalId": "208"
+  },
+  {
+    "brand": "Vixen",
+    "model": "VMC110L",
+    "apertureMm": 110,
+    "focalLengthMm": 1035,
+    "focalRatio": 9.41,
+    "externalId": "49"
+  },
+  {
+    "brand": "Vixen",
+    "model": "VMC200L",
+    "apertureMm": 200,
+    "focalLengthMm": 1900,
+    "focalRatio": 9.5,
+    "externalId": "183"
+  },
+  {
+    "brand": "Vixen",
+    "model": "VMC260L",
+    "apertureMm": 260,
+    "focalLengthMm": 3000,
+    "focalRatio": 11.54,
+    "externalId": "531"
+  },
+  {
+    "brand": "William Optics",
+    "model": "98-FLT @ f/6.3",
+    "apertureMm": 98,
+    "focalLengthMm": 618,
+    "focalRatio": 6.31,
+    "externalId": "6"
+  },
+  {
+    "brand": "William Optics",
+    "model": "FLT110 TEC",
+    "apertureMm": 110,
+    "focalLengthMm": 715,
+    "focalRatio": 6.5,
+    "externalId": "33451"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Fluorostar FLT 156",
+    "apertureMm": 156,
+    "focalLengthMm": 1217,
+    "focalRatio": 7.8,
+    "externalId": "35033"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Fluorostar FLT-110 &nbsp;f/7",
+    "apertureMm": 110,
+    "focalLengthMm": 770,
+    "focalRatio": 7,
+    "externalId": "125"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Fluorostar FLT-123 f/6 (LZOS)",
+    "apertureMm": 123,
+    "focalLengthMm": 738,
+    "focalRatio": 6,
+    "externalId": "133"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Fluorostar FLT-132 &nbsp;f/7",
+    "apertureMm": 132,
+    "focalLengthMm": 910,
+    "focalRatio": 6.89,
+    "externalId": "124"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Fluorostar FLT120",
+    "apertureMm": 120,
+    "focalLengthMm": 780,
+    "focalRatio": 6.5,
+    "externalId": "18987"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Fluorostar FLT132",
+    "apertureMm": 132,
+    "focalLengthMm": 924,
+    "focalRatio": 7,
+    "externalId": "350"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Fluorostar FLT91",
+    "apertureMm": 91,
+    "focalLengthMm": 540,
+    "focalRatio": 5.93,
+    "externalId": "13920"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Gran Turismo GT-102 f/6.9",
+    "apertureMm": 102,
+    "focalLengthMm": 704,
+    "focalRatio": 6.9,
+    "externalId": "132"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Gran Turismo GT-102F f/6.9 (5-element)",
+    "apertureMm": 102,
+    "focalLengthMm": 703,
+    "focalRatio": 6.89,
+    "externalId": "131"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Gran Turismo GT-81 f/6.6 (5-element)",
+    "apertureMm": 81,
+    "focalLengthMm": 535,
+    "focalRatio": 6.6,
+    "externalId": "130"
+  },
+  {
+    "brand": "William optics",
+    "model": "Gran Turismo GT71",
+    "apertureMm": 71,
+    "focalLengthMm": 420,
+    "focalRatio": 5.92,
+    "externalId": "2268"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Gran Turismo GT81 IV f/5.9",
+    "apertureMm": 81,
+    "focalLengthMm": 478,
+    "focalRatio": 5.9,
+    "externalId": "58"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Gran Turismo GT81 WIFD",
+    "apertureMm": 81,
+    "focalLengthMm": 478,
+    "focalRatio": 5.9,
+    "externalId": "26732"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Guide Scope",
+    "apertureMm": 50,
+    "focalLengthMm": 200,
+    "focalRatio": 4,
+    "externalId": "2858"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Guiding Scope 50mm f/4",
+    "apertureMm": 50,
+    "focalLengthMm": 200,
+    "focalRatio": 4,
+    "externalId": "35244"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Megrez 110 &nbsp;f/5.95",
+    "apertureMm": 110,
+    "focalLengthMm": 655,
+    "focalRatio": 5.95,
+    "externalId": "127"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Megrez 72 f/6.0",
+    "apertureMm": 72,
+    "focalLengthMm": 432,
+    "focalRatio": 6,
+    "externalId": "15"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Megrez 80 f/6 (LOMO)",
+    "apertureMm": 80,
+    "focalLengthMm": 480,
+    "focalRatio": 6,
+    "externalId": "134"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Megrez 80 II ED",
+    "apertureMm": 80,
+    "focalLengthMm": 560,
+    "focalRatio": 7,
+    "externalId": "31216"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Megrez 88 f/5.6",
+    "apertureMm": 88,
+    "focalLengthMm": 493,
+    "focalRatio": 5.6,
+    "externalId": "33643"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Megrez 90 f/6.9",
+    "apertureMm": 90,
+    "focalLengthMm": 621,
+    "focalRatio": 6.9,
+    "externalId": "218"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Megrez 90 &nbsp;f/6.2",
+    "apertureMm": 90,
+    "focalLengthMm": 558,
+    "focalRatio": 6.2,
+    "externalId": "126"
+  },
+  {
+    "brand": "William Optics",
+    "model": "MiniCat 51 WIFD",
+    "apertureMm": 51,
+    "focalLengthMm": 178,
+    "focalRatio": 3.49,
+    "externalId": "35278"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Pleiades 111 f/4.8",
+    "apertureMm": 111,
+    "focalLengthMm": 528,
+    "focalRatio": 4.76,
+    "externalId": "30481"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Pleiades 181",
+    "apertureMm": 181,
+    "focalLengthMm": 998,
+    "focalRatio": 5.51,
+    "externalId": "35194"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Pleiades 68 f/3.8",
+    "apertureMm": 68,
+    "focalLengthMm": 260,
+    "focalRatio": 3.82,
+    "externalId": "30475"
+  },
+  {
+    "brand": "William Optics",
+    "model": "RedCat 51 WIFD",
+    "apertureMm": 51,
+    "focalLengthMm": 250,
+    "focalRatio": 4.9,
+    "externalId": "35193"
+  },
+  {
+    "brand": "William Optics",
+    "model": "RedCat 51mm f/4.9",
+    "apertureMm": 51,
+    "focalLengthMm": 250,
+    "focalRatio": 4.9,
+    "externalId": "4549"
+  },
+  {
+    "brand": "William Optics",
+    "model": "RedCat 61",
+    "apertureMm": 61,
+    "focalLengthMm": 300,
+    "focalRatio": 4.92,
+    "externalId": "27496"
+  },
+  {
+    "brand": "William Optics",
+    "model": "RedCat 61 WIFD",
+    "apertureMm": 61,
+    "focalLengthMm": 300,
+    "focalRatio": 4.92,
+    "externalId": "35190"
+  },
+  {
+    "brand": "William Optics",
+    "model": "RedCat 71",
+    "apertureMm": 71,
+    "focalLengthMm": 348,
+    "focalRatio": 4.9,
+    "externalId": "17742"
+  },
+  {
+    "brand": "William Optics",
+    "model": "RedCat 71 WIFD",
+    "apertureMm": 71,
+    "focalLengthMm": 350,
+    "focalRatio": 4.93,
+    "externalId": "35174"
+  },
+  {
+    "brand": "William Optics",
+    "model": "SpaceCat 51 WIFD",
+    "apertureMm": 51,
+    "focalLengthMm": 250,
+    "focalRatio": 4.9,
+    "externalId": "35124"
+  },
+  {
+    "brand": "William Optics",
+    "model": "SpaceCat 61 WIFD",
+    "apertureMm": 61,
+    "focalLengthMm": 300,
+    "focalRatio": 4.92,
+    "externalId": "35104"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Star-71 f/4.9",
+    "apertureMm": 71,
+    "focalLengthMm": 348,
+    "focalRatio": 4.9,
+    "externalId": "129"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Uniguide 32mm f/3.75",
+    "apertureMm": 32,
+    "focalLengthMm": 120,
+    "focalRatio": 3.75,
+    "externalId": "23674"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Uniguide 50mm f/4",
+    "apertureMm": 50,
+    "focalLengthMm": 200,
+    "focalRatio": 4,
+    "externalId": "35246"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Zenithstar 105 APO",
+    "apertureMm": 105,
+    "focalLengthMm": 735,
+    "focalRatio": 7,
+    "externalId": "33997"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Zenithstar 61 FPL53 f/5.9",
+    "apertureMm": 61,
+    "focalLengthMm": 360,
+    "focalRatio": 5.9,
+    "externalId": "1933"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Zenithstar 61 II APO",
+    "apertureMm": 61,
+    "focalLengthMm": 360,
+    "focalRatio": 5.9,
+    "externalId": "35243"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Zenithstar 66 SD f/5.9",
+    "apertureMm": 66,
+    "focalLengthMm": 388,
+    "focalRatio": 5.88,
+    "externalId": "63"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Zenithstar 71 ED f/5.9",
+    "apertureMm": 71,
+    "focalLengthMm": 418,
+    "focalRatio": 5.89,
+    "externalId": "20"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Zenithstar 73 III APO f/5.9",
+    "apertureMm": 73,
+    "focalLengthMm": 430,
+    "focalRatio": 5.89,
+    "externalId": "2378"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Zenithstar 80 II ED &nbsp;f/6.8",
+    "apertureMm": 80,
+    "focalLengthMm": 545,
+    "focalRatio": 6.81,
+    "externalId": "128"
+  },
+  {
+    "brand": "William Optics",
+    "model": "ZenithStar 81 APO f/6.9",
+    "apertureMm": 81,
+    "focalLengthMm": 559,
+    "focalRatio": 6.9,
+    "externalId": "6113"
+  },
+  {
+    "brand": "WIlliam Optics",
+    "model": "Zenithstar 81 WIFD",
+    "apertureMm": 81,
+    "focalLengthMm": 559,
+    "focalRatio": 6.9,
+    "externalId": "35209"
+  },
+  {
+    "brand": "William Optics",
+    "model": "Zenithstar-103 ED f/6.9",
+    "apertureMm": 103,
+    "focalLengthMm": 710,
+    "focalRatio": 6.89,
+    "externalId": "2940"
+  },
+  {
+    "brand": "William Optics",
+    "model": "ZS126",
+    "apertureMm": 126,
+    "focalLengthMm": 970,
+    "focalRatio": 7.7,
+    "externalId": "3980"
+  },
+  {
+    "brand": "William Optics",
+    "model": "ZS73 &amp; ZS73 II",
+    "apertureMm": 73,
+    "focalLengthMm": 430,
+    "focalRatio": 5.89,
+    "externalId": "5740"
+  },
+  {
+    "brand": "Zhumell",
+    "model": "Z114",
+    "apertureMm": 114,
+    "focalLengthMm": 465,
+    "focalRatio": 4.08,
+    "externalId": "29766"
+  },
+  {
+    "brand": "Ziess",
+    "model": "Telementor",
+    "apertureMm": 63,
+    "focalLengthMm": 840,
+    "focalRatio": 13.33,
+    "externalId": "1974"
+  },
+  {
+    "brand": "ZWO",
+    "model": "30mm Mini Guide Scope",
+    "apertureMm": 30,
+    "focalLengthMm": 120,
+    "focalRatio": 4,
+    "externalId": "3776"
+  },
+  {
+    "brand": "ZWO",
+    "model": "FF107 APO Quadruplet",
+    "apertureMm": 107,
+    "focalLengthMm": 749,
+    "focalRatio": 7,
+    "externalId": "31985"
+  },
+  {
+    "brand": "ZWO",
+    "model": "FF130 APO Quadruplet",
+    "apertureMm": 130,
+    "focalLengthMm": 1000,
+    "focalRatio": 7.69,
+    "externalId": "31962"
+  },
+  {
+    "brand": "ZWO",
+    "model": "FF65 APO Quintuplet",
+    "apertureMm": 65,
+    "focalLengthMm": 416,
+    "focalRatio": 6.4,
+    "externalId": "32011"
+  },
+  {
+    "brand": "ZWO",
+    "model": "FF80 APO Quadruplet",
+    "apertureMm": 80,
+    "focalLengthMm": 600,
+    "focalRatio": 7.5,
+    "externalId": "31984"
+  },
+  {
+    "brand": "ZWO",
+    "model": "Seestar S30",
+    "apertureMm": 30,
+    "focalLengthMm": 150,
+    "focalRatio": 5,
+    "externalId": "35568"
+  },
+  {
+    "brand": "ZWO",
+    "model": "Seestar S50",
+    "apertureMm": 50,
+    "focalLengthMm": 250,
+    "focalRatio": 5,
+    "externalId": "34518"
+  }
+]

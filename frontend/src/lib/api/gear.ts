@@ -1,5 +1,6 @@
 import type {
   Telescope,
+  TelescopeCatalog,
   Camera,
   Rig,
   CreateTelescopeInput,
@@ -29,6 +30,20 @@ async function fetchAPI<T>(url: string, options?: RequestInit): Promise<T> {
 
   return response.json();
 }
+
+// Telescope Catalog
+export const searchTelescopeCatalog = (
+  search: string = '',
+  limit: number = 20,
+  offset: number = 0
+): Promise<{ telescopes: TelescopeCatalog[]; total: number; hasMore: boolean }> => {
+  const params = new URLSearchParams({
+    search,
+    limit: limit.toString(),
+    offset: offset.toString(),
+  });
+  return fetchAPI(`/api/telescope-catalog?${params.toString()}`);
+};
 
 // Telescopes
 export const getTelescopes = (): Promise<Telescope[]> =>

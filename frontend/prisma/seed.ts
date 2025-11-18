@@ -1,6 +1,17 @@
 import { PrismaClient } from '@prisma/client';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const prisma = new PrismaClient();
+
+interface TelescopeData {
+  brand: string;
+  model: string;
+  apertureMm: number;
+  focalLengthMm: number;
+  focalRatio: number;
+  externalId: string;
+}
 
 // Messier catalog data - first 20 objects as example
 // In production, you'd import the full catalog from a data file
@@ -42,7 +53,56 @@ const ngcCatalog = [
 ];
 
 async function main() {
-  console.log('🌌 Seeding target catalog...');
+  console.log('🌌 Seeding database...');
+
+  // Seed Telescope Catalog
+  console.log('\n🔭 Seeding telescope catalog...');
+  const telescopeCatalogPath = path.join(__dirname, 'telescope-catalog.json');
+
+  if (fs.existsSync(telescopeCatalogPath)) {
+    const telescopeData: TelescopeData[] = JSON.parse(
+      fs.readFileSync(telescopeCatalogPath, 'utf-8')
+    );
+
+    console.log(`📡 Adding ${telescopeData.length} telescopes...`);
+
+    let added = 0;
+    let updated = 0;
+
+    for (const telescope of telescopeData) {
+      const result = await prisma.telescopeCatalog.upsert({
+        where: {
+          brand_model_apertureMm_focalLengthMm: {
+            brand: telescope.brand,
+            model: telescope.model,
+            apertureMm: telescope.apertureMm,
+            focalLengthMm: telescope.focalLengthMm,
+          },
+        },
+        update: {
+          focalRatio: telescope.focalRatio,
+          externalId: telescope.externalId,
+        },
+        create: telescope,
+      });
+
+      if (result.createdAt.getTime() === result.updatedAt.getTime()) {
+        added++;
+      } else {
+        updated++;
+      }
+    }
+
+    console.log(`✅ Telescope catalog: ${added} added, ${updated} updated`);
+  } else {
+    console.log('⚠️  Telescope catalog JSON not found. Run parse-telescopes.ts first.');
+  }
+
+  const totalTelescopes = await prisma.telescopeCatalog.count();
+  console.log(`📊 Total telescopes in catalog: ${totalTelescopes}`);
+
+  // Seed Target Catalog
+  console.log('\n🎯 Seeding target catalog...');
 
   // Seed Messier objects
   console.log('📡 Adding Messier objects...');
@@ -67,8 +127,9 @@ async function main() {
   console.log(`✅ Added ${ngcCatalog.length} NGC objects`);
 
   const totalTargets = await prisma.target.count();
-  console.log(`\n🎯 Total targets in catalog: ${totalTargets}`);
-  console.log('✨ Seed completed successfully!');
+  console.log(`📊 Total targets in catalog: ${totalTargets}`);
+
+  console.log('\n✨ Seed completed successfully!');
 }
 
 main()

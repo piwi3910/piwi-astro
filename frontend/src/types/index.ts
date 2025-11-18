@@ -46,9 +46,21 @@ export interface ImageUpload {
   notes: string | null;
 }
 
+export interface TelescopeCatalog {
+  id: string;
+  brand: string;
+  model: string;
+  apertureMm: number;
+  focalLengthMm: number;
+  focalRatio: number;
+  externalId: string | null;
+  isActive: boolean;
+}
+
 export interface Telescope {
   id: string;
   userId: string;
+  catalogId: string | null;
   name: string;
   brand: string | null;
   model: string | null;
@@ -94,6 +106,7 @@ export interface Rig {
 }
 
 export interface CreateTelescopeInput {
+  catalogId?: string;
   name: string;
   brand?: string;
   model?: string;
