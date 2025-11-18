@@ -10,6 +10,51 @@ interface TelescopeData {
   externalId: string;
 }
 
+// Known brand name mappings for inconsistent source data
+const BRAND_MAPPINGS: Record<string, string> = {
+  'astro tech': 'Astro-Tech',
+  'astro-tech': 'Astro-Tech',
+  'astro physics': 'Astro-Physics',
+  'astro-physics': 'Astro-Physics',
+  'sky watcher': 'Sky-Watcher',
+  'sky-watcher': 'Sky-Watcher',
+  'ts optics': 'TS-Optics',
+  'ts-optics': 'TS-Optics',
+  'william optics': 'William Optics',
+};
+
+function normalizeBrandName(brand: string): string {
+  // Trim whitespace
+  const trimmed = brand.trim();
+
+  // Handle empty string
+  if (!trimmed) return '';
+
+  // Check brand mappings first (case-insensitive)
+  const lowerBrand = trimmed.toLowerCase();
+  if (BRAND_MAPPINGS[lowerBrand]) {
+    return BRAND_MAPPINGS[lowerBrand];
+  }
+
+  // Convert to lowercase first
+  const lower = trimmed.toLowerCase();
+
+  // Split by spaces and hyphens to handle multi-word brands
+  const words = lower.split(/(\s+|-)/);
+
+  // Capitalize first letter of each word, preserve separators
+  const normalized = words
+    .map((word) => {
+      // Keep separators (spaces, hyphens) as-is
+      if (word.match(/^[\s-]+$/)) return word;
+      // Capitalize first letter of word
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join('');
+
+  return normalized;
+}
+
 function parseTelescopeHTML(htmlContent: string): TelescopeData[] {
   const telescopes: TelescopeData[] = [];
 
@@ -24,8 +69,8 @@ function parseTelescopeHTML(htmlContent: string): TelescopeData[] {
     const focalLengthMm = parseFloat(focalLength);
     const focalRatio = focalLengthMm / apertureMm;
 
-    // Normalize brand name (capitalize first letter)
-    const normalizedBrand = brand.charAt(0).toUpperCase() + brand.slice(1);
+    // Normalize brand name to consistent capitalization
+    const normalizedBrand = normalizeBrandName(brand);
 
     telescopes.push({
       brand: normalizedBrand,
