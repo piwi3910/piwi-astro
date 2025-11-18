@@ -89,7 +89,9 @@ export default function FOVPlannerPage(): JSX.Element {
   const [fovOffsetX, setFovOffsetX] = useState<number>(0);
   const [fovOffsetY, setFovOffsetY] = useState<number>(0);
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [isRotating, setIsRotating] = useState<boolean>(false);
   const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null);
+  const [hoveredCorner, setHoveredCorner] = useState<number | null>(null);
 
   const { data: rigs } = useQuery({
     queryKey: ['rigs'],
@@ -273,36 +275,128 @@ export default function FOVPlannerPage(): JSX.Element {
     setRotationDeg(0);
   }, [selectedRigId, selectedTargetId]);
 
-  // Drag handlers for FOV repositioning
+  // Get corner positions for rotation handles
+  const getCornerPositions = () => {
+    if (!vizData) return [];
+
+    const centerX = vizData.centerX + fovOffsetX * vizData.scale;
+    const centerY = vizData.centerY + fovOffsetY * vizData.scale;
+    const halfWidth = vizData.fovWidthPx / 2;
+    const halfHeight = vizData.fovHeightPx / 2;
+
+    // Calculate rotated corner positions
+    const rad = (rotationDeg * Math.PI) / 180;
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+
+    return [
+      { // Top-left
+        x: centerX + (-halfWidth * cos - -halfHeight * sin),
+        y: centerY + (-halfWidth * sin + -halfHeight * cos),
+      },
+      { // Top-right
+        x: centerX + (halfWidth * cos - -halfHeight * sin),
+        y: centerY + (halfWidth * sin + -halfHeight * cos),
+      },
+      { // Bottom-right
+        x: centerX + (halfWidth * cos - halfHeight * sin),
+        y: centerY + (halfWidth * sin + halfHeight * cos),
+      },
+      { // Bottom-left
+        x: centerX + (-halfWidth * cos - halfHeight * sin),
+        y: centerY + (-halfWidth * sin + halfHeight * cos),
+      },
+    ];
+  };
+
+  // Check if mouse is near a corner
+  const getNearestCorner = (mouseX: number, mouseY: number, threshold = 20): number | null => {
+    const corners = getCornerPositions();
+    for (let i = 0; i < corners.length; i++) {
+      const dx = mouseX - corners[i].x;
+      const dy = mouseY - corners[i].y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < threshold) return i;
+    }
+    return null;
+  };
+
+  // Drag handlers for FOV repositioning and rotation
   const handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
     if (!vizData) return;
-    setIsDragging(true);
+
+    const svg = e.currentTarget;
+    const rect = svg.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const nearestCorner = getNearestCorner(mouseX, mouseY);
+
+    if (nearestCorner !== null) {
+      // Start rotation
+      setIsRotating(true);
+      setIsDragging(false);
+    } else {
+      // Start position dragging
+      setIsDragging(true);
+      setIsRotating(false);
+    }
+
     setDragStart({ x: e.clientX, y: e.clientY });
   };
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-    if (!isDragging || !dragStart || !vizData) return;
+    if (!vizData) return;
 
-    const dx = e.clientX - dragStart.x;
-    const dy = e.clientY - dragStart.y;
+    const svg = e.currentTarget;
+    const rect = svg.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
 
-    // Convert pixel movement to arcminutes using scale
-    const offsetXArcmin = dx / vizData.scale;
-    const offsetYArcmin = dy / vizData.scale;
+    // Update hovered corner for visual feedback
+    if (!isDragging && !isRotating) {
+      setHoveredCorner(getNearestCorner(mouseX, mouseY));
+    }
 
-    setFovOffsetX(fovOffsetX + offsetXArcmin);
-    setFovOffsetY(fovOffsetY + offsetYArcmin);
-    setDragStart({ x: e.clientX, y: e.clientY });
+    // Handle rotation
+    if (isRotating && dragStart) {
+      const centerX = vizData.centerX + fovOffsetX * vizData.scale;
+      const centerY = vizData.centerY + fovOffsetY * vizData.scale;
+
+      // Calculate angle from center to mouse
+      const angle = Math.atan2(mouseY - centerY, mouseX - centerX);
+      const degrees = (angle * 180) / Math.PI + 90; // Adjust for 0° being top
+
+      setRotationDeg((degrees + 360) % 360);
+      return;
+    }
+
+    // Handle position dragging
+    if (isDragging && dragStart) {
+      const dx = e.clientX - dragStart.x;
+      const dy = e.clientY - dragStart.y;
+
+      // Convert pixel movement to arcminutes using scale
+      const offsetXArcmin = dx / vizData.scale;
+      const offsetYArcmin = dy / vizData.scale;
+
+      setFovOffsetX(fovOffsetX + offsetXArcmin);
+      setFovOffsetY(fovOffsetY + offsetYArcmin);
+      setDragStart({ x: e.clientX, y: e.clientY });
+    }
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    setIsRotating(false);
     setDragStart(null);
   };
 
   const handleMouseLeave = () => {
     setIsDragging(false);
+    setIsRotating(false);
     setDragStart(null);
+    setHoveredCorner(null);
   };
 
   return (
@@ -395,42 +489,27 @@ export default function FOVPlannerPage(): JSX.Element {
             <Text size="sm" fw={500} mt="md" mb="xs" c="dimmed">
               Framing Controls
             </Text>
-            <Grid>
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <NumberInput
-                  label="Rotation"
-                  description="Rotate FOV to frame target"
-                  value={rotationDeg}
-                  onChange={(val) => setRotationDeg(Number(val) || 0)}
-                  min={0}
-                  max={360}
-                  step={1}
-                  suffix="°"
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <Stack gap="xs">
-                  <Text size="sm" fw={500}>
-                    Position
-                  </Text>
-                  <Text size="xs" c="dimmed">
-                    Drag the FOV in the visualization to reposition
-                  </Text>
-                  {(fovOffsetX !== 0 || fovOffsetY !== 0) && (
-                    <Button
-                      size="xs"
-                      variant="light"
-                      onClick={() => {
-                        setFovOffsetX(0);
-                        setFovOffsetY(0);
-                      }}
-                    >
-                      Reset Position
-                    </Button>
-                  )}
-                </Stack>
-              </Grid.Col>
-            </Grid>
+            <Stack gap="xs">
+              <Text size="xs" c="dimmed">
+                • Drag the FOV to reposition
+              </Text>
+              <Text size="xs" c="dimmed">
+                • Drag a corner to rotate
+              </Text>
+              {(fovOffsetX !== 0 || fovOffsetY !== 0 || rotationDeg !== 0) && (
+                <Button
+                  size="xs"
+                  variant="light"
+                  onClick={() => {
+                    setFovOffsetX(0);
+                    setFovOffsetY(0);
+                    setRotationDeg(0);
+                  }}
+                >
+                  Reset Framing
+                </Button>
+              )}
+            </Stack>
             {vizData && vizData.panelCount > 1 && (
               <Paper p="sm" mt="md" withBorder bg="dark.6">
                 <Group justify="space-between">
@@ -458,7 +537,13 @@ export default function FOVPlannerPage(): JSX.Element {
                 height={vizData.canvasHeight}
                 style={{
                   border: '1px solid var(--mantine-color-gray-3)',
-                  cursor: isDragging ? 'grabbing' : 'grab'
+                  cursor: isRotating
+                    ? 'grabbing'
+                    : hoveredCorner !== null
+                    ? 'grab'
+                    : isDragging
+                    ? 'grabbing'
+                    : 'grab'
                 }}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
@@ -599,6 +684,21 @@ export default function FOVPlannerPage(): JSX.Element {
                       />
                     </>
                   )}
+
+                  {/* Corner handles for rotation */}
+                  {getCornerPositions().map((corner, index) => (
+                    <circle
+                      key={index}
+                      cx={corner.x}
+                      cy={corner.y}
+                      r={hoveredCorner === index ? 8 : 6}
+                      fill={hoveredCorner === index ? '#4dabf7' : '#1971c2'}
+                      stroke="#ffffff"
+                      strokeWidth="2"
+                      opacity={hoveredCorner === index ? 1 : 0.7}
+                      style={{ cursor: 'grab', pointerEvents: 'all' }}
+                    />
+                  ))}
                 </g>
 
                 {/* Target Label (only show if no DSS image) */}
