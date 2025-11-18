@@ -556,6 +556,7 @@ export default function FOVPlannerPage(): JSX.Element {
                 height={vizData.canvasHeight}
                 style={{
                   border: '1px solid var(--mantine-color-gray-3)',
+                  overflow: 'hidden',
                   cursor: isRotating
                     ? 'grabbing'
                     : hoveredCorner !== null
