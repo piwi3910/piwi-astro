@@ -152,50 +152,51 @@ export function RigsTab(): JSX.Element {
                   </Group>
                 </Group>
 
-                <Stack gap="xs">
-                  <Text size="sm" c="dimmed">
-                    <strong>Telescope:</strong> {rig.telescope.name}
-                  </Text>
-                  <Text size="sm" c="dimmed">
-                    <strong>Camera:</strong> {rig.camera.name}
-                  </Text>
+                <Group align="flex-start" gap="md">
+                  <Stack gap="xs" style={{ flex: 1 }}>
+                    <Text size="sm" c="dimmed">
+                      <strong>Telescope:</strong> {rig.telescope.name}
+                    </Text>
+                    <Text size="sm" c="dimmed">
+                      <strong>Camera:</strong> {rig.camera.name}
+                    </Text>
 
-                  {(rig.reducerFactor !== 1.0 || rig.barlowFactor !== 1.0) && (
-                    <Group gap="xs">
-                      {rig.reducerFactor !== 1.0 && (
-                        <Badge color="blue" size="sm">
-                          {rig.reducerFactor}x Reducer
-                        </Badge>
-                      )}
-                      {rig.barlowFactor !== 1.0 && (
-                        <Badge color="orange" size="sm">
-                          {rig.barlowFactor}x Barlow
-                        </Badge>
-                      )}
-                    </Group>
-                  )}
+                    {(rig.reducerFactor !== 1.0 || rig.barlowFactor !== 1.0) && (
+                      <Group gap="xs">
+                        {rig.reducerFactor !== 1.0 && (
+                          <Badge color="blue" size="sm">
+                            {rig.reducerFactor}x Reducer
+                          </Badge>
+                        )}
+                        {rig.barlowFactor !== 1.0 && (
+                          <Badge color="orange" size="sm">
+                            {rig.barlowFactor}x Barlow
+                          </Badge>
+                        )}
+                      </Group>
+                    )}
 
-                  <Card mt="md" padding="sm" bg="dark.6" radius="sm">
-                    <Group align="flex-start" gap="md">
-                      <Box style={{ flex: 1 }}>
-                        <Text size="sm" fw={500} mb="xs" c="dimmed">
-                          Field of View
+                    <Card mt="md" padding="sm" bg="dark.6" radius="sm">
+                      <Text size="sm" fw={500} mb="xs" c="dimmed">
+                        Field of View
+                      </Text>
+                      <Stack gap={4}>
+                        <Text size="sm">
+                          <strong>Width:</strong> {rig.fovWidthArcmin.toFixed(2)}′
+                          ({(rig.fovWidthArcmin / 60).toFixed(2)}°)
                         </Text>
-                        <Stack gap={4}>
-                          <Text size="sm">
-                            <strong>Width:</strong> {rig.fovWidthArcmin.toFixed(2)}′
-                            ({(rig.fovWidthArcmin / 60).toFixed(2)}°)
-                          </Text>
-                          <Text size="sm">
-                            <strong>Height:</strong> {rig.fovHeightArcmin.toFixed(2)}′
-                            ({(rig.fovHeightArcmin / 60).toFixed(2)}°)
-                          </Text>
-                        </Stack>
-                      </Box>
-                      <PixelScaleGauge pixelScale={rig.pixelScale} />
-                    </Group>
-                  </Card>
-                </Stack>
+                        <Text size="sm">
+                          <strong>Height:</strong> {rig.fovHeightArcmin.toFixed(2)}′
+                          ({(rig.fovHeightArcmin / 60).toFixed(2)}°)
+                        </Text>
+                      </Stack>
+                    </Card>
+                  </Stack>
+
+                  <Box pt={4}>
+                    <PixelScaleGauge pixelScale={rig.pixelScale} />
+                  </Box>
+                </Group>
               </Card>
             </Grid.Col>
           ))}
