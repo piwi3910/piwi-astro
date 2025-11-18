@@ -349,205 +349,6 @@ export default function FOVPlannerPage(): JSX.Element {
           </Card>
         )}
 
-        {selectedRig && (
-          <Card shadow="sm" padding="lg" withBorder>
-            <Stack gap="md">
-              <Group justify="space-between">
-                <Text fw={600} size="lg">
-                  {selectedRig.name}
-                </Text>
-                {selectedTarget && (
-                  <Badge color={targetFits ? 'green' : 'red'} size="lg">
-                    {targetFits ? 'Target Fits' : 'Target Too Large'}
-                  </Badge>
-                )}
-              </Group>
-
-              <Grid>
-                <Grid.Col span={{ base: 12, md: 6 }}>
-                  <Paper p="md" withBorder>
-                    <Text size="sm" fw={600} mb="xs">
-                      Telescope
-                    </Text>
-                    <Stack gap="xs">
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Name:
-                        </Text>
-                        <Text size="sm">{selectedRig.telescope.name}</Text>
-                      </Group>
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Aperture:
-                        </Text>
-                        <Text size="sm">{selectedRig.telescope.aperture}mm</Text>
-                      </Group>
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Focal Length:
-                        </Text>
-                        <Text size="sm">{selectedRig.telescope.focalLength}mm</Text>
-                      </Group>
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Focal Ratio:
-                        </Text>
-                        <Text size="sm">f/{selectedRig.telescope.focalRatio}</Text>
-                      </Group>
-                    </Stack>
-                  </Paper>
-                </Grid.Col>
-
-                <Grid.Col span={{ base: 12, md: 6 }}>
-                  <Paper p="md" withBorder>
-                    <Text size="sm" fw={600} mb="xs">
-                      Camera
-                    </Text>
-                    <Stack gap="xs">
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Name:
-                        </Text>
-                        <Text size="sm">{selectedRig.camera.name}</Text>
-                      </Group>
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Sensor:
-                        </Text>
-                        <Text size="sm">
-                          {selectedRig.camera.sensorWidth}×{selectedRig.camera.sensorHeight}mm
-                        </Text>
-                      </Group>
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Pixel Size:
-                        </Text>
-                        <Text size="sm">{selectedRig.camera.pixelSize}µm</Text>
-                      </Group>
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Resolution:
-                        </Text>
-                        <Text size="sm">{selectedRig.camera.megapixels}MP</Text>
-                      </Group>
-                    </Stack>
-                  </Paper>
-                </Grid.Col>
-              </Grid>
-
-              {(selectedRig.focalReducer || selectedRig.barlowLens) && (
-                <Paper p="md" withBorder>
-                  <Text size="sm" fw={600} mb="xs">
-                    Accessories
-                  </Text>
-                  <Stack gap="xs">
-                    {selectedRig.focalReducer && (
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Focal Reducer:
-                        </Text>
-                        <Text size="sm">{selectedRig.focalReducer}×</Text>
-                      </Group>
-                    )}
-                    {selectedRig.barlowLens && (
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Barlow Lens:
-                        </Text>
-                        <Text size="sm">{selectedRig.barlowLens}×</Text>
-                      </Group>
-                    )}
-                  </Stack>
-                </Paper>
-              )}
-
-              <Paper p="md" withBorder style={{ background: 'var(--mantine-color-blue-0)' }}>
-                <Text size="sm" fw={600} mb="xs">
-                  Calculated FOV
-                </Text>
-                <Stack gap="xs">
-                  <Group justify="space-between">
-                    <Text size="sm" c="dimmed">
-                      Pixel Scale:
-                    </Text>
-                    <Text size="sm" fw={600}>
-                      {selectedRig.pixelScale.toFixed(2)}″/pixel
-                    </Text>
-                  </Group>
-                  <Group justify="space-between">
-                    <Text size="sm" c="dimmed">
-                      FOV (Width):
-                    </Text>
-                    <Text size="sm" fw={600}>
-                      {selectedRig.fovWidthArcmin.toFixed(2)}′ (
-                      {(selectedRig.fovWidthArcmin / 60).toFixed(2)}°)
-                    </Text>
-                  </Group>
-                  <Group justify="space-between">
-                    <Text size="sm" c="dimmed">
-                      FOV (Height):
-                    </Text>
-                    <Text size="sm" fw={600}>
-                      {selectedRig.fovHeightArcmin.toFixed(2)}′ (
-                      {(selectedRig.fovHeightArcmin / 60).toFixed(2)}°)
-                    </Text>
-                  </Group>
-                </Stack>
-              </Paper>
-
-              {selectedTarget && (
-                <Paper p="md" withBorder style={{ background: 'var(--mantine-color-grape-0)' }}>
-                  <Text size="sm" fw={600} mb="xs">
-                    Target Information
-                  </Text>
-                  <Stack gap="xs">
-                    <Group justify="space-between">
-                      <Text size="sm" c="dimmed">
-                        Name:
-                      </Text>
-                      <Text size="sm" fw={600}>
-                        {selectedTarget.name}
-                      </Text>
-                    </Group>
-                    {selectedTarget.catalogId && (
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Catalog ID:
-                        </Text>
-                        <Text size="sm">{selectedTarget.catalogId}</Text>
-                      </Group>
-                    )}
-                    <Group justify="space-between">
-                      <Text size="sm" c="dimmed">
-                        Type:
-                      </Text>
-                      <Text size="sm">{selectedTarget.type}</Text>
-                    </Group>
-                    {selectedTarget.sizeMajorArcmin && (
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Size:
-                        </Text>
-                        <Text size="sm" fw={600}>
-                          {selectedTarget.sizeMajorArcmin.toFixed(1)}′
-                        </Text>
-                      </Group>
-                    )}
-                    {selectedTarget.magnitude && (
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Magnitude:
-                        </Text>
-                        <Text size="sm">{selectedTarget.magnitude}</Text>
-                      </Group>
-                    )}
-                  </Stack>
-                </Paper>
-              )}
-            </Stack>
-          </Card>
-        )}
-
         {vizData && (
           <Card shadow="sm" padding="lg" withBorder>
             <Text fw={600} size="lg" mb="md">
@@ -768,6 +569,205 @@ export default function FOVPlannerPage(): JSX.Element {
               {vizData.panelCount === 1 && 'Crosshairs: Center of frame'}
               {vizData.panelCount > 1 && 'Numbers: Panel sequence'}
             </Text>
+          </Card>
+        )}
+
+        {selectedRig && (
+          <Card shadow="sm" padding="lg" withBorder>
+            <Stack gap="md">
+              <Group justify="space-between">
+                <Text fw={600} size="lg">
+                  {selectedRig.name}
+                </Text>
+                {selectedTarget && (
+                  <Badge color={targetFits ? 'green' : 'red'} size="lg">
+                    {targetFits ? 'Target Fits' : 'Target Too Large'}
+                  </Badge>
+                )}
+              </Group>
+
+              <Grid>
+                <Grid.Col span={{ base: 12, md: 6 }}>
+                  <Paper p="md" withBorder>
+                    <Text size="sm" fw={600} mb="xs">
+                      Telescope
+                    </Text>
+                    <Stack gap="xs">
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Name:
+                        </Text>
+                        <Text size="sm">{selectedRig.telescope.name}</Text>
+                      </Group>
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Aperture:
+                        </Text>
+                        <Text size="sm">{selectedRig.telescope.aperture}mm</Text>
+                      </Group>
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Focal Length:
+                        </Text>
+                        <Text size="sm">{selectedRig.telescope.focalLength}mm</Text>
+                      </Group>
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Focal Ratio:
+                        </Text>
+                        <Text size="sm">f/{selectedRig.telescope.focalRatio}</Text>
+                      </Group>
+                    </Stack>
+                  </Paper>
+                </Grid.Col>
+
+                <Grid.Col span={{ base: 12, md: 6 }}>
+                  <Paper p="md" withBorder>
+                    <Text size="sm" fw={600} mb="xs">
+                      Camera
+                    </Text>
+                    <Stack gap="xs">
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Name:
+                        </Text>
+                        <Text size="sm">{selectedRig.camera.name}</Text>
+                      </Group>
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Sensor:
+                        </Text>
+                        <Text size="sm">
+                          {selectedRig.camera.sensorWidth}×{selectedRig.camera.sensorHeight}mm
+                        </Text>
+                      </Group>
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Pixel Size:
+                        </Text>
+                        <Text size="sm">{selectedRig.camera.pixelSize}µm</Text>
+                      </Group>
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Resolution:
+                        </Text>
+                        <Text size="sm">{selectedRig.camera.megapixels}MP</Text>
+                      </Group>
+                    </Stack>
+                  </Paper>
+                </Grid.Col>
+              </Grid>
+
+              {(selectedRig.focalReducer || selectedRig.barlowLens) && (
+                <Paper p="md" withBorder>
+                  <Text size="sm" fw={600} mb="xs">
+                    Accessories
+                  </Text>
+                  <Stack gap="xs">
+                    {selectedRig.focalReducer && (
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Focal Reducer:
+                        </Text>
+                        <Text size="sm">{selectedRig.focalReducer}×</Text>
+                      </Group>
+                    )}
+                    {selectedRig.barlowLens && (
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Barlow Lens:
+                        </Text>
+                        <Text size="sm">{selectedRig.barlowLens}×</Text>
+                      </Group>
+                    )}
+                  </Stack>
+                </Paper>
+              )}
+
+              <Paper p="md" withBorder style={{ background: 'var(--mantine-color-blue-0)' }}>
+                <Text size="sm" fw={600} mb="xs">
+                  Calculated FOV
+                </Text>
+                <Stack gap="xs">
+                  <Group justify="space-between">
+                    <Text size="sm" c="dimmed">
+                      Pixel Scale:
+                    </Text>
+                    <Text size="sm" fw={600}>
+                      {selectedRig.pixelScale.toFixed(2)}″/pixel
+                    </Text>
+                  </Group>
+                  <Group justify="space-between">
+                    <Text size="sm" c="dimmed">
+                      FOV (Width):
+                    </Text>
+                    <Text size="sm" fw={600}>
+                      {selectedRig.fovWidthArcmin.toFixed(2)}′ (
+                      {(selectedRig.fovWidthArcmin / 60).toFixed(2)}°)
+                    </Text>
+                  </Group>
+                  <Group justify="space-between">
+                    <Text size="sm" c="dimmed">
+                      FOV (Height):
+                    </Text>
+                    <Text size="sm" fw={600}>
+                      {selectedRig.fovHeightArcmin.toFixed(2)}′ (
+                      {(selectedRig.fovHeightArcmin / 60).toFixed(2)}°)
+                    </Text>
+                  </Group>
+                </Stack>
+              </Paper>
+
+              {selectedTarget && (
+                <Paper p="md" withBorder style={{ background: 'var(--mantine-color-grape-0)' }}>
+                  <Text size="sm" fw={600} mb="xs">
+                    Target Information
+                  </Text>
+                  <Stack gap="xs">
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        Name:
+                      </Text>
+                      <Text size="sm" fw={600}>
+                        {selectedTarget.name}
+                      </Text>
+                    </Group>
+                    {selectedTarget.catalogId && (
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Catalog ID:
+                        </Text>
+                        <Text size="sm">{selectedTarget.catalogId}</Text>
+                      </Group>
+                    )}
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        Type:
+                      </Text>
+                      <Text size="sm">{selectedTarget.type}</Text>
+                    </Group>
+                    {selectedTarget.sizeMajorArcmin && (
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Size:
+                        </Text>
+                        <Text size="sm" fw={600}>
+                          {selectedTarget.sizeMajorArcmin.toFixed(1)}′
+                        </Text>
+                      </Group>
+                    )}
+                    {selectedTarget.magnitude && (
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Magnitude:
+                        </Text>
+                        <Text size="sm">{selectedTarget.magnitude}</Text>
+                      </Group>
+                    )}
+                  </Stack>
+                </Paper>
+              )}
+            </Stack>
           </Card>
         )}
 
