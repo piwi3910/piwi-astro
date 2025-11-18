@@ -92,6 +92,7 @@ export default function FOVPlannerPage(): JSX.Element {
   const [isRotating, setIsRotating] = useState<boolean>(false);
   const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null);
   const [hoveredCorner, setHoveredCorner] = useState<number | null>(null);
+  const [zoomLevel, setZoomLevel] = useState<number>(1.0);
 
   const { data: rigs } = useQuery({
     queryKey: ['rigs'],
@@ -268,11 +269,12 @@ export default function FOVPlannerPage(): JSX.Element {
     }
   }, [dssImageUrl]);
 
-  // Reset FOV position and rotation when target or rig changes
+  // Reset FOV position, rotation, and zoom when target or rig changes
   useEffect(() => {
     setFovOffsetX(0);
     setFovOffsetY(0);
     setRotationDeg(0);
+    setZoomLevel(1.0);
   }, [selectedRigId, selectedTargetId]);
 
   // Get corner positions for rotation handles
@@ -399,6 +401,19 @@ export default function FOVPlannerPage(): JSX.Element {
     setHoveredCorner(null);
   };
 
+  // Zoom handler for mouse wheel
+  const handleWheel = (e: React.WheelEvent<SVGSVGElement>) => {
+    e.preventDefault();
+
+    // Determine zoom direction (negative deltaY = zoom in, positive = zoom out)
+    const zoomDelta = e.deltaY > 0 ? 0.9 : 1.1;
+
+    // Apply zoom with limits (0.5x to 5x)
+    const newZoom = Math.min(Math.max(zoomLevel * zoomDelta, 0.5), 5.0);
+
+    setZoomLevel(newZoom);
+  };
+
   return (
     <Container size="xl" py="xl">
       <Stack gap="lg">
@@ -496,7 +511,10 @@ export default function FOVPlannerPage(): JSX.Element {
               <Text size="xs" c="dimmed">
                 • Drag a corner to rotate
               </Text>
-              {(fovOffsetX !== 0 || fovOffsetY !== 0 || rotationDeg !== 0) && (
+              <Text size="xs" c="dimmed">
+                • Scroll wheel to zoom
+              </Text>
+              {(fovOffsetX !== 0 || fovOffsetY !== 0 || rotationDeg !== 0 || zoomLevel !== 1.0) && (
                 <Button
                   size="xs"
                   variant="light"
@@ -504,6 +522,7 @@ export default function FOVPlannerPage(): JSX.Element {
                     setFovOffsetX(0);
                     setFovOffsetY(0);
                     setRotationDeg(0);
+                    setZoomLevel(1.0);
                   }}
                 >
                   Reset Framing
@@ -549,88 +568,93 @@ export default function FOVPlannerPage(): JSX.Element {
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseLeave}
+                onWheel={handleWheel}
               >
-                {/* Background */}
-                {dssImageUrl ? (
-                  <>
-                    {/* DSS Survey Image */}
-                    <image
-                      href={dssImageUrl}
-                      width={vizData.canvasWidth}
-                      height={vizData.canvasHeight}
-                      preserveAspectRatio="xMidYMid slice"
-                      onLoad={() => {
-                        setImageLoading(false);
-                        setImageError(false);
-                      }}
-                      onError={() => {
-                        setImageLoading(false);
-                        setImageError(true);
-                      }}
-                      style={{ display: imageLoading || imageError ? 'none' : 'block' }}
-                    />
-                    {/* Semi-transparent overlay for better FOV visibility */}
-                    {!imageLoading && !imageError && (
-                      <rect
+                {/* Zoom wrapper - centered zoom transform */}
+                <g
+                  transform={`translate(${vizData.centerX}, ${vizData.centerY}) scale(${zoomLevel}) translate(${-vizData.centerX}, ${-vizData.centerY})`}
+                >
+                  {/* Background */}
+                  {dssImageUrl ? (
+                    <>
+                      {/* DSS Survey Image */}
+                      <image
+                        href={dssImageUrl}
                         width={vizData.canvasWidth}
                         height={vizData.canvasHeight}
-                        fill="black"
-                        opacity="0.2"
+                        preserveAspectRatio="xMidYMid slice"
+                        onLoad={() => {
+                          setImageLoading(false);
+                          setImageError(false);
+                        }}
+                        onError={() => {
+                          setImageLoading(false);
+                          setImageError(true);
+                        }}
+                        style={{ display: imageLoading || imageError ? 'none' : 'block' }}
                       />
-                    )}
-                    {/* Loading state */}
-                    {imageLoading && (
-                      <>
-                        <rect width={vizData.canvasWidth} height={vizData.canvasHeight} fill="#0a0e27" />
-                        <foreignObject
-                          x={vizData.canvasWidth / 2 - 50}
-                          y={vizData.canvasHeight / 2 - 50}
-                          width={100}
-                          height={100}
-                        >
-                          <Center style={{ width: '100%', height: '100%' }}>
-                            <Loader color="blue" size="lg" />
-                          </Center>
-                        </foreignObject>
-                      </>
-                    )}
-                    {/* Error state - fallback to starry background */}
-                    {imageError && (
-                      <>
-                        <rect width={vizData.canvasWidth} height={vizData.canvasHeight} fill="#0a0e27" />
-                        {[...Array(50)].map((_, i) => (
-                          <circle
-                            key={i}
-                            cx={Math.random() * vizData.canvasWidth}
-                            cy={Math.random() * vizData.canvasHeight}
-                            r={Math.random() * 1.5 + 0.5}
-                            fill="white"
-                            opacity={Math.random() * 0.7 + 0.3}
-                          />
-                        ))}
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {/* Fallback: Dark starry background */}
-                    <rect width={vizData.canvasWidth} height={vizData.canvasHeight} fill="#0a0e27" />
-                    {/* Stars (decorative) */}
-                    {[...Array(50)].map((_, i) => (
-                      <circle
-                        key={i}
-                        cx={Math.random() * vizData.canvasWidth}
-                        cy={Math.random() * vizData.canvasHeight}
-                        r={Math.random() * 1.5 + 0.5}
-                        fill="white"
-                        opacity={Math.random() * 0.7 + 0.3}
-                      />
-                    ))}
-                  </>
-                )}
+                      {/* Semi-transparent overlay for better FOV visibility */}
+                      {!imageLoading && !imageError && (
+                        <rect
+                          width={vizData.canvasWidth}
+                          height={vizData.canvasHeight}
+                          fill="black"
+                          opacity="0.2"
+                        />
+                      )}
+                      {/* Loading state */}
+                      {imageLoading && (
+                        <>
+                          <rect width={vizData.canvasWidth} height={vizData.canvasHeight} fill="#0a0e27" />
+                          <foreignObject
+                            x={vizData.canvasWidth / 2 - 50}
+                            y={vizData.canvasHeight / 2 - 50}
+                            width={100}
+                            height={100}
+                          >
+                            <Center style={{ width: '100%', height: '100%' }}>
+                              <Loader color="blue" size="lg" />
+                            </Center>
+                          </foreignObject>
+                        </>
+                      )}
+                      {/* Error state - fallback to starry background */}
+                      {imageError && (
+                        <>
+                          <rect width={vizData.canvasWidth} height={vizData.canvasHeight} fill="#0a0e27" />
+                          {[...Array(50)].map((_, i) => (
+                            <circle
+                              key={i}
+                              cx={Math.random() * vizData.canvasWidth}
+                              cy={Math.random() * vizData.canvasHeight}
+                              r={Math.random() * 1.5 + 0.5}
+                              fill="white"
+                              opacity={Math.random() * 0.7 + 0.3}
+                            />
+                          ))}
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {/* Fallback: Dark starry background */}
+                      <rect width={vizData.canvasWidth} height={vizData.canvasHeight} fill="#0a0e27" />
+                      {/* Stars (decorative) */}
+                      {[...Array(50)].map((_, i) => (
+                        <circle
+                          key={i}
+                          cx={Math.random() * vizData.canvasWidth}
+                          cy={Math.random() * vizData.canvasHeight}
+                          r={Math.random() * 1.5 + 0.5}
+                          fill="white"
+                          opacity={Math.random() * 0.7 + 0.3}
+                        />
+                      ))}
+                    </>
+                  )}
 
-                {/* FOV Panels (Mosaic Grid) - with rotation */}
-                <g transform={`rotate(${rotationDeg}, ${vizData.centerX}, ${vizData.centerY})`}>
+                  {/* FOV Panels (Mosaic Grid) - with rotation */}
+                  <g transform={`rotate(${rotationDeg}, ${vizData.centerX}, ${vizData.centerY})`}>
                   {vizData.panelsPx.map((panel, index) => (
                     <g key={index}>
                       <rect
@@ -742,6 +766,8 @@ export default function FOVPlannerPage(): JSX.Element {
                     {selectedTarget.catalogId && ` (${selectedTarget.catalogId})`}
                   </text>
                 )}
+                </g>
+                {/* End of zoom wrapper */}
 
                 {/* Labels */}
                 <text
