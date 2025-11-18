@@ -1373,10 +1373,10 @@
     "brand": "NASA",
     "model": "Webb NIRCam Module A - Short Wavelength",
     "pixelSizeUm": 18,
-    "resolutionX": 4080,
-    "resolutionY": 4080,
-    "sensorWidthMm": 73.44,
-    "sensorHeightMm": 73.44,
+    "resolutionX": 2040,
+    "resolutionY": 2040,
+    "sensorWidthMm": 36.72,
+    "sensorHeightMm": 36.72,
     "externalId": "9872"
   },
   {
@@ -1422,11 +1422,11 @@
   {
     "brand": "Nikon",
     "model": "D5000",
-    "pixelSizeUm": 551,
+    "pixelSizeUm": 5.5,
     "resolutionX": 4288,
     "resolutionY": 2848,
-    "sensorWidthMm": 2362.69,
-    "sensorHeightMm": 1569.25,
+    "sensorWidthMm": 23.58,
+    "sensorHeightMm": 15.66,
     "externalId": "13958"
   },
   {
