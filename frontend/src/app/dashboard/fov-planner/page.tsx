@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Container,
   Title,
@@ -13,7 +13,8 @@ import {
   Grid,
   Paper,
   NumberInput,
-  Divider,
+  Loader,
+  Center,
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 
@@ -51,6 +52,8 @@ interface Target {
   catalogId: string | null;
   name: string;
   type: string;
+  raDeg: number;
+  decDeg: number;
   sizeMajorArcmin: number | null;
   magnitude: number | null;
   constellation: string | null;
@@ -80,6 +83,8 @@ export default function FOVPlannerPage(): JSX.Element {
   const [horizontalPanels, setHorizontalPanels] = useState<number>(1);
   const [verticalPanels, setVerticalPanels] = useState<number>(1);
   const [overlapPercent, setOverlapPercent] = useState<number>(20);
+  const [imageLoading, setImageLoading] = useState<boolean>(false);
+  const [imageError, setImageError] = useState<boolean>(false);
 
   const { data: rigs } = useQuery({
     queryKey: ['rigs'],
@@ -93,6 +98,32 @@ export default function FOVPlannerPage(): JSX.Element {
 
   const selectedRig = rigs?.find((r) => r.id === selectedRigId);
   const selectedTarget = userTargets?.find((ut) => ut.targetId === selectedTargetId)?.target;
+
+  // Generate DSS image URL for target (same method as target list)
+  const getDSSImageUrl = (target: Target | undefined, fovArcmin: number): string | null => {
+    if (!target) return null;
+
+    const raDeg = target.raDeg;
+    const decDeg = target.decDeg;
+
+    // Calculate FOV in degrees - use the mosaic total FOV or single panel FOV
+    const fovDeg = fovArcmin / 60;
+
+    const params = new URLSearchParams({
+      hips: 'CDS/P/DSS2/color',
+      ra: raDeg.toString(),
+      dec: decDeg.toString(),
+      width: '700',
+      height: '500',
+      fov: fovDeg.toString(),
+      format: 'jpg',
+    });
+
+    const externalUrl = `https://alasky.u-strasbg.fr/hips-image-services/hips2fits?${params}`;
+
+    // Proxy through our image cache API for lazy caching
+    return `/api/image-proxy?url=${encodeURIComponent(externalUrl)}`;
+  };
 
   // Calculate if target fits in FOV
   const targetFitsWidth =
@@ -200,6 +231,22 @@ export default function FOVPlannerPage(): JSX.Element {
   };
 
   const vizData = getVisualizationData();
+
+  // Get DSS image URL for visualization
+  const dssImageUrl = vizData && selectedTarget
+    ? getDSSImageUrl(selectedTarget, Math.max(vizData.totalWidthArcmin, vizData.totalHeightArcmin) * 1.2)
+    : null;
+
+  // Reset loading state when DSS image URL changes
+  useEffect(() => {
+    if (dssImageUrl) {
+      setImageLoading(true);
+      setImageError(false);
+    } else {
+      setImageLoading(false);
+      setImageError(false);
+    }
+  }, [dssImageUrl]);
 
   return (
     <Container size="xl" py="xl">
@@ -514,19 +561,83 @@ export default function FOVPlannerPage(): JSX.Element {
                 style={{ border: '1px solid var(--mantine-color-gray-3)' }}
               >
                 {/* Background */}
-                <rect width={vizData.canvasWidth} height={vizData.canvasHeight} fill="#0a0e27" />
-
-                {/* Stars (decorative) */}
-                {[...Array(50)].map((_, i) => (
-                  <circle
-                    key={i}
-                    cx={Math.random() * vizData.canvasWidth}
-                    cy={Math.random() * vizData.canvasHeight}
-                    r={Math.random() * 1.5 + 0.5}
-                    fill="white"
-                    opacity={Math.random() * 0.7 + 0.3}
-                  />
-                ))}
+                {dssImageUrl ? (
+                  <>
+                    {/* DSS Survey Image */}
+                    <image
+                      href={dssImageUrl}
+                      width={vizData.canvasWidth}
+                      height={vizData.canvasHeight}
+                      preserveAspectRatio="xMidYMid slice"
+                      onLoad={() => {
+                        setImageLoading(false);
+                        setImageError(false);
+                      }}
+                      onError={() => {
+                        setImageLoading(false);
+                        setImageError(true);
+                      }}
+                      style={{ display: imageLoading || imageError ? 'none' : 'block' }}
+                    />
+                    {/* Semi-transparent overlay for better FOV visibility */}
+                    {!imageLoading && !imageError && (
+                      <rect
+                        width={vizData.canvasWidth}
+                        height={vizData.canvasHeight}
+                        fill="black"
+                        opacity="0.2"
+                      />
+                    )}
+                    {/* Loading state */}
+                    {imageLoading && (
+                      <>
+                        <rect width={vizData.canvasWidth} height={vizData.canvasHeight} fill="#0a0e27" />
+                        <foreignObject
+                          x={vizData.canvasWidth / 2 - 50}
+                          y={vizData.canvasHeight / 2 - 50}
+                          width={100}
+                          height={100}
+                        >
+                          <Center style={{ width: '100%', height: '100%' }}>
+                            <Loader color="blue" size="lg" />
+                          </Center>
+                        </foreignObject>
+                      </>
+                    )}
+                    {/* Error state - fallback to starry background */}
+                    {imageError && (
+                      <>
+                        <rect width={vizData.canvasWidth} height={vizData.canvasHeight} fill="#0a0e27" />
+                        {[...Array(50)].map((_, i) => (
+                          <circle
+                            key={i}
+                            cx={Math.random() * vizData.canvasWidth}
+                            cy={Math.random() * vizData.canvasHeight}
+                            r={Math.random() * 1.5 + 0.5}
+                            fill="white"
+                            opacity={Math.random() * 0.7 + 0.3}
+                          />
+                        ))}
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {/* Fallback: Dark starry background */}
+                    <rect width={vizData.canvasWidth} height={vizData.canvasHeight} fill="#0a0e27" />
+                    {/* Stars (decorative) */}
+                    {[...Array(50)].map((_, i) => (
+                      <circle
+                        key={i}
+                        cx={Math.random() * vizData.canvasWidth}
+                        cy={Math.random() * vizData.canvasHeight}
+                        r={Math.random() * 1.5 + 0.5}
+                        fill="white"
+                        opacity={Math.random() * 0.7 + 0.3}
+                      />
+                    ))}
+                  </>
+                )}
 
                 {/* FOV Panels (Mosaic Grid) */}
                 {vizData.panelsPx.map((panel, index) => (
@@ -583,8 +694,8 @@ export default function FOVPlannerPage(): JSX.Element {
                   </>
                 )}
 
-                {/* Target Visualization */}
-                {selectedTarget && vizData.targetWidthPx > 0 && (
+                {/* Target Label (only show if no DSS image) */}
+                {selectedTarget && !dssImageUrl && vizData.targetWidthPx > 0 && (
                   <>
                     <ellipse
                       cx={vizData.centerX}
@@ -607,6 +718,22 @@ export default function FOVPlannerPage(): JSX.Element {
                       {selectedTarget.name}
                     </text>
                   </>
+                )}
+
+                {/* Target Name Label (show on DSS image) */}
+                {selectedTarget && dssImageUrl && (
+                  <text
+                    x={vizData.centerX}
+                    y={vizData.canvasHeight - 30}
+                    textAnchor="middle"
+                    fill="#ffffff"
+                    fontSize="16"
+                    fontWeight="bold"
+                    style={{ textShadow: '0 0 4px black, 0 0 8px black' }}
+                  >
+                    {selectedTarget.name}
+                    {selectedTarget.catalogId && ` (${selectedTarget.catalogId})`}
+                  </text>
                 )}
 
                 {/* Labels */}
