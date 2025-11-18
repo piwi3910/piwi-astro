@@ -12,6 +12,8 @@ import {
   Badge,
   Grid,
   Paper,
+  NumberInput,
+  Divider,
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 
@@ -75,6 +77,9 @@ async function fetchUserTargets(): Promise<UserTarget[]> {
 export default function FOVPlannerPage(): JSX.Element {
   const [selectedRigId, setSelectedRigId] = useState<string>('');
   const [selectedTargetId, setSelectedTargetId] = useState<string>('');
+  const [horizontalPanels, setHorizontalPanels] = useState<number>(1);
+  const [verticalPanels, setVerticalPanels] = useState<number>(1);
+  const [overlapPercent, setOverlapPercent] = useState<number>(20);
 
   const { data: rigs } = useQuery({
     queryKey: ['rigs'],
@@ -100,32 +105,83 @@ export default function FOVPlannerPage(): JSX.Element {
     selectedTarget.sizeMajorArcmin <= selectedRig.fovHeightArcmin;
   const targetFits = targetFitsWidth && targetFitsHeight;
 
+  // Calculate mosaic dimensions
+  const getMosaicData = () => {
+    if (!selectedRig) return null;
+
+    const fovWidth = selectedRig.fovWidthArcmin;
+    const fovHeight = selectedRig.fovHeightArcmin;
+    const overlap = overlapPercent / 100;
+
+    // Effective FOV per panel (accounting for overlap)
+    const effectiveWidth = fovWidth * (1 - overlap);
+    const effectiveHeight = fovHeight * (1 - overlap);
+
+    // Total mosaic coverage
+    const totalWidth = horizontalPanels === 1 ? fovWidth : (horizontalPanels - 1) * effectiveWidth + fovWidth;
+    const totalHeight = verticalPanels === 1 ? fovHeight : (verticalPanels - 1) * effectiveHeight + fovHeight;
+
+    // Panel positions
+    const panels: { x: number; y: number }[] = [];
+    for (let row = 0; row < verticalPanels; row++) {
+      for (let col = 0; col < horizontalPanels; col++) {
+        panels.push({
+          x: col * effectiveWidth - totalWidth / 2 + fovWidth / 2,
+          y: row * effectiveHeight - totalHeight / 2 + fovHeight / 2,
+        });
+      }
+    }
+
+    return {
+      fovWidth,
+      fovHeight,
+      totalWidth,
+      totalHeight,
+      panels,
+      panelCount: horizontalPanels * verticalPanels,
+    };
+  };
+
   // Calculate scale factor for visualization
   const getVisualizationData = () => {
     if (!selectedRig) return null;
 
-    const canvasWidth = 600;
-    const canvasHeight = 400;
+    const mosaicData = getMosaicData();
+    if (!mosaicData) return null;
 
-    // FOV in pixels (scale down to fit canvas)
-    const fovWidthPx = canvasWidth * 0.8;
-    const fovHeightPx = canvasHeight * 0.8;
+    const canvasWidth = 700;
+    const canvasHeight = 500;
 
-    // Scale: pixels per arcminute
-    const scaleX = fovWidthPx / selectedRig.fovWidthArcmin;
-    const scaleY = fovHeightPx / selectedRig.fovHeightArcmin;
+    // Determine what to fit in the canvas (single FOV or total mosaic)
+    const displayWidth = mosaicData.totalWidth;
+    const displayHeight = mosaicData.totalHeight;
+
+    // Scale to fit canvas with padding
+    const scaleX = (canvasWidth * 0.85) / displayWidth;
+    const scaleY = (canvasHeight * 0.85) / displayHeight;
+    const scale = Math.min(scaleX, scaleY);
 
     // Center of canvas
     const centerX = canvasWidth / 2;
     const centerY = canvasHeight / 2;
 
+    // FOV dimensions in pixels
+    const fovWidthPx = mosaicData.fovWidth * scale;
+    const fovHeightPx = mosaicData.fovHeight * scale;
+
     // Target size in pixels (if target is selected)
     let targetWidthPx = 0;
     let targetHeightPx = 0;
     if (selectedTarget?.sizeMajorArcmin) {
-      targetWidthPx = selectedTarget.sizeMajorArcmin * scaleX;
-      targetHeightPx = selectedTarget.sizeMajorArcmin * scaleY;
+      targetWidthPx = selectedTarget.sizeMajorArcmin * scale;
+      targetHeightPx = selectedTarget.sizeMajorArcmin * scale;
     }
+
+    // Panel positions in pixels
+    const panelsPx = mosaicData.panels.map(p => ({
+      x: centerX + p.x * scale,
+      y: centerY + p.y * scale,
+    }));
 
     return {
       canvasWidth,
@@ -136,6 +192,10 @@ export default function FOVPlannerPage(): JSX.Element {
       centerY,
       targetWidthPx,
       targetHeightPx,
+      panelsPx,
+      totalWidthArcmin: mosaicData.totalWidth,
+      totalHeightArcmin: mosaicData.totalHeight,
+      panelCount: mosaicData.panelCount,
     };
   };
 
@@ -185,6 +245,62 @@ export default function FOVPlannerPage(): JSX.Element {
             />
           </Grid.Col>
         </Grid>
+
+        {selectedRig && (
+          <Card shadow="sm" padding="lg" withBorder>
+            <Text fw={600} size="md" mb="md">
+              Mosaic Planning
+            </Text>
+            <Grid>
+              <Grid.Col span={{ base: 12, sm: 4 }}>
+                <NumberInput
+                  label="Horizontal Panels"
+                  description="Number of frames across"
+                  value={horizontalPanels}
+                  onChange={(val) => setHorizontalPanels(Number(val) || 1)}
+                  min={1}
+                  max={10}
+                  step={1}
+                />
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, sm: 4 }}>
+                <NumberInput
+                  label="Vertical Panels"
+                  description="Number of frames down"
+                  value={verticalPanels}
+                  onChange={(val) => setVerticalPanels(Number(val) || 1)}
+                  min={1}
+                  max={10}
+                  step={1}
+                />
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, sm: 4 }}>
+                <NumberInput
+                  label="Overlap %"
+                  description="Panel overlap percentage"
+                  value={overlapPercent}
+                  onChange={(val) => setOverlapPercent(Number(val) || 20)}
+                  min={10}
+                  max={50}
+                  step={5}
+                  suffix="%"
+                />
+              </Grid.Col>
+            </Grid>
+            {vizData && vizData.panelCount > 1 && (
+              <Paper p="sm" mt="md" withBorder style={{ background: 'var(--mantine-color-blue-0)' }}>
+                <Group justify="space-between">
+                  <Text size="sm" fw={600}>
+                    Total Mosaic Coverage:
+                  </Text>
+                  <Text size="sm">
+                    {vizData.totalWidthArcmin.toFixed(1)}′ × {vizData.totalHeightArcmin.toFixed(1)}′ ({vizData.panelCount} panels)
+                  </Text>
+                </Group>
+              </Paper>
+            )}
+          </Card>
+        )}
 
         {selectedRig && (
           <Card shadow="sm" padding="lg" withBorder>
@@ -412,37 +528,60 @@ export default function FOVPlannerPage(): JSX.Element {
                   />
                 ))}
 
-                {/* FOV Rectangle */}
-                <rect
-                  x={vizData.centerX - vizData.fovWidthPx / 2}
-                  y={vizData.centerY - vizData.fovHeightPx / 2}
-                  width={vizData.fovWidthPx}
-                  height={vizData.fovHeightPx}
-                  fill="none"
-                  stroke="#4dabf7"
-                  strokeWidth="2"
-                  strokeDasharray="5,5"
-                />
+                {/* FOV Panels (Mosaic Grid) */}
+                {vizData.panelsPx.map((panel, index) => (
+                  <g key={index}>
+                    <rect
+                      x={panel.x - vizData.fovWidthPx / 2}
+                      y={panel.y - vizData.fovHeightPx / 2}
+                      width={vizData.fovWidthPx}
+                      height={vizData.fovHeightPx}
+                      fill="none"
+                      stroke="#4dabf7"
+                      strokeWidth="2"
+                      strokeDasharray="5,5"
+                      opacity={vizData.panelCount > 1 ? 0.7 : 1}
+                    />
+                    {/* Panel number */}
+                    {vizData.panelCount > 1 && (
+                      <text
+                        x={panel.x}
+                        y={panel.y}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill="#4dabf7"
+                        fontSize="14"
+                        fontWeight="bold"
+                      >
+                        {index + 1}
+                      </text>
+                    )}
+                  </g>
+                ))}
 
-                {/* FOV Crosshairs */}
-                <line
-                  x1={vizData.centerX - vizData.fovWidthPx / 2}
-                  y1={vizData.centerY}
-                  x2={vizData.centerX + vizData.fovWidthPx / 2}
-                  y2={vizData.centerY}
-                  stroke="#4dabf7"
-                  strokeWidth="1"
-                  opacity="0.5"
-                />
-                <line
-                  x1={vizData.centerX}
-                  y1={vizData.centerY - vizData.fovHeightPx / 2}
-                  x2={vizData.centerX}
-                  y2={vizData.centerY + vizData.fovHeightPx / 2}
-                  stroke="#4dabf7"
-                  strokeWidth="1"
-                  opacity="0.5"
-                />
+                {/* Center Crosshairs (only for single panel) */}
+                {vizData.panelCount === 1 && (
+                  <>
+                    <line
+                      x1={vizData.centerX - vizData.fovWidthPx / 2}
+                      y1={vizData.centerY}
+                      x2={vizData.centerX + vizData.fovWidthPx / 2}
+                      y2={vizData.centerY}
+                      stroke="#4dabf7"
+                      strokeWidth="1"
+                      opacity="0.5"
+                    />
+                    <line
+                      x1={vizData.centerX}
+                      y1={vizData.centerY - vizData.fovHeightPx / 2}
+                      x2={vizData.centerX}
+                      y2={vizData.centerY + vizData.fovHeightPx / 2}
+                      stroke="#4dabf7"
+                      strokeWidth="1"
+                      opacity="0.5"
+                    />
+                  </>
+                )}
 
                 {/* Target Visualization */}
                 {selectedTarget && vizData.targetWidthPx > 0 && (
@@ -479,7 +618,7 @@ export default function FOVPlannerPage(): JSX.Element {
                   fontSize="16"
                   fontWeight="bold"
                 >
-                  Camera Field of View
+                  {vizData.panelCount > 1 ? `${vizData.panelCount}-Panel Mosaic` : 'Camera Field of View'}
                 </text>
                 <text
                   x={vizData.centerX}
@@ -488,14 +627,19 @@ export default function FOVPlannerPage(): JSX.Element {
                   fill="#4dabf7"
                   fontSize="12"
                 >
-                  {selectedRig?.fovWidthArcmin.toFixed(1)}′ × {selectedRig?.fovHeightArcmin.toFixed(1)}′
+                  {vizData.panelCount === 1
+                    ? `${selectedRig?.fovWidthArcmin.toFixed(1)}′ × ${selectedRig?.fovHeightArcmin.toFixed(1)}′`
+                    : `Total: ${vizData.totalWidthArcmin.toFixed(1)}′ × ${vizData.totalHeightArcmin.toFixed(1)}′ | Panel: ${selectedRig?.fovWidthArcmin.toFixed(1)}′ × ${selectedRig?.fovHeightArcmin.toFixed(1)}′`
+                  }
                 </text>
               </svg>
             </div>
 
             <Text size="sm" c="dimmed" ta="center" mt="md">
-              Blue dashed rectangle: Camera field of view • Red ellipse: Target size •
-              Crosshairs: Center of frame
+              Blue dashed rectangles: Camera FOV {vizData.panelCount > 1 && `(${vizData.panelCount} panels with ${overlapPercent}% overlap)`} •
+              Red ellipse: Target size •
+              {vizData.panelCount === 1 && 'Crosshairs: Center of frame'}
+              {vizData.panelCount > 1 && 'Numbers: Panel sequence'}
             </Text>
           </Card>
         )}
