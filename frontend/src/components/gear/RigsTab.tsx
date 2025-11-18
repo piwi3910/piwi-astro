@@ -30,6 +30,7 @@ import {
 } from '@/hooks/useGear';
 import type { Rig, CreateRigInput } from '@/types';
 import { PixelScaleGauge } from './PixelScaleGauge';
+import { FilterSizeIndicator } from './FilterSizeIndicator';
 
 export function RigsTab(): JSX.Element {
   const [opened, setOpened] = useState(false);
@@ -193,9 +194,13 @@ export function RigsTab(): JSX.Element {
                     </Card>
                   </Stack>
 
-                  <Box pt={4}>
+                  <Group gap="lg" align="flex-start" pt={4}>
+                    <FilterSizeIndicator
+                      sensorWidthMm={rig.camera.sensorWidthMm}
+                      sensorHeightMm={rig.camera.sensorHeightMm}
+                    />
                     <PixelScaleGauge pixelScale={rig.pixelScale} />
-                  </Box>
+                  </Group>
                 </Group>
               </Card>
             </Grid.Col>
