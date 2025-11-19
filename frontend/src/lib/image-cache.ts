@@ -1,33 +1,20 @@
 /**
  * Image Caching Service
  * Lazily downloads and caches external images in MinIO
+ * Images are automatically optimized using sharp (resize, WebP conversion, compression)
  */
 
 import { minioClient, BUCKET_CACHE, fileExists, getPublicUrl } from './minio';
+import sharp from 'sharp';
 import crypto from 'crypto';
 
 /**
  * Generate a cache key from a URL
+ * Always uses .webp extension since we convert all images to WebP
  */
 function getCacheKey(url: string): string {
   const hash = crypto.createHash('md5').update(url).digest('hex');
-
-  // Extract extension from URL or query params
-  let extension = 'jpg'; // Default
-
-  // Check for format parameter in query string
-  const formatMatch = url.match(/[?&]format=([^&]+)/);
-  if (formatMatch) {
-    extension = formatMatch[1];
-  } else {
-    // Try to get from file extension
-    const pathMatch = url.match(/\.([a-z0-9]+)(?:[?#]|$)/i);
-    if (pathMatch) {
-      extension = pathMatch[1];
-    }
-  }
-
-  return `cached/${hash}.${extension}`;
+  return `cached/${hash}.webp`;
 }
 
 /**
@@ -43,23 +30,33 @@ async function downloadImage(url: string): Promise<Buffer> {
 }
 
 /**
- * Get content type from URL or buffer
+ * Optimize image using sharp
+ * - Resize to max 2048px (preserves aspect ratio)
+ * - Convert to WebP format
+ * - Apply 85% quality compression
  */
-function getContentType(url: string): string {
-  const extension = url.split('.').pop()?.split('?')[0]?.toLowerCase();
-  const contentTypes: Record<string, string> = {
-    jpg: 'image/jpeg',
-    jpeg: 'image/jpeg',
-    png: 'image/png',
-    gif: 'image/gif',
-    webp: 'image/webp',
-  };
-  return contentTypes[extension || 'jpg'] || 'image/jpeg';
+async function optimizeImage(imageBuffer: Buffer): Promise<Buffer> {
+  try {
+    const optimizedBuffer = await sharp(imageBuffer)
+      .resize(2048, 2048, {
+        fit: 'inside',
+        withoutEnlargement: true,
+      })
+      .webp({ quality: 85 })
+      .toBuffer();
+
+    return optimizedBuffer;
+  } catch (error) {
+    console.error('⚠️ Image optimization failed, using original:', error);
+    // Fallback to original if sharp fails
+    return imageBuffer;
+  }
 }
 
 /**
  * Cache an external image and return MinIO URL
  * If already cached, return the cached URL
+ * Images are automatically optimized (resize, WebP conversion, compression)
  */
 export async function cacheExternalImage(externalUrl: string): Promise<string> {
   const cacheKey = getCacheKey(externalUrl);
@@ -75,19 +72,28 @@ export async function cacheExternalImage(externalUrl: string): Promise<string> {
 
   try {
     // Download image
-    const imageBuffer = await downloadImage(externalUrl);
-    const contentType = getContentType(externalUrl);
+    const originalBuffer = await downloadImage(externalUrl);
+    const originalSize = originalBuffer.length;
 
-    // Upload to MinIO cache bucket
+    // Optimize image (resize, WebP conversion, compression)
+    const optimizedBuffer = await optimizeImage(originalBuffer);
+    const optimizedSize = optimizedBuffer.length;
+
+    // Calculate compression ratio
+    const compressionRatio = ((1 - optimizedSize / originalSize) * 100).toFixed(1);
+
+    // Upload optimized image to MinIO cache bucket
     await minioClient.putObject(
       BUCKET_CACHE,
       cacheKey,
-      imageBuffer,
-      imageBuffer.length,
-      { 'Content-Type': contentType }
+      optimizedBuffer,
+      optimizedBuffer.length,
+      { 'Content-Type': 'image/webp' }
     );
 
-    console.log(`✅ Cached: ${cacheKey} (${(imageBuffer.length / 1024).toFixed(2)} KB)`);
+    console.log(
+      `✅ Cached: ${cacheKey} | Original: ${(originalSize / 1024).toFixed(2)} KB → Optimized: ${(optimizedSize / 1024).toFixed(2)} KB (${compressionRatio}% smaller)`
+    );
 
     return getPublicUrl(cacheKey, BUCKET_CACHE);
   } catch (error) {
