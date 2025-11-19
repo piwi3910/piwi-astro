@@ -14,7 +14,6 @@ import {
   NumberInput,
   Loader,
   Center,
-  Button,
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 
@@ -85,7 +84,6 @@ export default function FOVPlannerPage(): JSX.Element {
   const [overlapPercent, setOverlapPercent] = useState<number>(20);
   const [imageLoading, setImageLoading] = useState<boolean>(false);
   const [imageError, setImageError] = useState<boolean>(false);
-  const [zoomLevel, setZoomLevel] = useState<number>(1.0);
 
   const { data: rigs } = useQuery({
     queryKey: ['rigs'],
@@ -262,24 +260,6 @@ export default function FOVPlannerPage(): JSX.Element {
     }
   }, [dssImageUrl]);
 
-  // Reset zoom when target or rig changes
-  useEffect(() => {
-    setZoomLevel(1.0);
-  }, [selectedRigId, selectedTargetId]);
-
-  // Zoom handler for mouse wheel
-  const handleWheel = (e: React.WheelEvent<SVGSVGElement>) => {
-    e.preventDefault();
-
-    // Determine zoom direction (negative deltaY = zoom in, positive = zoom out)
-    const zoomDelta = e.deltaY > 0 ? 0.9 : 1.1;
-
-    // Apply zoom with limits (0.5x to 5x)
-    const newZoom = Math.min(Math.max(zoomLevel * zoomDelta, 0.5), 5.0);
-
-    setZoomLevel(newZoom);
-  };
-
   return (
     <Container size="xl" py="xl">
       <Stack gap="lg">
@@ -367,23 +347,6 @@ export default function FOVPlannerPage(): JSX.Element {
               </Grid.Col>
             </Grid>
 
-            <Text size="sm" fw={500} mt="md" mb="xs" c="dimmed">
-              Zoom Controls
-            </Text>
-            <Stack gap="xs">
-              <Text size="xs" c="dimmed">
-                • Scroll wheel to zoom in/out
-              </Text>
-              {zoomLevel !== 1.0 && (
-                <Button
-                  size="xs"
-                  variant="light"
-                  onClick={() => setZoomLevel(1.0)}
-                >
-                  Reset Zoom
-                </Button>
-              )}
-            </Stack>
             {vizData && vizData.panelCount > 1 && (
               <Paper p="sm" mt="md" withBorder bg="dark.6">
                 <Group justify="space-between">
@@ -413,13 +376,8 @@ export default function FOVPlannerPage(): JSX.Element {
                   border: '1px solid var(--mantine-color-gray-3)',
                   overflow: 'hidden',
                 }}
-                onWheel={handleWheel}
               >
-                {/* Zoom wrapper - centered zoom transform */}
-                <g
-                  transform={`translate(${vizData.centerX}, ${vizData.centerY}) scale(${zoomLevel}) translate(${-vizData.centerX}, ${-vizData.centerY})`}
-                >
-                  {/* Background */}
+                {/* Background */}
                   {dssImageUrl ? (
                     <>
                       {/* DSS Survey Image */}
@@ -594,8 +552,6 @@ export default function FOVPlannerPage(): JSX.Element {
                     {selectedTarget.catalogId && ` (${selectedTarget.catalogId})`}
                   </text>
                 )}
-                </g>
-                {/* End of zoom wrapper */}
 
                 {/* Labels */}
                 <text
