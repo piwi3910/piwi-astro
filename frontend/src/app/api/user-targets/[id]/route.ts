@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 
 const updateUserTargetSchema = z.object({
   status: z.enum(['WISHLIST', 'PLANNED', 'SHOT', 'PROCESSED']).optional(),
@@ -14,11 +13,10 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
+  const { userId, error } = await getUserId();
+  if (error) return error;
+
   const { id } = await params;
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
 
   try {
     const body = await request.json();
@@ -27,7 +25,7 @@ export async function PUT(
     const existing = await prisma.userTarget.findFirst({
       where: {
         id,
-        userId: (session.user as { id: string }).id,
+        userId,
       },
     });
 
@@ -64,16 +62,15 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
+  const { userId, error } = await getUserId();
+  if (error) return error;
+
   const { id } = await params;
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
 
   const existing = await prisma.userTarget.findFirst({
     where: {
       id,
-      userId: (session.user as { id: string }).id,
+      userId,
     },
   });
 

@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 
 const updateLocationSchema = z.object({
   name: z.string().min(1).optional(),
@@ -19,10 +18,8 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   const { id } = await params;
   const location = await prisma.location.findUnique({
@@ -34,7 +31,7 @@ export async function GET(
   }
 
   // Verify ownership
-  if (location.userId !== (session.user as { id: string }).id) {
+  if (location.userId !== userId) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
@@ -45,10 +42,8 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   try {
     const { id } = await params;
@@ -61,7 +56,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Location not found' }, { status: 404 });
     }
 
-    if (existing.userId !== (session.user as { id: string }).id) {
+    if (existing.userId !== userId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
@@ -90,10 +85,8 @@ export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   const { id } = await params;
   // Check if location exists and user owns it
@@ -105,7 +98,7 @@ export async function DELETE(
     return NextResponse.json({ error: 'Location not found' }, { status: 404 });
   }
 
-  if (existing.userId !== (session.user as { id: string }).id) {
+  if (existing.userId !== userId) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 

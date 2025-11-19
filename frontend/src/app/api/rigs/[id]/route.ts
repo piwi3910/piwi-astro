@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 import { calculateFOV } from '@/utils/fov';
 
 const rigSchema = z.object({
@@ -18,14 +17,13 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
+  const { userId, error } = await getUserId();
+  if (error) return error;
+
   const { id } = await params;
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
 
   const rig = await prisma.rig.findFirst({
-    where: { id, userId: (session.user as { id: string }).id },
+    where: { id, userId },
     include: { telescope: true, camera: true },
   });
 
@@ -49,18 +47,17 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
+  const { userId, error } = await getUserId();
+  if (error) return error;
+
   const { id } = await params;
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
 
   try {
     const body = await request.json();
     const data = rigSchema.parse(body);
 
     const existing = await prisma.rig.findFirst({
-      where: { id, userId: (session.user as { id: string }).id },
+      where: { id, userId },
     });
 
     if (!existing) {
@@ -69,7 +66,7 @@ export async function PUT(
 
     if (data.telescopeId) {
       const telescope = await prisma.telescope.findFirst({
-        where: { id: data.telescopeId, userId: (session.user as { id: string }).id },
+        where: { id: data.telescopeId, userId },
       });
       if (!telescope) {
         return NextResponse.json({ error: 'Telescope not found' }, { status: 400 });
@@ -78,7 +75,7 @@ export async function PUT(
 
     if (data.cameraId) {
       const camera = await prisma.camera.findFirst({
-        where: { id: data.cameraId, userId: (session.user as { id: string }).id },
+        where: { id: data.cameraId, userId },
       });
       if (!camera) {
         return NextResponse.json({ error: 'Camera not found' }, { status: 400 });
@@ -113,14 +110,13 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
+  const { userId, error } = await getUserId();
+  if (error) return error;
+
   const { id } = await params;
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
 
   const existing = await prisma.rig.findFirst({
-    where: { id, userId: (session.user as { id: string }).id },
+    where: { id, userId },
   });
 
   if (!existing) {

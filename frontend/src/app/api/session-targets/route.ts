@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 
 const sessionTargetSchema = z.object({
   sessionId: z.string().uuid(),
@@ -13,10 +12,8 @@ const sessionTargetSchema = z.object({
 });
 
 export async function GET(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   const { searchParams } = new URL(request.url);
   const sessionId = searchParams.get('sessionId');
@@ -29,7 +26,7 @@ export async function GET(request: Request) {
   const sessionOwned = await prisma.session.findFirst({
     where: {
       id: sessionId,
-      userId: (session.user as { id: string }).id,
+      userId,
     },
   });
 
@@ -51,10 +48,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   try {
     const body = await request.json();
@@ -64,7 +59,7 @@ export async function POST(request: Request) {
     const sessionOwned = await prisma.session.findFirst({
       where: {
         id: data.sessionId,
-        userId: (session.user as { id: string }).id,
+        userId,
       },
     });
 

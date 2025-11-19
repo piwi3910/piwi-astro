@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 import { uploadFile, getPresignedUrl } from '@/lib/minio';
 
 const uploadImageSchema = z.object({
@@ -20,7 +19,8 @@ const uploadImageSchema = z.object({
 });
 
 export async function GET(request: Request) {
-  const session = await getServerSession(authOptions);
+  // Images can be accessed publicly, so we get userId but don't require auth
+  const { userId: authenticatedUserId } = await getUserId();
 
   const { searchParams } = new URL(request.url);
   const targetId = searchParams.get('targetId');
@@ -69,7 +69,7 @@ export async function GET(request: Request) {
   }
 
   // If not authenticated, only show public images
-  if (!session?.user) {
+  if (!authenticatedUserId) {
     where.visibility = 'PUBLIC';
   } else {
     // If authenticated but no specific filters, show user's images + public images
@@ -79,7 +79,7 @@ export async function GET(request: Request) {
         where.AND = [
           {
             OR: [
-              { userId: (session.user as { id: string }).id },
+              { userId: authenticatedUserId },
               { visibility: 'PUBLIC' },
             ],
           },
@@ -90,7 +90,7 @@ export async function GET(request: Request) {
         delete where.OR; // Remove OR from top level since it's in AND now
       } else {
         where.OR = [
-          { userId: (session.user as { id: string }).id },
+          { userId: authenticatedUserId },
           { visibility: 'PUBLIC' },
         ];
       }
@@ -140,10 +140,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   try {
     const formData = await request.formData();
@@ -210,7 +208,7 @@ export async function POST(request: Request) {
     // Save to database
     const imageUpload = await prisma.imageUpload.create({
       data: {
-        userId: (session.user as { id: string }).id,
+        userId,
         targetId: data.targetId,
         sessionId: data.sessionId || null,
         rigId: data.rigId || null,

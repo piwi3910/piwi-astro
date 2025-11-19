@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 
 const updateProfileSchema = z.object({
   username: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_-]+$/).optional(),
@@ -12,13 +11,11 @@ const updateProfileSchema = z.object({
 }).partial();
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   const user = await prisma.user.findUnique({
-    where: { id: (session.user as { id: string }).id },
+    where: { id: userId },
     select: {
       id: true,
       email: true,
@@ -38,10 +35,8 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   try {
     const body = await request.json();
@@ -53,7 +48,7 @@ export async function PUT(request: Request) {
         where: {
           username: data.username,
           NOT: {
-            id: (session.user as { id: string }).id,
+            id: userId,
           },
         },
       });
@@ -67,7 +62,7 @@ export async function PUT(request: Request) {
     }
 
     const updatedUser = await prisma.user.update({
-      where: { id: (session.user as { id: string }).id },
+      where: { id: userId },
       data,
       select: {
         id: true,

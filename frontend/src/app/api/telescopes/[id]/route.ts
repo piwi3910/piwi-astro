@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 
 const telescopeSchema = z.object({
   name: z.string().min(1).max(100),
@@ -18,17 +17,15 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  const { id } = await params;
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { id } = await params;
 
   const telescope = await prisma.telescope.findFirst({
     where: {
       id,
-      userId: (session.user as { id: string }).id,
+      userId,
     },
   });
 
@@ -43,12 +40,10 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  const { id } = await params;
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { id } = await params;
 
   try {
     const body = await request.json();
@@ -58,7 +53,7 @@ export async function PUT(
     const existing = await prisma.telescope.findFirst({
       where: {
         id,
-        userId: (session.user as { id: string }).id,
+        userId,
       },
     });
 
@@ -84,18 +79,16 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  const { id } = await params;
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { id } = await params;
 
   // Check ownership
   const existing = await prisma.telescope.findFirst({
     where: {
       id,
-      userId: (session.user as { id: string }).id,
+      userId,
     },
   });
 

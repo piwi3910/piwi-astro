@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 
 const updateSessionSchema = z.object({
   startTime: z.string().datetime().optional(),
@@ -15,17 +14,15 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  const { id } = await params;
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { id } = await params;
 
   const existingSession = await prisma.session.findFirst({
     where: {
       id,
-      userId: (session.user as { id: string }).id,
+      userId,
     },
     include: {
       sessionTargets: {
@@ -50,12 +47,10 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  const { id } = await params;
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { id } = await params;
 
   try {
     const body = await request.json();
@@ -64,7 +59,7 @@ export async function PUT(
     const existing = await prisma.session.findFirst({
       where: {
         id,
-        userId: (session.user as { id: string }).id,
+        userId,
       },
     });
 
@@ -105,17 +100,15 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  const { id } = await params;
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { id } = await params;
 
   const existing = await prisma.session.findFirst({
     where: {
       id,
-      userId: (session.user as { id: string }).id,
+      userId,
     },
   });
 

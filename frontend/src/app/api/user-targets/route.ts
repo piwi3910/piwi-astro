@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 
 const userTargetSchema = z.object({
   targetId: z.string().uuid(),
@@ -12,16 +11,14 @@ const userTargetSchema = z.object({
 });
 
 export async function GET(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   const { searchParams } = new URL(request.url);
   const status = searchParams.get('status') || '';
 
   const where = {
-    userId: (session.user as { id: string }).id,
+    userId,
     ...(status && { status }),
   };
 
@@ -37,10 +34,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   try {
     const body = await request.json();
@@ -50,7 +45,7 @@ export async function POST(request: Request) {
     const existing = await prisma.userTarget.findUnique({
       where: {
         userId_targetId: {
-          userId: (session.user as { id: string }).id,
+          userId,
           targetId: data.targetId,
         },
       },
@@ -63,7 +58,7 @@ export async function POST(request: Request) {
     const userTarget = await prisma.userTarget.create({
       data: {
         ...data,
-        userId: (session.user as { id: string }).id,
+        userId,
       },
       include: {
         target: true,

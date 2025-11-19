@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 
 const sessionSchema = z.object({
   name: z.string().min(1),
@@ -17,10 +16,8 @@ const sessionSchema = z.object({
 });
 
 export async function GET(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   const { searchParams } = new URL(request.url);
   const from = searchParams.get('from');
@@ -33,7 +30,7 @@ export async function GET(request: Request) {
       lte?: Date;
     };
   } = {
-    userId: (session.user as { id: string }).id,
+    userId,
   };
 
   if (from || to) {
@@ -63,10 +60,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   try {
     const body = await request.json();
@@ -77,7 +72,7 @@ export async function POST(request: Request) {
         ...data,
         startTime: new Date(data.startTime),
         endTime: new Date(data.endTime),
-        userId: (session.user as { id: string }).id,
+        userId,
       },
       include: {
         sessionTargets: {

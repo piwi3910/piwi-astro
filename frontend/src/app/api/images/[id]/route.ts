@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 import { getPresignedUrl, deleteFile } from '@/lib/minio';
 
 const updateImageSchema = z.object({
@@ -22,7 +21,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const session = await getServerSession(authOptions);
+  // Images can be accessed publicly, so we get userId but don't require auth
+  const { userId: authenticatedUserId } = await getUserId();
 
   const image = await prisma.imageUpload.findUnique({
     where: { id },
@@ -50,7 +50,7 @@ export async function GET(
   }
 
   // Check permissions
-  const isOwner = session?.user && image.userId === (session.user as { id: string }).id;
+  const isOwner = authenticatedUserId && image.userId === authenticatedUserId;
   const isPublic = image.visibility === 'PUBLIC';
 
   if (!isPublic && !isOwner) {
@@ -78,12 +78,10 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  const { id } = await params;
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { id } = await params;
 
   try {
     const body = await request.json();
@@ -92,7 +90,7 @@ export async function PUT(
     const existing = await prisma.imageUpload.findFirst({
       where: {
         id,
-        userId: (session.user as { id: string }).id,
+        userId,
       },
     });
 
@@ -134,17 +132,15 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  const { id } = await params;
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { id } = await params;
 
   const existing = await prisma.imageUpload.findFirst({
     where: {
       id,
-      userId: (session.user as { id: string }).id,
+      userId,
     },
   });
 

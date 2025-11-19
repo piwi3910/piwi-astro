@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 import { calculateFOV } from '@/utils/fov';
 
 const rigSchema = z.object({
@@ -15,13 +14,11 @@ const rigSchema = z.object({
 });
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   const rigs = await prisma.rig.findMany({
-    where: { userId: (session.user as { id: string }).id },
+    where: { userId },
     include: { telescope: true, camera: true },
     orderBy: { name: 'asc' },
   });
@@ -48,10 +45,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   try {
     const body = await request.json();
@@ -59,10 +54,10 @@ export async function POST(request: Request) {
 
     const [telescope, camera] = await Promise.all([
       prisma.telescope.findFirst({
-        where: { id: data.telescopeId, userId: (session.user as { id: string }).id },
+        where: { id: data.telescopeId, userId },
       }),
       prisma.camera.findFirst({
-        where: { id: data.cameraId, userId: (session.user as { id: string }).id },
+        where: { id: data.cameraId, userId },
       }),
     ]);
 
@@ -74,7 +69,7 @@ export async function POST(request: Request) {
     }
 
     const rig = await prisma.rig.create({
-      data: { ...data, userId: (session.user as { id: string }).id },
+      data: { ...data, userId },
       include: { telescope: true, camera: true },
     });
 
