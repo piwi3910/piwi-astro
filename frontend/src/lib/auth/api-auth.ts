@@ -32,8 +32,8 @@ export async function getUserId(): Promise<{ userId: string | null; error: NextR
     return { userId: null, error };
   }
 
-  // Extract userId from session (assuming it's stored in session.user.id)
-  const userId = (session.user as any).id;
+  // Extract userId from session
+  const userId = session.user.id;
 
   if (!userId) {
     return {
