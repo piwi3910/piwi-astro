@@ -97,29 +97,87 @@ export async function GET(request: Request) {
     }
   }
 
-  const images = await prisma.imageUpload.findMany({
-    where,
-    include: {
-      target: true,
-      session: true,
-      rig: {
-        include: {
-          telescope: true,
-          camera: true,
+  // Check if pagination is requested
+  const hasPagination = searchParams.has('page') || searchParams.has('pageSize');
+
+  if (!hasPagination) {
+    // Backward compatibility: return all items if no pagination params
+    const images = await prisma.imageUpload.findMany({
+      where,
+      include: {
+        target: true,
+        session: true,
+        rig: {
+          include: {
+            telescope: true,
+            camera: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            username: true,
+            name: true,
+          },
         },
       },
-      user: {
-        select: {
-          id: true,
-          username: true,
-          name: true,
+      orderBy: {
+        uploadedAt: 'desc',
+      },
+    });
+
+    // Generate presigned URLs for private images
+    const imagesWithUrls = await Promise.all(
+      images.map(async (image) => {
+        const url =
+          image.visibility === 'PUBLIC'
+            ? `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET_NAME || 'astroplanner-images'}/${image.storageKey}`
+            : await getPresignedUrl(image.storageKey);
+
+        return {
+          ...image,
+          url,
+        };
+      })
+    );
+
+    return NextResponse.json(imagesWithUrls);
+  }
+
+  // Parse and validate pagination params
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const pageSize = Math.min(Math.max(1, parseInt(searchParams.get('pageSize') || '50', 10)), 100);
+  const skip = (page - 1) * pageSize;
+
+  // Fetch total count and paginated data in parallel
+  const [total, images] = await Promise.all([
+    prisma.imageUpload.count({ where }),
+    prisma.imageUpload.findMany({
+      where,
+      skip,
+      take: pageSize,
+      include: {
+        target: true,
+        session: true,
+        rig: {
+          include: {
+            telescope: true,
+            camera: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            username: true,
+            name: true,
+          },
         },
       },
-    },
-    orderBy: {
-      uploadedAt: 'desc',
-    },
-  });
+      orderBy: {
+        uploadedAt: 'desc',
+      },
+    }),
+  ]);
 
   // Generate presigned URLs for private images
   const imagesWithUrls = await Promise.all(
@@ -136,7 +194,15 @@ export async function GET(request: Request) {
     })
   );
 
-  return NextResponse.json(imagesWithUrls);
+  return NextResponse.json({
+    data: imagesWithUrls,
+    pagination: {
+      page,
+      pageSize,
+      total,
+      totalPages: Math.ceil(total / pageSize),
+    },
+  });
 }
 
 export async function POST(request: Request) {

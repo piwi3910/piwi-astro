@@ -39,24 +39,67 @@ export async function GET(request: Request) {
     if (to) where.startTime.lte = new Date(to);
   }
 
-  const sessions = await prisma.session.findMany({
-    where,
-    include: {
-      sessionTargets: {
-        include: {
-          target: true,
-        },
-        orderBy: {
-          priority: 'desc',
+  // Check if pagination is requested
+  const hasPagination = searchParams.has('page') || searchParams.has('pageSize');
+
+  if (!hasPagination) {
+    // Backward compatibility: return all items if no pagination params
+    const sessions = await prisma.session.findMany({
+      where,
+      include: {
+        sessionTargets: {
+          include: {
+            target: true,
+          },
+          orderBy: {
+            priority: 'desc',
+          },
         },
       },
-    },
-    orderBy: {
-      startTime: 'desc',
+      orderBy: {
+        startTime: 'desc',
+      },
+    });
+    return NextResponse.json(sessions);
+  }
+
+  // Parse and validate pagination params
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const pageSize = Math.min(Math.max(1, parseInt(searchParams.get('pageSize') || '50', 10)), 100);
+  const skip = (page - 1) * pageSize;
+
+  // Fetch total count and paginated data in parallel
+  const [total, sessions] = await Promise.all([
+    prisma.session.count({ where }),
+    prisma.session.findMany({
+      where,
+      skip,
+      take: pageSize,
+      include: {
+        sessionTargets: {
+          include: {
+            target: true,
+          },
+          orderBy: {
+            priority: 'desc',
+          },
+        },
+      },
+      orderBy: {
+        startTime: 'desc',
+      },
+    }),
+  ]);
+
+  return NextResponse.json({
+    data: sessions,
+    pagination: {
+      page,
+      pageSize,
+      total,
+      totalPages: Math.ceil(total / pageSize),
     },
   });
-
-  return NextResponse.json(sessions);
 }
 
 export async function POST(request: Request) {

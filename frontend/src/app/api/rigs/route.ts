@@ -13,15 +13,60 @@ const rigSchema = z.object({
   rotationDegDefault: z.number().min(0).max(360).optional().default(0),
 });
 
-export async function GET() {
+export async function GET(request: Request) {
   const { userId, error } = await getUserId();
   if (error) return error;
 
-  const rigs = await prisma.rig.findMany({
-    where: { userId },
-    include: { telescope: true, camera: true },
-    orderBy: { name: 'asc' },
-  });
+  const { searchParams } = new URL(request.url);
+
+  // Check if pagination is requested
+  const hasPagination = searchParams.has('page') || searchParams.has('pageSize');
+
+  if (!hasPagination) {
+    // Backward compatibility: return all items if no pagination params
+    const rigs = await prisma.rig.findMany({
+      where: { userId },
+      include: { telescope: true, camera: true },
+      orderBy: { name: 'asc' },
+    });
+
+    const rigsWithFOV = rigs.map((rig) => {
+      const fov = calculateFOV(
+        rig.telescope.focalLengthMm,
+        rig.camera.sensorWidthMm,
+        rig.camera.sensorHeightMm,
+        rig.camera.pixelSizeUm,
+        rig.reducerFactor || 1.0,
+        rig.barlowFactor || 1.0
+      );
+
+      return {
+        ...rig,
+        pixelScale: fov.pixelScaleArcsecPerPixel,
+        fovWidthArcmin: fov.fovWidthArcmin,
+        fovHeightArcmin: fov.fovHeightArcmin,
+      };
+    });
+
+    return NextResponse.json(rigsWithFOV);
+  }
+
+  // Parse and validate pagination params
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const pageSize = Math.min(Math.max(1, parseInt(searchParams.get('pageSize') || '50', 10)), 100);
+  const skip = (page - 1) * pageSize;
+
+  // Fetch total count and paginated data in parallel
+  const [total, rigs] = await Promise.all([
+    prisma.rig.count({ where: { userId } }),
+    prisma.rig.findMany({
+      where: { userId },
+      skip,
+      take: pageSize,
+      include: { telescope: true, camera: true },
+      orderBy: { name: 'asc' },
+    }),
+  ]);
 
   const rigsWithFOV = rigs.map((rig) => {
     const fov = calculateFOV(
@@ -41,7 +86,15 @@ export async function GET() {
     };
   });
 
-  return NextResponse.json(rigsWithFOV);
+  return NextResponse.json({
+    data: rigsWithFOV,
+    pagination: {
+      page,
+      pageSize,
+      total,
+      totalPages: Math.ceil(total / pageSize),
+    },
+  });
 }
 
 export async function POST(request: Request) {
