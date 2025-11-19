@@ -28,18 +28,19 @@ import {
 } from '@tabler/icons-react';
 import Link from 'next/link';
 
-interface Stats {
-  telescopesCount: number;
-  camerasCount: number;
-  rigsCount: number;
-  targetsCount: number;
-  wishlistCount: number;
-  shotCount: number;
-  processedCount: number;
-  sessionsCount: number;
-  upcomingSessionsCount: number;
-  imagesCount: number;
-  publicImagesCount: number;
+interface DashboardStats {
+  telescopes: number;
+  cameras: number;
+  rigs: number;
+  locations: number;
+  targets: number;
+  targetsWishlist: number;
+  targetsShot: number;
+  targetsProcessed: number;
+  sessions: number;
+  sessionsUpcoming: number;
+  images: number;
+  imagesPublic: number;
 }
 
 interface RecentImage {
@@ -58,47 +59,10 @@ interface UpcomingSession {
   sessionTargets: Array<{ id: string }>;
 }
 
-async function fetchDashboardStats(): Promise<Stats> {
-  const [
-    telescopes,
-    cameras,
-    rigs,
-    userTargets,
-    sessions,
-    images,
-  ] = await Promise.all([
-    fetch('/api/telescopes').then((r) => r.json()),
-    fetch('/api/cameras').then((r) => r.json()),
-    fetch('/api/rigs').then((r) => r.json()),
-    fetch('/api/user-targets').then((r) => r.json()),
-    fetch('/api/sessions').then((r) => r.json()),
-    fetch('/api/images').then((r) => r.json()),
-  ]);
-
-  const wishlistCount = userTargets.filter((ut: { status: string }) => ut.status === 'WISHLIST').length;
-  const shotCount = userTargets.filter((ut: { status: string }) => ut.status === 'SHOT').length;
-  const processedCount = userTargets.filter((ut: { status: string }) => ut.status === 'PROCESSED').length;
-
-  const now = new Date();
-  const upcomingSessionsCount = sessions.filter(
-    (s: { date: string }) => new Date(s.date) >= now
-  ).length;
-
-  const publicImagesCount = images.filter((img: { visibility: string }) => img.visibility === 'PUBLIC').length;
-
-  return {
-    telescopesCount: telescopes.length,
-    camerasCount: cameras.length,
-    rigsCount: rigs.length,
-    targetsCount: userTargets.length,
-    wishlistCount,
-    shotCount,
-    processedCount,
-    sessionsCount: sessions.length,
-    upcomingSessionsCount,
-    imagesCount: images.length,
-    publicImagesCount,
-  };
+async function fetchDashboardStats(): Promise<DashboardStats> {
+  const response = await fetch('/api/dashboard-stats');
+  if (!response.ok) throw new Error('Failed to fetch dashboard stats');
+  return response.json();
 }
 
 async function fetchRecentImages(): Promise<RecentImage[]> {
@@ -145,8 +109,8 @@ export default function DashboardPage(): JSX.Element {
     );
   }
 
-  const targetProgress = stats.targetsCount > 0
-    ? (stats.processedCount / stats.targetsCount) * 100
+  const targetProgress = stats.targets > 0
+    ? (stats.targetsProcessed / stats.targets) * 100
     : 0;
 
   return (
@@ -168,10 +132,10 @@ export default function DashboardPage(): JSX.Element {
                   Gear
                 </Text>
                 <Text size="xl" fw={700}>
-                  {stats.telescopesCount + stats.camerasCount}
+                  {stats.telescopes + stats.cameras}
                 </Text>
                 <Text size="xs" c="dimmed">
-                  {stats.rigsCount} rigs configured
+                  {stats.rigs} rigs configured
                 </Text>
               </div>
               <ThemeIcon size="xl" variant="light" color="blue">
@@ -187,10 +151,10 @@ export default function DashboardPage(): JSX.Element {
                   Targets
                 </Text>
                 <Text size="xl" fw={700}>
-                  {stats.targetsCount}
+                  {stats.targets}
                 </Text>
                 <Text size="xs" c="dimmed">
-                  {stats.wishlistCount} in wishlist
+                  {stats.targetsWishlist} in wishlist
                 </Text>
               </div>
               <ThemeIcon size="xl" variant="light" color="grape">
@@ -206,10 +170,10 @@ export default function DashboardPage(): JSX.Element {
                   Sessions
                 </Text>
                 <Text size="xl" fw={700}>
-                  {stats.sessionsCount}
+                  {stats.sessions}
                 </Text>
                 <Text size="xs" c="dimmed">
-                  {stats.upcomingSessionsCount} upcoming
+                  {stats.sessionsUpcoming} upcoming
                 </Text>
               </div>
               <ThemeIcon size="xl" variant="light" color="cyan">
@@ -225,10 +189,10 @@ export default function DashboardPage(): JSX.Element {
                   Images
                 </Text>
                 <Text size="xl" fw={700}>
-                  {stats.imagesCount}
+                  {stats.images}
                 </Text>
                 <Text size="xs" c="dimmed">
-                  {stats.publicImagesCount} public
+                  {stats.imagesPublic} public
                 </Text>
               </div>
               <ThemeIcon size="xl" variant="light" color="orange">
@@ -267,7 +231,7 @@ export default function DashboardPage(): JSX.Element {
                 <SimpleGrid cols={3}>
                   <div>
                     <Text size="xl" fw={700} c="blue">
-                      {stats.wishlistCount}
+                      {stats.targetsWishlist}
                     </Text>
                     <Text size="xs" c="dimmed">
                       Wishlist
@@ -275,7 +239,7 @@ export default function DashboardPage(): JSX.Element {
                   </div>
                   <div>
                     <Text size="xl" fw={700} c="cyan">
-                      {stats.shotCount}
+                      {stats.targetsShot}
                     </Text>
                     <Text size="xs" c="dimmed">
                       Shot
@@ -283,7 +247,7 @@ export default function DashboardPage(): JSX.Element {
                   </div>
                   <div>
                     <Text size="xl" fw={700} c="green">
-                      {stats.processedCount}
+                      {stats.targetsProcessed}
                     </Text>
                     <Text size="xs" c="dimmed">
                       Processed
