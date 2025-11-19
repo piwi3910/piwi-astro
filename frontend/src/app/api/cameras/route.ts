@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
-import { authOptions } from '@/lib/auth';
+import { getUserId } from '@/lib/auth/api-auth';
 
 const cameraSchema = z.object({
   name: z.string().min(1).max(100),
@@ -18,13 +17,11 @@ const cameraSchema = z.object({
 });
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   const cameras = await prisma.camera.findMany({
-    where: { userId: (session.user as { id: string }).id },
+    where: { userId },
     orderBy: { name: 'asc' },
   });
 
@@ -32,10 +29,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { userId, error } = await getUserId();
+  if (error) return error;
 
   try {
     const body = await request.json();
@@ -44,7 +39,7 @@ export async function POST(request: Request) {
     const camera = await prisma.camera.create({
       data: {
         ...data,
-        userId: (session.user as { id: string }).id,
+        userId,
       },
     });
 
