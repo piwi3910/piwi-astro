@@ -6,8 +6,6 @@ import {
   Title,
   TextInput,
   Select,
-  Grid,
-  Card,
   Stack,
   Group,
   Text,
@@ -22,14 +20,13 @@ import {
   Button,
   Box,
   Divider,
-  Progress,
-  Switch,
   Modal,
   Loader,
   Center,
   Checkbox,
   Menu,
 } from '@mantine/core';
+import { DatePickerInput } from '@mantine/dates';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import {
@@ -41,8 +38,6 @@ import {
   IconFilter,
   IconMapPin,
   IconAlertCircle,
-  IconArrowUp,
-  IconArrowDown,
   IconArrowsSort,
   IconSelector,
 } from '@tabler/icons-react';
@@ -63,6 +58,16 @@ interface Location {
   latitude: number;
   longitude: number;
   isFavorite: boolean;
+}
+
+interface Rig {
+  id: string;
+  name: string;
+  fovWidthArcmin: number;
+  fovHeightArcmin: number;
+  pixelScale: number;
+  telescope: { name: string };
+  camera: { name: string };
 }
 
 interface Target {
@@ -102,6 +107,12 @@ interface TargetsResponse {
 async function fetchLocations(): Promise<Location[]> {
   const response = await fetch('/api/locations');
   if (!response.ok) throw new Error('Failed to fetch locations');
+  return response.json();
+}
+
+async function fetchRigs(): Promise<Rig[]> {
+  const response = await fetch('/api/rigs');
+  if (!response.ok) throw new Error('Failed to fetch rigs');
   return response.json();
 }
 
@@ -158,16 +169,17 @@ function VisibilityChart({
   target,
   location,
   showMoonOverlay = true,
+  selectedDate,
 }: {
   target: Target;
   location: Location;
   showMoonOverlay?: boolean;
+  selectedDate: Date;
 }) {
   const [hoverX, setHoverX] = useState<number | null>(null);
 
-  const now = new Date();
-  // Start from midnight of current day
-  const startOfDay = new Date(now);
+  // Start from midnight of selected day
+  const startOfDay = new Date(selectedDate);
   startOfDay.setHours(0, 0, 0, 0);
 
   // For dynamic objects, use calculated position if available, otherwise calculate
@@ -281,7 +293,9 @@ function VisibilityChart({
     return hour >= 12 ? (hour - 12) / 24 : (hour + 12) / 24;
   };
 
-  // Calculate current time position with midnight centered
+  // Calculate current time position with midnight centered (only if viewing today)
+  const now = new Date();
+  const isToday = startOfDay.toDateString() === new Date().toDateString();
   const currentHour = now.getHours() + now.getMinutes() / 60;
   const currentTimePosition = getShiftedPosition(currentHour);
 
@@ -609,16 +623,18 @@ function VisibilityChart({
           strokeWidth="2"
         />
 
-        {/* Current time marker - small red striped line */}
-        <line
-          x1={currentTimePosition * chartWidth}
-          y1="0"
-          x2={currentTimePosition * chartWidth}
-          y2={chartHeight}
-          stroke="var(--mantine-color-red-6)"
-          strokeWidth="2"
-          strokeDasharray="3,3"
-        />
+        {/* Current time marker - small red striped line (only show if viewing today) */}
+        {isToday && (
+          <line
+            x1={currentTimePosition * chartWidth}
+            y1="0"
+            x2={currentTimePosition * chartWidth}
+            y2={chartHeight}
+            stroke="var(--mantine-color-red-6)"
+            strokeWidth="2"
+            strokeDasharray="3,3"
+          />
+        )}
 
         {/* Meridian crossing (transit) - dotted line */}
         {maxAltPoint && maxAlt > 0 && (
@@ -891,6 +907,8 @@ function DirectionCompass({ azimuth }: { azimuth: number }) {
 
 export default function TargetsPage(): JSX.Element {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+  const [selectedGear, setSelectedGear] = useState<Rig | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [types, setTypes] = useState<string[]>([]);
@@ -899,6 +917,8 @@ export default function TargetsPage(): JSX.Element {
   const [timeWindow, setTimeWindow] = useState<[number, number]>([12, 36]); // 12h to 36h (full 24h range)
   const [altitudeRange, setAltitudeRange] = useState<[number, number]>([0, 90]);
   const [azimuthSegments, setAzimuthSegments] = useState<boolean[]>(Array(24).fill(true)); // 24 segments of 15° each
+  const [enableFOVFilter, setEnableFOVFilter] = useState(true);
+  const [fovCoverageRange, setFovCoverageRange] = useState<[number, number]>([10, 200]);
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
   const [applyAdvancedFilters, setApplyAdvancedFilters] = useState(false); // Toggle for advanced visibility filtering
@@ -919,6 +939,11 @@ export default function TargetsPage(): JSX.Element {
     queryFn: fetchLocations,
   });
 
+  const { data: rigs } = useQuery({
+    queryKey: ['rigs'],
+    queryFn: fetchRigs,
+  });
+
   // Auto-select favorite location
   useEffect(() => {
     if (locations && !selectedLocation) {
@@ -935,8 +960,7 @@ export default function TargetsPage(): JSX.Element {
   const currentMoonPhase = useMemo(() => {
     if (!selectedLocation) return null;
 
-    const now = new Date();
-    const startOfDay = new Date(now);
+    const startOfDay = new Date(selectedDate);
     startOfDay.setHours(0, 0, 0, 0);
 
     const moonPoints = calculateMoonAltitudeOverTime(
@@ -948,8 +972,10 @@ export default function TargetsPage(): JSX.Element {
 
     if (moonPoints.length === 0) return null;
 
-    // Get current hour to find the closest moon point
-    const currentHour = now.getHours() + now.getMinutes() / 60;
+    // Get current hour to find the closest moon point (for selected date)
+    const now = new Date();
+    const isToday = startOfDay.toDateString() === now.toDateString();
+    const currentHour = isToday ? (now.getHours() + now.getMinutes() / 60) : 12; // Default to noon if not today
     const pointIndex = Math.floor((currentHour / 24) * moonPoints.length);
     const currentPoint = moonPoints[pointIndex] || moonPoints[0];
 
@@ -957,7 +983,7 @@ export default function TargetsPage(): JSX.Element {
       illumination: currentPoint.illumination,
       altitude: currentPoint.altitude,
     };
-  }, [selectedLocation]);
+  }, [selectedLocation, selectedDate]);
 
   const { data: rawData, isLoading } = useQuery({
     queryKey: [
@@ -1001,8 +1027,7 @@ export default function TargetsPage(): JSX.Element {
     const isAltitudeDefault = altitudeRange[0] === 0 && altitudeRange[1] === 90;
     const isAzimuthDefault = azimuthSegments.every(seg => seg === true);
 
-    const now = new Date();
-    const startOfDay = new Date(now);
+    const startOfDay = new Date(selectedDate);
     startOfDay.setHours(0, 0, 0, 0);
 
     const filteredTargets = rawData.targets.filter((target) => {
@@ -1027,6 +1052,20 @@ export default function TargetsPage(): JSX.Element {
       // ALWAYS filter out targets that are never above the horizon
       const isEverVisible = points.some(point => point.altitude > 0);
       if (!isEverVisible) return false;
+
+      // FOV Coverage Filter (if enabled and gear selected)
+      if (enableFOVFilter && selectedGear && target.sizeMajorArcmin) {
+        // Calculate what % of FOV width the target occupies
+        const targetWidthArcmin = target.sizeMajorArcmin;
+        const fovWidthArcmin = selectedGear.fovWidthArcmin;
+        const coveragePercent = (targetWidthArcmin / fovWidthArcmin) * 100;
+
+        // Check if coverage is within desired range
+        const [minCoverage, maxCoverage] = fovCoverageRange;
+        if (coveragePercent < minCoverage || coveragePercent > maxCoverage) {
+          return false; // Filter out this target
+        }
+      }
 
       // If all advanced filters are at defaults, include this target (it's visible)
       if (isTimeWindowDefault && isAltitudeDefault && isAzimuthDefault) {
@@ -1091,7 +1130,8 @@ export default function TargetsPage(): JSX.Element {
         totalPages: Math.ceil(filteredTargets.length / rawData.pagination.limit),
       },
     };
-  }, [rawData, selectedLocation, timeWindow, altitudeRange, azimuthSegments, applyAdvancedFilters]);
+  }, [rawData, selectedLocation, timeWindow, altitudeRange, azimuthSegments, applyAdvancedFilters,
+      selectedDate, selectedGear, enableFOVFilter, fovCoverageRange]);
 
   const addMutation = useMutation({
     mutationFn: addToWishlist,
@@ -1299,15 +1339,12 @@ export default function TargetsPage(): JSX.Element {
           </div>
         </Group>
 
-        {/* Location Selector - FIRST THING */}
+        {/* Location, Gear, and Date Selectors */}
         <Paper p="md" withBorder>
           <Stack gap="md">
-            <Group gap="md">
-              <IconMapPin size={20} />
-              <div style={{ flex: 1 }}>
-                <Text size="sm" fw={600} mb={4}>
-                  Observing Location
-                </Text>
+            <Group gap="md" align="flex-start">
+              <div>
+                <Text size="sm" fw={500} mb={8}>Observing Location</Text>
                 <Select
                   placeholder="Select your location"
                   data={
@@ -1321,14 +1358,47 @@ export default function TargetsPage(): JSX.Element {
                     const loc = locations?.find((l) => l.id === value);
                     if (loc) setSelectedLocation(loc);
                   }}
-                  style={{ maxWidth: 400 }}
+                  style={{ minWidth: 250 }}
+                />
+                {selectedLocation && (
+                  <Text size="xs" c="dimmed" mt={4}>
+                    {selectedLocation.latitude.toFixed(2)}°, {selectedLocation.longitude.toFixed(2)}°
+                  </Text>
+                )}
+              </div>
+
+              <div>
+                <Text size="sm" fw={500} mb={8}>Gear (Optional)</Text>
+                <Select
+                  placeholder="Select gear for FOV filtering"
+                  data={rigs?.map(r => ({
+                    value: r.id,
+                    label: `${r.name} (${r.fovWidthArcmin.toFixed(1)}' × ${r.fovHeightArcmin.toFixed(1)}')`
+                  })) || []}
+                  value={selectedGear?.id || null}
+                  onChange={(value) => {
+                    const rig = rigs?.find(r => r.id === value);
+                    setSelectedGear(rig || null);
+                  }}
+                  clearable
+                  style={{ minWidth: 300 }}
+                />
+                {selectedGear && (
+                  <Text size="xs" c="dimmed" mt={4}>
+                    FOV: {selectedGear.fovWidthArcmin.toFixed(1)}' × {selectedGear.fovHeightArcmin.toFixed(1)}'
+                  </Text>
+                )}
+              </div>
+
+              <div>
+                <Text size="sm" fw={500} mb={8}>Date</Text>
+                <DatePickerInput
+                  value={selectedDate}
+                  onChange={(date) => setSelectedDate(date || new Date())}
+                  placeholder="Pick date"
+                  style={{ minWidth: 200 }}
                 />
               </div>
-              {selectedLocation && (
-                <Text size="sm" c="dimmed">
-                  {selectedLocation.latitude.toFixed(2)}°, {selectedLocation.longitude.toFixed(2)}°
-                </Text>
-              )}
             </Group>
           </Stack>
         </Paper>
@@ -1678,6 +1748,54 @@ export default function TargetsPage(): JSX.Element {
                   </Text>
                 </div>
 
+                <Divider />
+
+                {/* FOV Coverage Filter */}
+                <div style={{ paddingLeft: 16, paddingRight: 16 }}>
+                  <Group justify="space-between" mb={8}>
+                    <Text size="sm" fw={500}>
+                      FOV Coverage (requires gear selection)
+                    </Text>
+                    <Checkbox
+                      label="Enable FOV filter"
+                      checked={enableFOVFilter}
+                      onChange={(e) => setEnableFOVFilter(e.currentTarget.checked)}
+                      disabled={!selectedGear}
+                      size="xs"
+                    />
+                  </Group>
+
+                  {selectedGear && (
+                    <>
+                      <RangeSlider
+                        min={1}
+                        max={300}
+                        step={5}
+                        value={fovCoverageRange}
+                        onChange={setFovCoverageRange}
+                        disabled={!enableFOVFilter || !selectedGear}
+                        marks={[
+                          { value: 10, label: '10%' },
+                          { value: 100, label: '100%' },
+                          { value: 200, label: '200%' },
+                        ]}
+                      />
+                      <Text size="xs" c="dimmed" mt={20}>
+                        Target should occupy {fovCoverageRange[0]}% to {fovCoverageRange[1]}% of FOV width.
+                        Disable for mosaics or wide-field imaging.
+                      </Text>
+                    </>
+                  )}
+
+                  {!selectedGear && (
+                    <Text size="xs" c="dimmed" mt={8}>
+                      Select gear above to enable FOV-based filtering
+                    </Text>
+                  )}
+                </div>
+
+                <Divider />
+
                 {/* Azimuth Dial Filter */}
                 <div style={{ paddingLeft: 16, paddingRight: 16 }}>
                   <Text size="sm" fw={500} mb={8}>
@@ -1884,6 +2002,7 @@ export default function TargetsPage(): JSX.Element {
                               target={target}
                               location={selectedLocation}
                               showMoonOverlay={showMoonOverlay}
+                              selectedDate={selectedDate}
                             />
                           )}
 
