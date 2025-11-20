@@ -46,16 +46,19 @@ export async function GET(request: Request) {
   const dateParam = searchParams.get('date');
   const observationDate = dateParam ? new Date(dateParam) : new Date();
 
+  // Normalize search query (remove spaces for catalog IDs)
+  const normalizedSearch = search.replace(/\s+/g, '');
+
   const where = {
     AND: [
       search
         ? {
             OR: [
               { name: { contains: search, mode: 'insensitive' as const } },
-              { catalogId: { contains: search, mode: 'insensitive' as const } },
-              { messierId: { contains: search, mode: 'insensitive' as const } },
-              { ngcId: { contains: search, mode: 'insensitive' as const } },
-              { icId: { contains: search, mode: 'insensitive' as const } },
+              { catalogId: { contains: normalizedSearch, mode: 'insensitive' as const } },
+              { messierId: { contains: normalizedSearch, mode: 'insensitive' as const } },
+              { ngcId: { contains: normalizedSearch, mode: 'insensitive' as const } },
+              { icId: { contains: normalizedSearch, mode: 'insensitive' as const } },
               { otherNames: { contains: search, mode: 'insensitive' as const } },
             ],
           }
