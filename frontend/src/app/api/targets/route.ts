@@ -46,6 +46,32 @@ export async function GET(request: Request) {
   const dateParam = searchParams.get('date');
   const observationDate = dateParam ? new Date(dateParam) : new Date();
 
+  // Advanced filtering parameters (from frontend)
+  const applyAdvancedFilters = searchParams.get('applyAdvancedFilters') === 'true';
+  const timeWindowStart = searchParams.get('timeWindowStart')
+    ? parseFloat(searchParams.get('timeWindowStart')!)
+    : undefined;
+  const timeWindowEnd = searchParams.get('timeWindowEnd')
+    ? parseFloat(searchParams.get('timeWindowEnd')!)
+    : undefined;
+  const altitudeMin = searchParams.get('altitudeMin')
+    ? parseFloat(searchParams.get('altitudeMin')!)
+    : undefined;
+  const altitudeMax = searchParams.get('altitudeMax')
+    ? parseFloat(searchParams.get('altitudeMax')!)
+    : undefined;
+  const azimuthSegmentsParam = searchParams.get('azimuthSegments');
+  const azimuthSegments = azimuthSegmentsParam
+    ? azimuthSegmentsParam.split('').map(s => s === '1')
+    : undefined;
+  const rigId = searchParams.get('rigId') || undefined;
+  const fovCoverageMin = searchParams.get('fovCoverageMin')
+    ? parseFloat(searchParams.get('fovCoverageMin')!)
+    : undefined;
+  const fovCoverageMax = searchParams.get('fovCoverageMax')
+    ? parseFloat(searchParams.get('fovCoverageMax')!)
+    : undefined;
+
   // Normalize search query (remove spaces for catalog IDs)
   const normalizedSearch = search.replace(/\s+/g, '');
 
@@ -255,13 +281,87 @@ export async function GET(request: Request) {
       });
   }
 
+  // Apply advanced filtering if enabled
+  let finalTargets = targetsWithVisibility;
+
+  if (applyAdvancedFilters && latitude !== undefined && longitude !== undefined) {
+    const startOfDay = new Date(observationDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    const location = { latitude, longitude };
+
+    // Fetch rig if FOV filtering is requested
+    let rig = null;
+    if (rigId && fovCoverageMin !== undefined && fovCoverageMax !== undefined) {
+      rig = await prisma.rig.findUnique({ where: { id: rigId } });
+    }
+
+    // Filter targets based on advanced criteria
+    finalTargets = targetsWithVisibility.filter(target => {
+      // Calculate target coordinates
+      let targetCoords = { raDeg: target.raDeg, decDeg: target.decDeg };
+      if (target.dynamicRaDeg !== undefined && target.dynamicDecDeg !== undefined) {
+        targetCoords = { raDeg: target.dynamicRaDeg, decDeg: target.dynamicDecDeg };
+      } else if (target.isDynamic && target.solarSystemBody) {
+        targetCoords = calculatePlanetPosition(target.solarSystemBody, startOfDay);
+      }
+
+      // Calculate altitude over time
+      const points = calculateAltitudeOverTime(
+        targetCoords,
+        location,
+        startOfDay,
+        24,
+        30
+      );
+
+      // FOV Coverage Filter
+      if (rig && target.sizeMajorArcmin && fovCoverageMin !== undefined && fovCoverageMax !== undefined) {
+        const fovWidthArcmin = rig.fovWidthArcmin;
+        const coveragePercent = (target.sizeMajorArcmin / fovWidthArcmin) * 100;
+        if (coveragePercent < fovCoverageMin || coveragePercent > fovCoverageMax) {
+          return false;
+        }
+      }
+
+      // Check if target has any valid visibility point
+      const hasValidPoint = points.some((point, i) => {
+        // Time window filter (convert hour to 12-36 scale)
+        if (timeWindowStart !== undefined && timeWindowEnd !== undefined) {
+          const hour = (i / (points.length - 1)) * 24;
+          const hourInWindowScale = hour >= 12 ? hour : hour + 24;
+          const inTimeWindow = timeWindowStart <= timeWindowEnd
+            ? hourInWindowScale >= timeWindowStart && hourInWindowScale <= timeWindowEnd
+            : hourInWindowScale >= timeWindowStart || hourInWindowScale <= timeWindowEnd;
+          if (!inTimeWindow) return false;
+        }
+
+        // Target must be above horizon
+        if (point.altitude <= 0) return false;
+
+        // Altitude range filter
+        if (altitudeMin !== undefined && point.altitude < altitudeMin) return false;
+        if (altitudeMax !== undefined && point.altitude > altitudeMax) return false;
+
+        // Azimuth segments filter
+        if (azimuthSegments) {
+          const segmentIndex = Math.floor(point.azimuth / 15) % 24;
+          if (!azimuthSegments[segmentIndex]) return false;
+        }
+
+        return true;
+      });
+
+      return hasValidPoint;
+    });
+  }
+
     return NextResponse.json({
-      targets: targetsWithVisibility,
+      targets: finalTargets,
       pagination: {
         page,
         limit,
-        total: total, // Use the actual database count, not filtered count
-        totalPages: Math.ceil(total / limit),
+        total: finalTargets.length, // Total after filtering
+        totalPages: Math.ceil(finalTargets.length / limit),
       },
     });
   } catch (error) {
