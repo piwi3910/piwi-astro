@@ -127,6 +127,7 @@ async function fetchTargets(params: {
   magnitudeMax?: number;
   sortBy?: string;
   sortDirection?: string;
+  date?: Date;
 }): Promise<TargetsResponse> {
   const searchParams = new URLSearchParams({
     page: params.page.toString(),
@@ -140,6 +141,7 @@ async function fetchTargets(params: {
     ...(params.magnitudeMax !== undefined && { magnitudeMax: params.magnitudeMax.toString() }),
     ...(params.sortBy && { sortBy: params.sortBy }),
     ...(params.sortDirection && { sortDirection: params.sortDirection }),
+    ...(params.date && { date: params.date.toISOString() }),
   });
 
   const url = `/api/targets?${searchParams}`;
@@ -923,7 +925,7 @@ export default function TargetsPage(): JSX.Element {
   const [showSort, setShowSort] = useState(false);
   const [applyAdvancedFilters, setApplyAdvancedFilters] = useState(false); // Toggle for advanced visibility filtering
   const showMoonOverlay = true; // Always show moon overlay
-  const [sortBy, setSortBy] = useState<'magnitude' | 'size'>('magnitude');
+  const [sortBy, setSortBy] = useState<'magnitude' | 'size' | 'tonights-best'>('magnitude');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [addedTargets, setAddedTargets] = useState<Set<string>>(new Set());
   const [imageModalOpen, setImageModalOpen] = useState(false);
@@ -997,6 +999,7 @@ export default function TargetsPage(): JSX.Element {
       magnitudeRange,
       sortBy,
       sortDirection,
+      selectedDate.toISOString(), // Include date in cache key
     ],
     queryFn: () =>
       fetchTargets({
@@ -1010,6 +1013,7 @@ export default function TargetsPage(): JSX.Element {
         magnitudeMax: magnitudeRange[1],
         sortBy,
         sortDirection,
+        date: selectedDate, // Pass the selected date to backend
       }),
     enabled: !!selectedLocation,
   });
@@ -1648,26 +1652,32 @@ export default function TargetsPage(): JSX.Element {
                   label="Sort by"
                   clearable={false}
                   data={[
-                    { value: 'magnitude', label: 'Magnitude (brightness)' },
-                    { value: 'size', label: 'Size (angular diameter)' },
+                    { value: 'tonights-best', label: "Tonight's best" },
+                    { value: 'magnitude', label: 'Magnitude' },
+                    { value: 'size', label: 'Size' },
                   ]}
                   value={sortBy}
                   onChange={(val) => {
-                    setSortBy((val as 'magnitude' | 'size') || 'magnitude');
+                    setSortBy((val as 'magnitude' | 'size' | 'tonights-best') || 'magnitude');
                     setPage(1);
                   }}
                 />
                 <Select
                   label="Direction"
                   clearable={false}
+                  disabled={sortBy === 'tonights-best'}
                   data={[
                     {
                       value: 'desc',
-                      label: sortBy === 'magnitude' ? '↓ Brightest first' : '↓ Largest first'
+                      label: sortBy === 'magnitude' ? '↓ Brightest first' :
+                             sortBy === 'size' ? '↓ Largest first' :
+                             '↓ Best first'
                     },
                     {
                       value: 'asc',
-                      label: sortBy === 'magnitude' ? '↑ Faintest first' : '↑ Smallest first'
+                      label: sortBy === 'magnitude' ? '↑ Faintest first' :
+                             sortBy === 'size' ? '↑ Smallest first' :
+                             '↑ Worst first'
                     },
                   ]}
                   value={sortDirection}

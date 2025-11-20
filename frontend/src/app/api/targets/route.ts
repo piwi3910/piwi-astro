@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { getTargetVisibility, calculatePlanetPosition, fetchCometPositions, calculateMoonMagnitude } from '@/utils/visibility';
+import { getTargetVisibility, calculatePlanetPosition, fetchCometPositions, calculateMoonMagnitude, calculateAltitudeOverTime, calculateSunAltitudeOverTime } from '@/utils/visibility';
 
 export async function GET(request: Request) {
   try {
@@ -41,6 +41,10 @@ export async function GET(request: Request) {
   const minAltitude = searchParams.get('minAltitude')
     ? parseFloat(searchParams.get('minAltitude')!)
     : undefined;
+
+  // Date for astronomical calculations (defaults to today)
+  const dateParam = searchParams.get('date');
+  const observationDate = dateParam ? new Date(dateParam) : new Date();
 
   const where = {
     AND: [
@@ -90,22 +94,110 @@ export async function GET(request: Request) {
     return [{ magnitude: 'asc' }, { name: 'asc' }];
   };
 
-  const [targets, total] = await Promise.all([
-    prisma.target.findMany({
-      where,
-      orderBy: getOrderBy() as any,
-      skip: (page - 1) * limit,
-      take: limit,
-    }),
-    prisma.target.count({ where }),
-  ]);
+  // Special handling for "tonights-best" sorting
+  let targets, total;
+
+  if (sortBy === 'tonights-best' && latitude !== undefined && longitude !== undefined) {
+    // For tonight's best, fetch a larger batch to calculate visibility
+    // We fetch more than needed because some might not be visible at night
+    const batchSize = Math.min(500, limit * 10); // Fetch 10 pages worth, max 500
+
+    const [allTargets, totalCount] = await Promise.all([
+      prisma.target.findMany({
+        where,
+        orderBy: [{ magnitude: 'asc' }, { name: 'asc' }], // Pre-sort by magnitude as baseline
+        take: batchSize,
+      }),
+      prisma.target.count({ where }),
+    ]);
+
+    // Calculate astronomical night visibility for each target
+    const startOfDay = new Date(observationDate);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const location = { latitude, longitude };
+
+    const targetsWithVisibility = allTargets.map(target => {
+      let targetCoords = { raDeg: target.raDeg, decDeg: target.decDeg };
+
+      // Handle dynamic objects
+      if (target.isDynamic && target.solarSystemBody) {
+        targetCoords = calculatePlanetPosition(target.solarSystemBody, startOfDay);
+      }
+
+      // Calculate altitude points over 24 hours
+      const points = calculateAltitudeOverTime(
+        targetCoords,
+        location,
+        startOfDay,
+        24,
+        30 // 30-minute intervals
+      );
+
+      const sunPoints = calculateSunAltitudeOverTime(
+        location,
+        startOfDay,
+        24,
+        30
+      );
+
+      // Calculate visibility during astronomical night (sun < -18°)
+      let visibleMinutes = 0;
+      let maxAltitude = 0;
+
+      points.forEach((point, i) => {
+        const sunAlt = sunPoints[i]?.altitude ?? 999;
+
+        if (sunAlt < -18 && point.altitude > 0) {
+          visibleMinutes += 30;
+          maxAltitude = Math.max(maxAltitude, point.altitude);
+        }
+      });
+
+      return {
+        target,
+        visibleMinutes,
+        maxAltitude,
+      };
+    });
+
+    // Filter out targets with zero night visibility and sort
+    const sortedTargets = targetsWithVisibility
+      .filter(item => item.visibleMinutes > 0)
+      .sort((a, b) => {
+        if (b.visibleMinutes !== a.visibleMinutes) {
+          return b.visibleMinutes - a.visibleMinutes;
+        }
+        return b.maxAltitude - a.maxAltitude;
+      });
+
+    // Paginate the sorted results
+    const startIndex = (page - 1) * limit;
+    const paginatedTargets = sortedTargets
+      .slice(startIndex, startIndex + limit)
+      .map(item => item.target);
+
+    targets = paginatedTargets;
+    total = sortedTargets.length; // Total visible targets during night
+  } else {
+    // Standard sorting (magnitude, size)
+    [targets, total] = await Promise.all([
+      prisma.target.findMany({
+        where,
+        orderBy: getOrderBy() as any,
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      prisma.target.count({ where }),
+    ]);
+  }
 
   // Calculate visibility if location is provided
   let targetsWithVisibility = targets;
 
   if (latitude !== undefined && longitude !== undefined) {
     const location = { latitude, longitude };
-    const now = new Date();
+    const now = observationDate; // Use the observation date for consistency
 
     // Check if there are any comets in the result set
     const hasComets = targets.some((t) => t.type === 'Comet');
