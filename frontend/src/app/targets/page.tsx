@@ -901,7 +901,7 @@ export default function TargetsPage(): JSX.Element {
   const [azimuthSegments, setAzimuthSegments] = useState<boolean[]>(Array(24).fill(true)); // 24 segments of 15° each
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
-  const [applyAdvancedFilters, setApplyAdvancedFilters] = useState(true); // Toggle for advanced visibility filtering
+  const [applyAdvancedFilters, setApplyAdvancedFilters] = useState(false); // Toggle for advanced visibility filtering
   const showMoonOverlay = true; // Always show moon overlay
   const [sortBy, setSortBy] = useState<'magnitude' | 'size'>('magnitude');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -1541,14 +1541,16 @@ export default function TargetsPage(): JSX.Element {
             leftSection={<IconFilter size={16} />}
             rightSection={showFilters ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
             onClick={() => setShowFilters(!showFilters)}
+            style={{ color: applyAdvancedFilters ? 'var(--mantine-color-green-5)' : undefined }}
           >
             Advanced Filters
           </Button>
 
           <Checkbox
-            label="Apply visibility filters"
+            label="Apply filters"
             checked={applyAdvancedFilters}
             onChange={(event) => setApplyAdvancedFilters(event.currentTarget.checked)}
+            color="green"
           />
         </Group>
 
