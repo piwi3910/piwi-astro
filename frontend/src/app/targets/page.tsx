@@ -1527,7 +1527,7 @@ export default function TargetsPage(): JSX.Element {
       </Stack>
 
         {/* Sort and Advanced Filters */}
-        <Group gap="md" mb={0}>
+        <Group gap="md" mb={0} align="center">
           <Button
             variant="subtle"
             leftSection={<IconArrowsSort size={16} />}
@@ -1544,6 +1544,12 @@ export default function TargetsPage(): JSX.Element {
           >
             Advanced Filters
           </Button>
+
+          <Checkbox
+            label="Apply visibility filters"
+            checked={applyAdvancedFilters}
+            onChange={(event) => setApplyAdvancedFilters(event.currentTarget.checked)}
+          />
         </Group>
 
         <Collapse in={showSort}>
@@ -1591,16 +1597,6 @@ export default function TargetsPage(): JSX.Element {
           <Collapse in={showFilters}>
             <Paper p="md" mt="xs" withBorder>
               <Stack gap="md">
-                {/* Apply Advanced Filters Toggle */}
-                <Checkbox
-                  label="Apply visibility filters (uncheck to see all targets including those not visible today)"
-                  description="When enabled, only shows targets visible during the selected time window, altitude, and azimuth constraints"
-                  checked={applyAdvancedFilters}
-                  onChange={(event) => setApplyAdvancedFilters(event.currentTarget.checked)}
-                />
-
-                <Divider />
-
                 <div style={{ paddingLeft: 16, paddingRight: 16 }}>
                   <Text size="sm" fw={500} mb={8}>
                     Magnitude Range (brightness - lower is brighter)
