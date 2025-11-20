@@ -901,6 +901,7 @@ export default function TargetsPage(): JSX.Element {
   const [azimuthSegments, setAzimuthSegments] = useState<boolean[]>(Array(24).fill(true)); // 24 segments of 15° each
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
+  const [applyAdvancedFilters, setApplyAdvancedFilters] = useState(true); // Toggle for advanced visibility filtering
   const showMoonOverlay = true; // Always show moon overlay
   const [sortBy, setSortBy] = useState<'magnitude' | 'size'>('magnitude');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -990,6 +991,11 @@ export default function TargetsPage(): JSX.Element {
   // Apply client-side filtering for advanced filters (time window, altitude, azimuth)
   const data = useMemo(() => {
     if (!rawData || !selectedLocation) return rawData;
+
+    // If advanced filters are disabled, return all targets without filtering
+    if (!applyAdvancedFilters) {
+      return rawData;
+    }
 
     const isTimeWindowDefault = timeWindow[0] === 12 && timeWindow[1] === 36;
     const isAltitudeDefault = altitudeRange[0] === 0 && altitudeRange[1] === 90;
@@ -1085,7 +1091,7 @@ export default function TargetsPage(): JSX.Element {
         totalPages: Math.ceil(filteredTargets.length / rawData.pagination.limit),
       },
     };
-  }, [rawData, selectedLocation, timeWindow, altitudeRange, azimuthSegments]);
+  }, [rawData, selectedLocation, timeWindow, altitudeRange, azimuthSegments, applyAdvancedFilters]);
 
   const addMutation = useMutation({
     mutationFn: addToWishlist,
@@ -1585,6 +1591,16 @@ export default function TargetsPage(): JSX.Element {
           <Collapse in={showFilters}>
             <Paper p="md" mt="xs" withBorder>
               <Stack gap="md">
+                {/* Apply Advanced Filters Toggle */}
+                <Checkbox
+                  label="Apply visibility filters (uncheck to see all targets including those not visible today)"
+                  description="When enabled, only shows targets visible during the selected time window, altitude, and azimuth constraints"
+                  checked={applyAdvancedFilters}
+                  onChange={(event) => setApplyAdvancedFilters(event.currentTarget.checked)}
+                />
+
+                <Divider />
+
                 <div style={{ paddingLeft: 16, paddingRight: 16 }}>
                   <Text size="sm" fw={500} mb={8}>
                     Magnitude Range (brightness - lower is brighter)
