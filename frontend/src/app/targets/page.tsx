@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import {
   Container,
   Title,
@@ -935,6 +935,7 @@ export default function TargetsPage(): JSX.Element {
   const { data: session } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const targetListRef = useRef<HTMLDivElement>(null);
 
   const { data: locations, isLoading: locationsLoading } = useQuery({
     queryKey: ['locations'],
@@ -957,6 +958,13 @@ export default function TargetsPage(): JSX.Element {
       }
     }
   }, [locations, selectedLocation]);
+
+  // Scroll to top of target list when page changes
+  useEffect(() => {
+    if (targetListRef.current) {
+      targetListRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [page]);
 
   // Calculate current moon phase
   const currentMoonPhase = useMemo(() => {
@@ -1907,7 +1915,7 @@ export default function TargetsPage(): JSX.Element {
         </div>
 
         {/* Target Grid */}
-        <div style={{ position: 'relative', minHeight: 400 }}>
+        <div ref={targetListRef} style={{ position: 'relative', minHeight: 400 }}>
           <LoadingOverlay visible={isLoading} />
 
           {!selectedLocation && (
