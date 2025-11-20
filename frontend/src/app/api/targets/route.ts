@@ -101,18 +101,14 @@ export async function GET(request: Request) {
   let targets, total;
 
   if (sortBy === 'tonights-best' && latitude !== undefined && longitude !== undefined) {
-    // For tonight's best, fetch a larger batch to calculate visibility
-    // We fetch more than needed because some might not be visible at night
-    const batchSize = Math.min(500, limit * 10); // Fetch 10 pages worth, max 500
+    // For tonight's best, we need to calculate visibility for sorting
+    // Fetch all matching targets (within reason - use WHERE clause to limit)
+    const allTargets = await prisma.target.findMany({
+      where,
+      orderBy: [{ magnitude: 'asc' }, { name: 'asc' }], // Baseline order
+    });
 
-    const [allTargets, totalCount] = await Promise.all([
-      prisma.target.findMany({
-        where,
-        orderBy: [{ magnitude: 'asc' }, { name: 'asc' }], // Pre-sort by magnitude as baseline
-        take: batchSize,
-      }),
-      prisma.target.count({ where }),
-    ]);
+    const totalCount = allTargets.length;
 
     // Calculate astronomical night visibility for each target
     const startOfDay = new Date(observationDate);
@@ -164,15 +160,14 @@ export async function GET(request: Request) {
       };
     });
 
-    // Filter out targets with zero night visibility and sort
-    const sortedTargets = targetsWithVisibility
-      .filter(item => item.visibleMinutes > 0)
-      .sort((a, b) => {
-        if (b.visibleMinutes !== a.visibleMinutes) {
-          return b.visibleMinutes - a.visibleMinutes;
-        }
-        return b.maxAltitude - a.maxAltitude;
-      });
+    // Sort by visibility (NO FILTERING - sort only)
+    // Targets with zero visibility go to the bottom
+    const sortedTargets = targetsWithVisibility.sort((a, b) => {
+      if (b.visibleMinutes !== a.visibleMinutes) {
+        return b.visibleMinutes - a.visibleMinutes;
+      }
+      return b.maxAltitude - a.maxAltitude;
+    });
 
     // Paginate the sorted results
     const startIndex = (page - 1) * limit;
@@ -181,7 +176,7 @@ export async function GET(request: Request) {
       .map(item => item.target);
 
     targets = paginatedTargets;
-    total = sortedTargets.length; // Total visible targets during night
+    total = totalCount; // Total targets (not filtered by visibility)
   } else {
     // Standard sorting (magnitude, size)
     [targets, total] = await Promise.all([
