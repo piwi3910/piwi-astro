@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import { useDebouncedValue } from '@mantine/hooks';
 import {
   Container,
   Title,
@@ -10,7 +11,6 @@ import {
   Group,
   Text,
   Badge,
-  LoadingOverlay,
   ActionIcon,
   Tooltip,
   Paper,
@@ -27,7 +27,8 @@ import {
   Menu,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { List } from 'react-window';
 import { useSession } from 'next-auth/react';
 import {
   IconSearch,
@@ -923,11 +924,11 @@ export default function TargetsPage(): JSX.Element {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [selectedGear, setSelectedGear] = useState<Rig | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebouncedValue(search, 300); // 300ms debounce
   const [types, setTypes] = useState<string[]>([]);
   const [constellation, setConstellation] = useState('');
-  const [magnitudeRange, setMagnitudeRange] = useState<[number, number]>([-15, 15]);
+  const [magnitudeRange, setMagnitudeRange] = useState<[number, number]>([-15, 25]); // Cover full range: -12.7 to 21.01
   const [timeWindow, setTimeWindow] = useState<[number, number]>([12, 36]); // 12h to 36h (full 24h range)
   const [altitudeRange, setAltitudeRange] = useState<[number, number]>([0, 90]);
   const [azimuthSegments, setAzimuthSegments] = useState<boolean[]>(Array(24).fill(true)); // 24 segments of 15° each
@@ -943,6 +944,7 @@ export default function TargetsPage(): JSX.Element {
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImageTarget, setSelectedImageTarget] = useState<Target | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
+  const [loadingDots, setLoadingDots] = useState('.');
 
   const { data: session } = useSession();
   const router = useRouter();
@@ -970,10 +972,7 @@ export default function TargetsPage(): JSX.Element {
     }
   }, [locations, selectedLocation]);
 
-  // Scroll to top of page when page changes
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [page]);
+  // Removed page state - using infinite scroll now
 
   // Calculate current moon phase
   const currentMoonPhase = useMemo(() => {
@@ -1004,11 +1003,16 @@ export default function TargetsPage(): JSX.Element {
     };
   }, [selectedLocation, selectedDate]);
 
-  const { data: rawData, isLoading } = useQuery({
+  const {
+    data: infiniteData,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: [
       'targets',
-      page,
-      search,
+      debouncedSearch, // Use debounced search for query key
       types,
       constellation,
       selectedLocation?.latitude,
@@ -1025,16 +1029,17 @@ export default function TargetsPage(): JSX.Element {
       enableFOVFilter,
       fovCoverageRange,
     ],
-    queryFn: () =>
+    queryFn: ({ pageParam = 1 }) =>
       fetchTargets({
-        page,
-        search,
+        page: pageParam,
+        search: debouncedSearch, // Use debounced search for API call
         types,
         constellation,
         latitude: selectedLocation?.latitude,
         longitude: selectedLocation?.longitude,
-        magnitudeMin: magnitudeRange[0],
-        magnitudeMax: magnitudeRange[1],
+        // Only send magnitude filters if advanced filters are enabled
+        magnitudeMin: applyAdvancedFilters ? magnitudeRange[0] : undefined,
+        magnitudeMax: applyAdvancedFilters ? magnitudeRange[1] : undefined,
         sortBy,
         sortDirection,
         date: selectedDate,
@@ -1046,11 +1051,37 @@ export default function TargetsPage(): JSX.Element {
         rigId: (applyAdvancedFilters && enableFOVFilter) ? selectedGear?.id : undefined,
         fovCoverageRange: (applyAdvancedFilters && enableFOVFilter) ? fovCoverageRange : undefined,
       }),
+    getNextPageParam: (lastPage) => {
+      const { page, totalPages } = lastPage.pagination;
+      return page < totalPages ? page + 1 : undefined;
+    },
     enabled: !!selectedLocation,
+    initialPageParam: 1,
+    // Performance optimization: cache data for faster navigation
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+    gcTime: 30 * 60 * 1000,    // Keep in cache for 30 minutes (formerly cacheTime)
   });
 
-  // No client-side filtering - all filtering happens on backend
-  const data = rawData;
+  // Flatten all pages into a single array
+  const allTargets = infiniteData?.pages.flatMap(page => page.targets) ?? [];
+  const totalCount = infiniteData?.pages[0]?.pagination.total ?? 0;
+
+  // Animate loading dots
+  useEffect(() => {
+    if (!isLoading) {
+      setLoadingDots('.');
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setLoadingDots((prev) => {
+        if (prev === '...') return '.';
+        return prev + '.';
+      });
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, [isLoading]);
 
   const addMutation = useMutation({
     mutationFn: addToWishlist,
@@ -1347,7 +1378,6 @@ export default function TargetsPage(): JSX.Element {
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
-                setPage(1);
               }}
             />
             <Menu closeOnItemClick={false} width={250}>
@@ -1387,7 +1417,6 @@ export default function TargetsPage(): JSX.Element {
                         variant="subtle"
                         onClick={() => {
                           setTypes([]);
-                          setPage(1);
                         }}
                       >
                         Clear
@@ -1415,7 +1444,6 @@ export default function TargetsPage(): JSX.Element {
                       } else {
                         setTypes([...types, typeOption]);
                       }
-                      setPage(1);
                     }}
                   >
                     <Checkbox
@@ -1525,7 +1553,6 @@ export default function TargetsPage(): JSX.Element {
             value={constellation}
             onChange={(val) => {
               setConstellation(val || '');
-              setPage(1);
             }}
           />
         </Group>
@@ -1574,7 +1601,6 @@ export default function TargetsPage(): JSX.Element {
                   value={sortBy}
                   onChange={(val) => {
                     setSortBy((val as 'magnitude' | 'size' | 'tonights-best') || 'magnitude');
-                    setPage(1);
                   }}
                 />
                 <Select
@@ -1598,7 +1624,6 @@ export default function TargetsPage(): JSX.Element {
                   value={sortDirection}
                   onChange={(val) => {
                     setSortDirection((val as 'asc' | 'desc') || 'desc');
-                    setPage(1);
                   }}
                 />
               </Group>
@@ -1616,14 +1641,15 @@ export default function TargetsPage(): JSX.Element {
                   </Text>
                   <RangeSlider
                     min={-15}
-                    max={15}
+                    max={25}
                     step={0.5}
                     value={magnitudeRange}
                     onChange={setMagnitudeRange}
                     marks={[
                       { value: -15, label: '-15 (Moon)' },
                       { value: 0, label: '0' },
-                      { value: 15, label: '15 (faint)' },
+                      { value: 15, label: '15' },
+                      { value: 25, label: '25 (faint)' },
                     ]}
                   />
                   <Text size="xs" c="dimmed" mt={20}>
@@ -1643,7 +1669,6 @@ export default function TargetsPage(): JSX.Element {
                     value={timeWindow}
                     onChange={(val) => {
                       setTimeWindow([val[0], val[1]]);
-                      setPage(1);
                     }}
                     marks={[
                       { value: 12, label: '12h' },
@@ -1674,7 +1699,6 @@ export default function TargetsPage(): JSX.Element {
                     value={altitudeRange}
                     onChange={(val) => {
                       setAltitudeRange(val);
-                      setPage(1);
                     }}
                     marks={[
                       { value: 0, label: '0°' },
@@ -1780,7 +1804,6 @@ export default function TargetsPage(): JSX.Element {
                               const newSegments = [...azimuthSegments];
                               newSegments[i] = !newSegments[i];
                               setAzimuthSegments(newSegments);
-                              setPage(1);
                             }}
                             style={{ cursor: 'pointer' }}
                           />
@@ -1823,7 +1846,32 @@ export default function TargetsPage(): JSX.Element {
 
         {/* Target Grid */}
         <div style={{ position: 'relative', minHeight: 400 }}>
-          <LoadingOverlay visible={isLoading} />
+          {isLoading && (
+            <Paper
+              p="xl"
+              withBorder
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                zIndex: 100,
+                backgroundColor: 'rgba(26, 27, 30, 0.95)'
+              }}
+            >
+              <Center>
+                <Stack align="center" gap="xs">
+                  <Loader size="md" />
+                  <Text size="sm" fw={500}>
+                    Processing {totalCount > 0 ? totalCount.toLocaleString() : '...'} targets{loadingDots}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    This takes a while
+                  </Text>
+                </Stack>
+              </Center>
+            </Paper>
+          )}
 
           {!selectedLocation && (
             <Paper p="xl" withBorder>
@@ -1836,15 +1884,37 @@ export default function TargetsPage(): JSX.Element {
             </Paper>
           )}
 
-          {data && data.targets.length > 0 ? (
+          {allTargets.length > 0 ? (
             <>
-              <Stack gap="md">
-                {data.targets.map((target) => {
+              <Text size="sm" c="dimmed" mb="md">
+                Showing {allTargets.length} of {totalCount} targets
+                {isFetchingNextPage && ' (loading more...)'}
+              </Text>
+
+              <List
+                style={{ height: '800px', width: '100%' }}
+                rowComponent={({ index, style, ...rowProps }: any) => {
+                  // Show loading indicator at the end
+                  if (index >= allTargets.length) {
+                    return (
+                      <div style={style}>
+                        <Paper p="md" withBorder style={{ backgroundColor: 'var(--mantine-color-dark-7)', margin: '8px 0' }}>
+                          <Center>
+                            <Loader size="sm" />
+                            <Text size="sm" c="dimmed" ml="sm">Loading more targets...</Text>
+                          </Center>
+                        </Paper>
+                      </div>
+                    );
+                  }
+
+                  const target = allTargets[index];
                   const isAdded = addedTargets.has(target.id);
                   const imageUrl = getTargetImageUrl(target);
 
                   return (
-                    <Paper key={target.id} p="xs" withBorder style={{ backgroundColor: 'var(--mantine-color-dark-7)' }}>
+                    <div style={style}>
+                      <Paper key={target.id} p="xs" withBorder style={{ backgroundColor: 'var(--mantine-color-dark-7)', margin: '8px 0' }}>
                       <Group align="flex-start" gap="sm" wrap="nowrap">
                         {/* Preview Image - Click to enlarge */}
                         <Box
@@ -1856,6 +1926,7 @@ export default function TargetsPage(): JSX.Element {
                             height={150}
                             width={150}
                             alt={target.name}
+                            loading="lazy"
                             fallbackSrc="https://placehold.co/150x150/1a1b1e/white?text=No+Image"
                             radius="sm"
                             style={{ transition: 'transform 0.2s', ':hover': { transform: 'scale(1.05)' } }}
@@ -1963,34 +2034,23 @@ export default function TargetsPage(): JSX.Element {
                         )}
                       </Group>
                     </Paper>
+                    </div>
                   );
-                })}
-              </Stack>
-
-              <Group justify="center" mt="xl">
-                <Button.Group>
-                  <Button
-                    variant="default"
-                    onClick={() => setPage(page - 1)}
-                    disabled={page === 1}
-                  >
-                    Previous
-                  </Button>
-                  <Button variant="default" disabled>
-                    Page {page} of {data.pagination.totalPages}
-                  </Button>
-                  <Button
-                    variant="default"
-                    onClick={() => setPage(page + 1)}
-                    disabled={page >= data.pagination.totalPages}
-                  >
-                    Next
-                  </Button>
-                </Button.Group>
-                <Text size="sm" c="dimmed">
-                  Showing {data.targets.length} of {data.pagination.total} targets
-                </Text>
-              </Group>
+                }}
+                rowCount={allTargets.length + (hasNextPage ? 1 : 0)}
+                rowHeight={220}
+                rowProps={{}}
+                onRowsRendered={({ stopIndex }: any) => {
+                  // Load next page when user scrolls near the bottom
+                  if (
+                    !isFetchingNextPage &&
+                    hasNextPage &&
+                    stopIndex >= allTargets.length - 3
+                  ) {
+                    fetchNextPage();
+                  }
+                }}
+              />
             </>
           ) : (
             !isLoading &&
