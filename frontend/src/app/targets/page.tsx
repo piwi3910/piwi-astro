@@ -961,8 +961,10 @@ export default function TargetsPage(): JSX.Element {
 
   // Scroll to top of target list when page changes
   useEffect(() => {
+    // Scroll to top of the target list
     if (targetListRef.current) {
-      targetListRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const offsetTop = targetListRef.current.offsetTop;
+      window.scrollTo({ top: offsetTop - 20, behavior: 'smooth' });
     }
   }, [page]);
 
