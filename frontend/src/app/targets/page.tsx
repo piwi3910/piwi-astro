@@ -925,7 +925,7 @@ export default function TargetsPage(): JSX.Element {
   const [showSort, setShowSort] = useState(false);
   const [applyAdvancedFilters, setApplyAdvancedFilters] = useState(false); // Toggle for advanced visibility filtering
   const showMoonOverlay = true; // Always show moon overlay
-  const [sortBy, setSortBy] = useState<'magnitude' | 'size' | 'tonights-best'>('magnitude');
+  const [sortBy, setSortBy] = useState<'magnitude' | 'size' | 'tonights-best'>('tonights-best');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [addedTargets, setAddedTargets] = useState<Set<string>>(new Set());
   const [imageModalOpen, setImageModalOpen] = useState(false);
