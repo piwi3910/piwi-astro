@@ -1392,40 +1392,28 @@ export default function TargetsPage(): JSX.Element {
 
               <div>
                 <Text size="sm" fw={500} mb={8}>Date</Text>
-                <Group gap="xs" align="flex-start">
-                  <DatePickerInput
-                    value={selectedDate}
-                    onChange={(date) => setSelectedDate(date || new Date())}
-                    placeholder="Pick date"
-                    style={{ minWidth: 200 }}
-                    getDayProps={(date) => {
-                      const today = new Date();
-                      const isToday =
-                        date.getDate() === today.getDate() &&
-                        date.getMonth() === today.getMonth() &&
-                        date.getFullYear() === today.getFullYear();
+                <DatePickerInput
+                  value={selectedDate}
+                  onChange={(date) => setSelectedDate(date || new Date())}
+                  placeholder="Pick date"
+                  style={{ minWidth: 200 }}
+                  getDayProps={(date) => {
+                    const today = new Date();
+                    const isToday =
+                      date.getDate() === today.getDate() &&
+                      date.getMonth() === today.getMonth() &&
+                      date.getFullYear() === today.getFullYear();
 
-                      return {
-                        style: isToday ? {
-                          backgroundColor: 'var(--mantine-color-blue-6)',
-                          color: 'white',
-                          fontWeight: 'bold',
-                          border: '2px solid var(--mantine-color-blue-4)',
-                        } : undefined
-                      };
-                    }}
-                  />
-                  <Tooltip label="Jump to today">
-                    <Button
-                      variant="subtle"
-                      size="sm"
-                      onClick={() => setSelectedDate(new Date())}
-                      style={{ marginTop: 20 }}
-                    >
-                      Today
-                    </Button>
-                  </Tooltip>
-                </Group>
+                    return {
+                      style: isToday ? {
+                        backgroundColor: 'var(--mantine-color-blue-6)',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        border: '2px solid var(--mantine-color-blue-4)',
+                      } : undefined
+                    };
+                  }}
+                />
               </div>
             </Group>
           </Stack>
