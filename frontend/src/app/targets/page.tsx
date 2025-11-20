@@ -128,6 +128,12 @@ async function fetchTargets(params: {
   sortBy?: string;
   sortDirection?: string;
   date?: Date;
+  applyAdvancedFilters?: boolean;
+  timeWindow?: [number, number];
+  altitudeRange?: [number, number];
+  azimuthSegments?: boolean[];
+  rigId?: string;
+  fovCoverageRange?: [number, number];
 }): Promise<TargetsResponse> {
   const searchParams = new URLSearchParams({
     page: params.page.toString(),
@@ -142,6 +148,12 @@ async function fetchTargets(params: {
     ...(params.sortBy && { sortBy: params.sortBy }),
     ...(params.sortDirection && { sortDirection: params.sortDirection }),
     ...(params.date && { date: params.date.toISOString() }),
+    ...(params.applyAdvancedFilters !== undefined && { applyAdvancedFilters: params.applyAdvancedFilters.toString() }),
+    ...(params.timeWindow && { timeWindowStart: params.timeWindow[0].toString(), timeWindowEnd: params.timeWindow[1].toString() }),
+    ...(params.altitudeRange && { altitudeMin: params.altitudeRange[0].toString(), altitudeMax: params.altitudeRange[1].toString() }),
+    ...(params.azimuthSegments && { azimuthSegments: params.azimuthSegments.map(s => s ? '1' : '0').join('') }),
+    ...(params.rigId && { rigId: params.rigId }),
+    ...(params.fovCoverageRange && { fovCoverageMin: params.fovCoverageRange[0].toString(), fovCoverageMax: params.fovCoverageRange[1].toString() }),
   });
 
   const url = `/api/targets?${searchParams}`;
@@ -1004,7 +1016,14 @@ export default function TargetsPage(): JSX.Element {
       magnitudeRange,
       sortBy,
       sortDirection,
-      selectedDate.toISOString(), // Include date in cache key
+      selectedDate.toISOString(),
+      applyAdvancedFilters,
+      timeWindow,
+      altitudeRange,
+      azimuthSegments,
+      selectedGear?.id,
+      enableFOVFilter,
+      fovCoverageRange,
     ],
     queryFn: () =>
       fetchTargets({
@@ -1018,132 +1037,20 @@ export default function TargetsPage(): JSX.Element {
         magnitudeMax: magnitudeRange[1],
         sortBy,
         sortDirection,
-        date: selectedDate, // Pass the selected date to backend
+        date: selectedDate,
+        // Pass advanced filter parameters
+        applyAdvancedFilters,
+        timeWindow: applyAdvancedFilters ? timeWindow : undefined,
+        altitudeRange: applyAdvancedFilters ? altitudeRange : undefined,
+        azimuthSegments: applyAdvancedFilters ? azimuthSegments : undefined,
+        rigId: (applyAdvancedFilters && enableFOVFilter) ? selectedGear?.id : undefined,
+        fovCoverageRange: (applyAdvancedFilters && enableFOVFilter) ? fovCoverageRange : undefined,
       }),
     enabled: !!selectedLocation,
   });
 
-  // Apply client-side filtering for advanced filters (time window, altitude, azimuth)
-  const data = useMemo(() => {
-    if (!rawData || !selectedLocation) return rawData;
-
-    // If advanced filters are disabled, return all targets WITHOUT ANY FILTERING
-    if (!applyAdvancedFilters) {
-      return {
-        targets: rawData.targets,
-        pagination: rawData.pagination,
-      };
-    }
-
-    const isTimeWindowDefault = timeWindow[0] === 12 && timeWindow[1] === 36;
-    const isAltitudeDefault = altitudeRange[0] === 0 && altitudeRange[1] === 90;
-    const isAzimuthDefault = azimuthSegments.every(seg => seg === true);
-
-    const startOfDay = new Date(selectedDate);
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const filteredTargets = rawData.targets.filter((target) => {
-      // Calculate target coordinates (handle dynamic objects)
-      let targetCoords = { raDeg: target.raDeg, decDeg: target.decDeg };
-
-      if (target.dynamicRaDeg !== undefined && target.dynamicDecDeg !== undefined) {
-        targetCoords = { raDeg: target.dynamicRaDeg, decDeg: target.dynamicDecDeg };
-      } else if (target.isDynamic && target.solarSystemBody) {
-        targetCoords = calculatePlanetPosition(target.solarSystemBody, startOfDay);
-      }
-
-      // Calculate altitude over time
-      const points = calculateAltitudeOverTime(
-        targetCoords,
-        { latitude: selectedLocation.latitude, longitude: selectedLocation.longitude },
-        startOfDay,
-        24,
-        30
-      );
-
-      // ALWAYS filter out targets that are never above the horizon
-      const isEverVisible = points.some(point => point.altitude > 0);
-      if (!isEverVisible) return false;
-
-      // FOV Coverage Filter (if enabled and gear selected)
-      if (enableFOVFilter && selectedGear && target.sizeMajorArcmin) {
-        // Calculate what % of FOV width the target occupies
-        const targetWidthArcmin = target.sizeMajorArcmin;
-        const fovWidthArcmin = selectedGear.fovWidthArcmin;
-        const coveragePercent = (targetWidthArcmin / fovWidthArcmin) * 100;
-
-        // Check if coverage is within desired range
-        const [minCoverage, maxCoverage] = fovCoverageRange;
-        if (coveragePercent < minCoverage || coveragePercent > maxCoverage) {
-          return false; // Filter out this target
-        }
-      }
-
-      // If all advanced filters are at defaults, include this target (it's visible)
-      if (isTimeWindowDefault && isAltitudeDefault && isAzimuthDefault) {
-        return true;
-      }
-
-      // Apply advanced filters (AND logic)
-      // timeWindow is stored in 12-36 scale where 12=noon, 24=midnight, 36=noon next day
-      const startHour = timeWindow[0];
-      const endHour = timeWindow[1];
-
-      let hasValidVisibilityPoint = false;
-
-      points.forEach((point, i) => {
-        const hour = (i / (points.length - 1)) * 24; // 0-24
-        // Convert to same scale as time window (12-36)
-        const hourInWindowScale = hour >= 12 ? hour : hour + 24;
-
-        // Check if this hour is within the selected time window
-        const inTimeWindow = isTimeWindowDefault || (
-          startHour <= endHour
-            ? hourInWindowScale >= startHour && hourInWindowScale <= endHour
-            : hourInWindowScale >= startHour || hourInWindowScale <= endHour
-        );
-
-        // Only consider points within the time window
-        if (!inTimeWindow) return;
-
-        // Target must be above horizon
-        if (point.altitude <= 0) return;
-
-        // Apply altitude range filter (target must be within range)
-        if (!isAltitudeDefault) {
-          if (point.altitude < altitudeRange[0] || point.altitude > altitudeRange[1]) {
-            return;
-          }
-        }
-
-        // Apply azimuth filter (target must be in enabled segment)
-        if (!isAzimuthDefault) {
-          const segmentIndex = Math.floor(point.azimuth / 15) % 24;
-          if (!azimuthSegments[segmentIndex]) {
-            return;
-          }
-        }
-
-        // If we reach here, this point passes all filters
-        hasValidVisibilityPoint = true;
-      });
-
-      // Target must have at least one valid visibility point
-      return hasValidVisibilityPoint;
-    });
-
-    // Note: Sorting is now handled by the backend
-    // Just return filtered results with updated pagination
-    return {
-      targets: filteredTargets,
-      pagination: {
-        ...rawData.pagination,
-        total: filteredTargets.length,
-        totalPages: Math.ceil(filteredTargets.length / rawData.pagination.limit),
-      },
-    };
-  }, [rawData, selectedLocation, timeWindow, altitudeRange, azimuthSegments, applyAdvancedFilters,
-      selectedDate, selectedGear, enableFOVFilter, fovCoverageRange]);
+  // No client-side filtering - all filtering happens on backend
+  const data = rawData;
 
   const addMutation = useMutation({
     mutationFn: addToWishlist,
