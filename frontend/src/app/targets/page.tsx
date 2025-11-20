@@ -1027,9 +1027,12 @@ export default function TargetsPage(): JSX.Element {
   const data = useMemo(() => {
     if (!rawData || !selectedLocation) return rawData;
 
-    // If advanced filters are disabled, return all targets without filtering
+    // If advanced filters are disabled, return all targets WITHOUT ANY FILTERING
     if (!applyAdvancedFilters) {
-      return rawData;
+      return {
+        targets: rawData.targets,
+        pagination: rawData.pagination,
+      };
     }
 
     const isTimeWindowDefault = timeWindow[0] === 12 && timeWindow[1] === 36;
