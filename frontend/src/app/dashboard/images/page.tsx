@@ -149,6 +149,10 @@ export default function ImagesPage(): JSX.Element {
     aperture: 0,
   });
 
+  const [extractingMetadata, setExtractingMetadata] = useState(false);
+  const [extractedMetadata, setExtractedMetadata] = useState<any>(null);
+  const [metadataError, setMetadataError] = useState<string | null>(null);
+
   const [editForm, setEditForm] = useState({
     visibility: 'PRIVATE',
     title: '',
@@ -226,6 +230,98 @@ export default function ImagesPage(): JSX.Element {
       focalLength: 0,
       aperture: 0,
     });
+    setExtractedMetadata(null);
+    setMetadataError(null);
+  };
+
+  const handleFileSelect = async (file: File | null): Promise<void> => {
+    if (!file) {
+      setUploadForm({ ...uploadForm, file: null });
+      setExtractedMetadata(null);
+      setMetadataError(null);
+      return;
+    }
+
+    setUploadForm({ ...uploadForm, file });
+    setExtractingMetadata(true);
+    setMetadataError(null);
+
+    try {
+      // Call metadata extraction API
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/images/extract-metadata', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to extract metadata');
+      }
+
+      const metadata = await response.json();
+      setExtractedMetadata(metadata);
+
+      // Auto-populate form fields from extracted metadata
+      const updates: any = {};
+
+      if (metadata.targetName) {
+        updates.title = metadata.targetName;
+      }
+
+      if (metadata.captureDate) {
+        try {
+          updates.captureDate = new Date(metadata.captureDate);
+        } catch (e) {
+          console.error('Invalid date format:', e);
+        }
+      }
+
+      if (metadata.exposureTime) {
+        updates.exposureTime = metadata.exposureTime;
+      }
+
+      if (metadata.exposureCount) {
+        updates.exposureCount = metadata.exposureCount;
+      }
+
+      if (metadata.iso) {
+        updates.iso = metadata.iso;
+      } else if (metadata.gain) {
+        // Use gain as ISO if ISO not present
+        updates.iso = Math.round(metadata.gain);
+      }
+
+      if (metadata.focalLength) {
+        updates.focalLength = metadata.focalLength;
+      }
+
+      if (metadata.aperture) {
+        updates.aperture = metadata.aperture;
+      }
+
+      // Try to match target by name or coordinates
+      if (metadata.targetName && userTargets) {
+        const matchedTarget = userTargets.find(
+          (ut) =>
+            ut.target.name.toLowerCase() === metadata.targetName.toLowerCase() ||
+            (ut.target.catalogId &&
+              ut.target.catalogId.toLowerCase() === metadata.targetName.toLowerCase())
+        );
+        if (matchedTarget) {
+          updates.targetId = matchedTarget.targetId;
+        }
+      }
+
+      setUploadForm({ ...uploadForm, file, ...updates });
+    } catch (error) {
+      console.error('Error extracting metadata:', error);
+      setMetadataError(error instanceof Error ? error.message : 'Failed to extract metadata');
+    } finally {
+      setExtractingMetadata(false);
+    }
   };
 
   const handleUpload = (): void => {
@@ -409,14 +505,49 @@ export default function ImagesPage(): JSX.Element {
         >
           <Stack gap="md">
             <FileInput
-              label="Image File"
-              placeholder="Select image file"
-              accept="image/jpeg,image/jpg,image/png,image/tiff,.fits"
+              label="FITS/XISF File"
+              placeholder="Select FITS or XISF file"
+              accept=".fits,.fit,.fts,.xisf"
               value={uploadForm.file}
-              onChange={(file) => setUploadForm({ ...uploadForm, file })}
+              onChange={handleFileSelect}
               leftSection={<IconUpload size={16} />}
+              description={
+                extractingMetadata
+                  ? 'Extracting metadata...'
+                  : extractedMetadata
+                  ? `Detected: ${extractedMetadata.targetName || 'Unknown target'} • ${extractedMetadata.fileType || ''}`
+                  : 'Upload FITS (.fits, .fit, .fts) or XISF (.xisf) files only'
+              }
+              error={metadataError}
+              disabled={extractingMetadata}
               required
             />
+
+            {extractingMetadata && (
+              <Group gap="xs">
+                <Loader size="sm" />
+                <Text size="sm" c="dimmed">
+                  Analyzing file and extracting metadata...
+                </Text>
+              </Group>
+            )}
+
+            {extractedMetadata && (
+              <Stack gap="xs">
+                <Text size="sm" fw={500} c="teal">
+                  ✓ Metadata extracted successfully
+                </Text>
+                <Text size="xs" c="dimmed">
+                  Form fields have been auto-populated. Please review and adjust as needed.
+                </Text>
+                {extractedMetadata.ra && extractedMetadata.dec && (
+                  <Text size="xs" c="dimmed">
+                    Coordinates: RA {extractedMetadata.ra.toFixed(4)}°, Dec{' '}
+                    {extractedMetadata.dec.toFixed(4)}°
+                  </Text>
+                )}
+              </Stack>
+            )}
 
             <Select
               label="Target"

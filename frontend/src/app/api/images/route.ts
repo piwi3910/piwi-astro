@@ -217,10 +217,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    // Validate file type
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/tiff', 'image/fits'];
-    if (!validTypes.includes(file.type) && !file.name.toLowerCase().endsWith('.fits')) {
-      return NextResponse.json({ error: 'Invalid file type' }, { status: 400 });
+    // Validate file type - only FITS and XISF allowed
+    const fileName = file.name.toLowerCase();
+    const validExtensions = ['.fits', '.fit', '.fts', '.xisf'];
+    const hasValidExtension = validExtensions.some(ext => fileName.endsWith(ext));
+
+    if (!hasValidExtension) {
+      return NextResponse.json(
+        { error: 'Invalid file type. Only FITS (.fits, .fit, .fts) and XISF (.xisf) files are supported.' },
+        { status: 400 }
+      );
     }
 
     // Validate file size (max 100MB)
@@ -259,11 +265,18 @@ export async function POST(request: Request) {
     const buffer = Buffer.from(bytes);
 
     // Upload to MinIO
+    // Determine content type based on file extension
+    const contentType = fileName.endsWith('.xisf')
+      ? 'application/xisf'
+      : fileName.match(/\.(fits|fit|fts)$/)
+      ? 'image/fits'
+      : 'application/octet-stream';
+
     const storageKey = await uploadFile(
       buffer,
       file.name,
-      file.type || 'application/octet-stream',
-      data.visibility === 'PUBLIC'
+      contentType
+      // Note: bucketName parameter is optional and defaults to BUCKET_IMAGES
     );
 
     const url =
