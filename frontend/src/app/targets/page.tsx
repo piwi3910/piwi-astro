@@ -1160,10 +1160,20 @@ export default function TargetsPage(): JSX.Element {
     const decDeg = target.dynamicDecDeg ?? target.decDeg;
 
     // Use Aladin HiPS2FITS service with DSS2 color survey
-    // FOV calculated based on target size or default to 0.5 degrees
-    const fovDeg = target.sizeMajorArcmin
-      ? Math.max(target.sizeMajorArcmin / 60, 0.2) * 1.5  // 1.5x target size for context
-      : 0.5; // Default 0.5 degree FOV
+    // FOV calculated based on target size so object fills ~50-70% of the image
+    // Small objects need smaller FOV (more zoom), large objects need larger FOV
+    let fovDeg: number;
+    if (target.sizeMajorArcmin) {
+      // Convert arcmin to degrees and multiply by 1.5 for context around the object
+      const targetFov = (target.sizeMajorArcmin / 60) * 1.5;
+      // Clamp to reasonable bounds:
+      // - Min: 0.05 degrees (3 arcmin) - DSS resolution limit
+      // - Max: 3 degrees - for very large objects like Andromeda
+      fovDeg = Math.min(Math.max(targetFov, 0.05), 3);
+    } else {
+      // Default 0.5 degree FOV (30 arcmin) when no size info available
+      fovDeg = 0.5;
+    }
 
     const params = new URLSearchParams({
       hips: 'CDS/P/DSS2/color',
@@ -1220,12 +1230,24 @@ export default function TargetsPage(): JSX.Element {
       };
       externalUrl = planetLargeImages[target.solarSystemBody] || getPlanetImageUrl(target.solarSystemBody);
     } else {
-      // For deep-sky objects, generate larger HiPS2FITS image (1024x1024, larger FOV)
+      // For deep-sky objects, generate larger HiPS2FITS image (1024x1024)
       const raDeg = target.dynamicRaDeg ?? target.raDeg;
       const decDeg = target.dynamicDecDeg ?? target.decDeg;
-      const fovDeg = target.sizeMajorArcmin
-        ? Math.max(target.sizeMajorArcmin / 60, 0.5) * 2  // 2x size for context
-        : 1; // Default 1 degree FOV for modal
+
+      // Scale FOV based on target size so object fills ~50-70% of the image
+      // Use 2x multiplier for modal view (more context than thumbnail)
+      let fovDeg: number;
+      if (target.sizeMajorArcmin) {
+        // Convert arcmin to degrees and multiply by 2 for more context in modal
+        const targetFov = (target.sizeMajorArcmin / 60) * 2;
+        // Clamp to reasonable bounds:
+        // - Min: 0.08 degrees (5 arcmin) - DSS resolution limit for high-res
+        // - Max: 5 degrees - for very large objects
+        fovDeg = Math.min(Math.max(targetFov, 0.08), 5);
+      } else {
+        // Default 1 degree FOV when no size info available
+        fovDeg = 1;
+      }
 
       const params = new URLSearchParams({
         hips: 'CDS/P/DSS2/color',
