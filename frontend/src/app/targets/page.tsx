@@ -928,7 +928,8 @@ export default function TargetsPage(): JSX.Element {
   const [selectedGear, setSelectedGear] = useState<Rig | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [search, setSearch] = useState('');
-  const [debouncedSearch] = useDebouncedValue(search, 300); // 300ms debounce
+  const [debouncedSearch] = useDebouncedValue(search, 300); // 300ms debounce for search query
+  const [debouncedSearchForHistory] = useDebouncedValue(search, 1500); // 1500ms debounce for saving to history
   const [types, setTypes] = useState<string[]>([]);
   const [constellation, setConstellation] = useState('');
   const [magnitudeRange, setMagnitudeRange] = useState<[number, number]>([-15, 25]); // Cover full range: -12.7 to 21.01
@@ -998,15 +999,16 @@ export default function TargetsPage(): JSX.Element {
   }, [session?.user]);
 
   // Save search term to history when debounced search changes (authenticated users only)
+  // Uses longer 1500ms debounce to only save intentional searches
   useEffect(() => {
-    if (!session?.user || !debouncedSearch || debouncedSearch.length < 2) return;
+    if (!session?.user || !debouncedSearchForHistory || debouncedSearchForHistory.length < 2) return;
 
     const saveSearchTerm = async () => {
       try {
         const response = await fetch('/api/search-history', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ term: debouncedSearch, type: 'targets' }),
+          body: JSON.stringify({ term: debouncedSearchForHistory, type: 'targets' }),
         });
         if (response.ok) {
           const data = await response.json();
@@ -1020,7 +1022,7 @@ export default function TargetsPage(): JSX.Element {
     };
 
     saveSearchTerm();
-  }, [debouncedSearch, session?.user]);
+  }, [debouncedSearchForHistory, session?.user]);
 
   // Removed page state - using infinite scroll now
 
