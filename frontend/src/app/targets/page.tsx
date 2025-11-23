@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 import {
   Container,
@@ -25,6 +25,8 @@ import {
   Center,
   Checkbox,
   Menu,
+  Popover,
+  CloseButton,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -41,6 +43,7 @@ import {
   IconAlertCircle,
   IconArrowsSort,
   IconSelector,
+  IconHistory,
 } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import {
@@ -945,6 +948,9 @@ export default function TargetsPage(): JSX.Element {
   const [selectedImageTarget, setSelectedImageTarget] = useState<Target | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
   const [loadingDots, setLoadingDots] = useState('.');
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [searchHistoryOpen, setSearchHistoryOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const { data: session } = useSession();
   const router = useRouter();
@@ -971,6 +977,50 @@ export default function TargetsPage(): JSX.Element {
       }
     }
   }, [locations, selectedLocation]);
+
+  // Fetch search history on mount (authenticated users only)
+  useEffect(() => {
+    if (!session?.user) return;
+
+    const fetchSearchHistory = async () => {
+      try {
+        const response = await fetch('/api/search-history?type=targets');
+        if (response.ok) {
+          const history = await response.json();
+          setSearchHistory(history);
+        }
+      } catch (error) {
+        console.error('Error fetching search history:', error);
+      }
+    };
+
+    fetchSearchHistory();
+  }, [session?.user]);
+
+  // Save search term to history when debounced search changes (authenticated users only)
+  useEffect(() => {
+    if (!session?.user || !debouncedSearch || debouncedSearch.length < 2) return;
+
+    const saveSearchTerm = async () => {
+      try {
+        const response = await fetch('/api/search-history', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ term: debouncedSearch, type: 'targets' }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.history) {
+            setSearchHistory(data.history);
+          }
+        }
+      } catch (error) {
+        console.error('Error saving search history:', error);
+      }
+    };
+
+    saveSearchTerm();
+  }, [debouncedSearch, session?.user]);
 
   // Removed page state - using infinite scroll now
 
@@ -1265,6 +1315,32 @@ export default function TargetsPage(): JSX.Element {
     return `/api/image-proxy?url=${encodeURIComponent(externalUrl)}`;
   };
 
+  // Delete a search history item
+  const deleteSearchHistoryItem = async (term: string) => {
+    if (!session?.user) return;
+
+    try {
+      const response = await fetch(
+        `/api/search-history?term=${encodeURIComponent(term)}&type=targets`,
+        { method: 'DELETE' }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        if (data.history) {
+          setSearchHistory(data.history);
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting search history item:', error);
+    }
+  };
+
+  // Handle search history item click
+  const handleSearchHistoryClick = (term: string) => {
+    setSearch(term);
+    setSearchHistoryOpen(false);
+  };
+
   // Handle image click to open modal
   const handleImageClick = (target: Target) => {
     setSelectedImageTarget(target);
@@ -1394,14 +1470,76 @@ export default function TargetsPage(): JSX.Element {
         {/* Search and Basic Filters */}
         <Stack gap="md">
           <Group grow>
-            <TextInput
-              placeholder="Search by name or catalog ID (M31, NGC224, etc.)"
-              leftSection={<IconSearch size={16} />}
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-            />
+            <Popover
+              opened={searchHistoryOpen && searchHistory.length > 0 && session?.user !== undefined}
+              onClose={() => setSearchHistoryOpen(false)}
+              position="bottom-start"
+              width="target"
+              shadow="md"
+            >
+              <Popover.Target>
+                <TextInput
+                  ref={searchInputRef}
+                  placeholder="Search by name or catalog ID (M31, NGC224, etc.)"
+                  leftSection={<IconSearch size={16} />}
+                  rightSection={
+                    searchHistory.length > 0 && session?.user ? (
+                      <ActionIcon
+                        variant="subtle"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSearchHistoryOpen(!searchHistoryOpen);
+                        }}
+                      >
+                        <IconHistory size={16} />
+                      </ActionIcon>
+                    ) : null
+                  }
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                  }}
+                  onFocus={() => {
+                    if (searchHistory.length > 0) {
+                      setSearchHistoryOpen(true);
+                    }
+                  }}
+                />
+              </Popover.Target>
+              <Popover.Dropdown p="xs">
+                <Stack gap={4}>
+                  <Text size="xs" c="dimmed" fw={500} mb={4}>
+                    Recent searches
+                  </Text>
+                  {searchHistory.map((term, index) => (
+                    <Group key={index} justify="space-between" wrap="nowrap">
+                      <Button
+                        variant="subtle"
+                        size="xs"
+                        justify="flex-start"
+                        fullWidth
+                        leftSection={<IconHistory size={14} />}
+                        onClick={() => handleSearchHistoryClick(term)}
+                        styles={{
+                          root: { fontWeight: 'normal' },
+                          inner: { justifyContent: 'flex-start' },
+                        }}
+                      >
+                        {term}
+                      </Button>
+                      <CloseButton
+                        size="xs"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteSearchHistoryItem(term);
+                        }}
+                      />
+                    </Group>
+                  ))}
+                </Stack>
+              </Popover.Dropdown>
+            </Popover>
             <Menu closeOnItemClick={false} width={250}>
               <Menu.Target>
                 <Button
