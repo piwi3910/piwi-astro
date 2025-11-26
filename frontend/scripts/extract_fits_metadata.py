@@ -1,15 +1,23 @@
 #!/usr/bin/env python3
 """
-FITS/XISF Metadata Extraction Script
-Extracts metadata from astronomical image files and outputs JSON
+FITS Metadata Extraction Script
+
+Extracts metadata from FITS astronomical image files and outputs JSON.
+This script is designed to work with the unified FITS pipeline where all
+image formats are first converted to FITS before metadata extraction.
+
+Usage:
+    python extract_fits_metadata.py <fits_file_path>
+
+Output:
+    JSON to stdout with extracted metadata
 """
 
 import sys
 import json
 import os
-from datetime import datetime
-from typing import Dict, Any, Optional
-import xml.etree.ElementTree as ET
+from typing import Dict, Any
+
 
 def extract_fits_metadata(file_path: str) -> Dict[str, Any]:
     """Extract metadata from FITS file"""
@@ -26,9 +34,15 @@ def extract_fits_metadata(file_path: str) -> Dict[str, Any]:
 
             # Target coordinates
             if 'RA' in header:
-                metadata['ra'] = float(header['RA'])
+                try:
+                    metadata['ra'] = float(header['RA'])
+                except (ValueError, TypeError):
+                    metadata['raStr'] = str(header['RA'])
             if 'DEC' in header:
-                metadata['dec'] = float(header['DEC'])
+                try:
+                    metadata['dec'] = float(header['DEC'])
+                except (ValueError, TypeError):
+                    metadata['decStr'] = str(header['DEC'])
             if 'OBJCTRA' in header:  # Alternative RA key
                 metadata['raStr'] = str(header['OBJCTRA'])
             if 'OBJCTDEC' in header:  # Alternative Dec key
@@ -46,30 +60,55 @@ def extract_fits_metadata(file_path: str) -> Dict[str, Any]:
 
             # Exposure
             if 'EXPTIME' in header:
-                metadata['exposureTime'] = float(header['EXPTIME'])
+                try:
+                    metadata['exposureTime'] = float(header['EXPTIME'])
+                except (ValueError, TypeError):
+                    pass
             elif 'EXPOSURE' in header:
-                metadata['exposureTime'] = float(header['EXPOSURE'])
+                try:
+                    metadata['exposureTime'] = float(header['EXPOSURE'])
+                except (ValueError, TypeError):
+                    pass
 
             # Integration time / number of exposures
             if 'NCOMBINE' in header or 'STACKCNT' in header:
                 count = header.get('NCOMBINE', header.get('STACKCNT'))
-                metadata['exposureCount'] = int(count)
-                if 'exposureTime' in metadata:
-                    metadata['totalIntegrationTime'] = metadata['exposureTime'] * metadata['exposureCount']
+                if count:
+                    try:
+                        metadata['exposureCount'] = int(count)
+                        if 'exposureTime' in metadata:
+                            metadata['totalIntegrationTime'] = metadata['exposureTime'] * metadata['exposureCount']
+                    except (ValueError, TypeError):
+                        pass
 
             # Camera/Sensor info
             if 'GAIN' in header:
-                metadata['gain'] = float(header['GAIN'])
+                try:
+                    metadata['gain'] = float(header['GAIN'])
+                except (ValueError, TypeError):
+                    pass
             if 'ISO' in header:
-                metadata['iso'] = int(header['ISO'])
+                try:
+                    metadata['iso'] = int(header['ISO'])
+                except (ValueError, TypeError):
+                    pass
             if 'OFFSET' in header:
-                metadata['offset'] = int(header['OFFSET'])
+                try:
+                    metadata['offset'] = int(header['OFFSET'])
+                except (ValueError, TypeError):
+                    pass
 
             # Temperature
             if 'CCD-TEMP' in header:
-                metadata['temperature'] = float(header['CCD-TEMP'])
+                try:
+                    metadata['temperature'] = float(header['CCD-TEMP'])
+                except (ValueError, TypeError):
+                    pass
             elif 'SET-TEMP' in header:
-                metadata['temperature'] = float(header['SET-TEMP'])
+                try:
+                    metadata['temperature'] = float(header['SET-TEMP'])
+                except (ValueError, TypeError):
+                    pass
 
             # Filter
             if 'FILTER' in header:
@@ -85,31 +124,61 @@ def extract_fits_metadata(file_path: str) -> Dict[str, Any]:
 
             # Optics
             if 'FOCALLEN' in header:
-                metadata['focalLength'] = float(header['FOCALLEN'])
+                try:
+                    metadata['focalLength'] = float(header['FOCALLEN'])
+                except (ValueError, TypeError):
+                    pass
             if 'APTDIA' in header:
-                metadata['aperture'] = float(header['APTDIA'])
+                try:
+                    metadata['aperture'] = float(header['APTDIA'])
+                except (ValueError, TypeError):
+                    pass
             if 'FOCRATIO' in header:
-                metadata['fRatio'] = float(header['FOCRATIO'])
+                try:
+                    metadata['fRatio'] = float(header['FOCRATIO'])
+                except (ValueError, TypeError):
+                    pass
 
             # Pixel scale
             if 'XPIXSZ' in header:
-                metadata['pixelSizeX'] = float(header['XPIXSZ'])
+                try:
+                    metadata['pixelSizeX'] = float(header['XPIXSZ'])
+                except (ValueError, TypeError):
+                    pass
             if 'YPIXSZ' in header:
-                metadata['pixelSizeY'] = float(header['YPIXSZ'])
+                try:
+                    metadata['pixelSizeY'] = float(header['YPIXSZ'])
+                except (ValueError, TypeError):
+                    pass
             if 'PIXSIZE' in header:
-                metadata['pixelSize'] = float(header['PIXSIZE'])
+                try:
+                    metadata['pixelSize'] = float(header['PIXSIZE'])
+                except (ValueError, TypeError):
+                    pass
 
             # Image dimensions
             if 'NAXIS1' in header:
-                metadata['width'] = int(header['NAXIS1'])
+                try:
+                    metadata['width'] = int(header['NAXIS1'])
+                except (ValueError, TypeError):
+                    pass
             if 'NAXIS2' in header:
-                metadata['height'] = int(header['NAXIS2'])
+                try:
+                    metadata['height'] = int(header['NAXIS2'])
+                except (ValueError, TypeError):
+                    pass
 
             # Binning
             if 'XBINNING' in header:
-                metadata['binningX'] = int(header['XBINNING'])
+                try:
+                    metadata['binningX'] = int(header['XBINNING'])
+                except (ValueError, TypeError):
+                    pass
             if 'YBINNING' in header:
-                metadata['binningY'] = int(header['YBINNING'])
+                try:
+                    metadata['binningY'] = int(header['YBINNING'])
+                except (ValueError, TypeError):
+                    pass
 
             # Software used
             if 'SWCREATE' in header:
@@ -121,11 +190,26 @@ def extract_fits_metadata(file_path: str) -> Dict[str, Any]:
             if 'OBSERVER' in header:
                 metadata['observer'] = str(header['OBSERVER'])
             if 'SITELAT' in header:
-                metadata['siteLatitude'] = float(header['SITELAT'])
+                try:
+                    metadata['siteLatitude'] = float(header['SITELAT'])
+                except (ValueError, TypeError):
+                    pass
             if 'SITELONG' in header:
-                metadata['siteLongitude'] = float(header['SITELONG'])
+                try:
+                    metadata['siteLongitude'] = float(header['SITELONG'])
+                except (ValueError, TypeError):
+                    pass
             if 'SITEELEV' in header:
-                metadata['siteElevation'] = float(header['SITEELEV'])
+                try:
+                    metadata['siteElevation'] = float(header['SITEELEV'])
+                except (ValueError, TypeError):
+                    pass
+
+            # Check for original format info (from conversion)
+            if 'ORIGFMT' in header:
+                metadata['originalFormat'] = str(header['ORIGFMT'])
+            if 'ORIGFILE' in header:
+                metadata['originalFile'] = str(header['ORIGFILE'])
 
             return metadata
 
@@ -138,239 +222,6 @@ def extract_fits_metadata(file_path: str) -> Dict[str, Any]:
         return {
             'success': False,
             'error': f'Error reading FITS file: {str(e)}'
-        }
-
-
-def extract_xisf_metadata(file_path: str) -> Dict[str, Any]:
-    """Extract metadata from XISF file
-
-    XISF files have a binary structure:
-    - Signature: 'XISF0100' (8 bytes)
-    - Header length: 4 bytes (little-endian uint32)
-    - Reserved: 4 bytes
-    - XML header (variable length)
-    - Binary image data
-    """
-    try:
-        metadata = {
-            'fileType': 'XISF',
-            'success': True,
-        }
-
-        with open(file_path, 'rb') as f:
-            # Read and validate signature
-            signature = f.read(8)
-            if signature != b'XISF0100':
-                return {
-                    'success': False,
-                    'error': f'Invalid XISF signature: {signature}'
-                }
-
-            # Read header length (little-endian uint32)
-            header_length_bytes = f.read(4)
-            header_length = int.from_bytes(header_length_bytes, byteorder='little')
-
-            # Skip reserved bytes
-            f.read(4)
-
-            # Read XML header
-            xml_data = f.read(header_length)
-
-            # Parse XML
-            root = ET.fromstring(xml_data)
-
-        # XISF stores metadata in FITSKeyword elements
-        # Handle both namespaced and non-namespaced versions
-        namespaces = {
-            'xisf': 'http://www.pixinsight.com/xisf'
-        }
-
-        fits_keywords = root.findall('.//xisf:FITSKeyword', namespaces)
-        if not fits_keywords:
-            # Try without namespace
-            fits_keywords = root.findall('.//FITSKeyword')
-
-        # Build a dictionary of FITS keywords
-        keywords = {}
-        for keyword in fits_keywords:
-            name = keyword.get('name')
-            value = keyword.get('value')
-            if name and value:
-                # Strip quotes from values
-                value = value.strip("'").strip()
-                keywords[name] = value
-
-        # Now extract metadata using similar logic to FITS
-        if 'RA' in keywords:
-            try:
-                metadata['ra'] = float(keywords['RA'])
-            except ValueError:
-                metadata['raStr'] = keywords['RA']
-        if 'OBJCTRA' in keywords:
-            metadata['raStr'] = keywords['OBJCTRA']
-
-        if 'DEC' in keywords:
-            try:
-                metadata['dec'] = float(keywords['DEC'])
-            except ValueError:
-                metadata['decStr'] = keywords['DEC']
-        if 'OBJCTDEC' in keywords:
-            metadata['decStr'] = keywords['OBJCTDEC']
-
-        if 'OBJECT' in keywords:
-            metadata['targetName'] = keywords['OBJECT']
-
-        if 'DATE-OBS' in keywords:
-            metadata['captureDate'] = keywords['DATE-OBS']
-        elif 'DATE' in keywords:
-            metadata['captureDate'] = keywords['DATE']
-
-        if 'EXPTIME' in keywords or 'EXPOSURE' in keywords:
-            exp_key = 'EXPTIME' if 'EXPTIME' in keywords else 'EXPOSURE'
-            try:
-                metadata['exposureTime'] = float(keywords[exp_key])
-            except ValueError:
-                pass
-
-        if 'NCOMBINE' in keywords or 'STACKCNT' in keywords:
-            count_key = 'NCOMBINE' if 'NCOMBINE' in keywords else 'STACKCNT'
-            try:
-                metadata['exposureCount'] = int(float(keywords[count_key]))
-                if 'exposureTime' in metadata:
-                    metadata['totalIntegrationTime'] = metadata['exposureTime'] * metadata['exposureCount']
-            except ValueError:
-                pass
-
-        if 'GAIN' in keywords:
-            try:
-                metadata['gain'] = float(keywords['GAIN'])
-            except ValueError:
-                pass
-        if 'ISO' in keywords:
-            try:
-                metadata['iso'] = int(float(keywords['ISO']))
-            except ValueError:
-                pass
-        if 'OFFSET' in keywords:
-            try:
-                metadata['offset'] = int(float(keywords['OFFSET']))
-            except ValueError:
-                pass
-
-        if 'CCD-TEMP' in keywords or 'SET-TEMP' in keywords:
-            temp_key = 'CCD-TEMP' if 'CCD-TEMP' in keywords else 'SET-TEMP'
-            try:
-                metadata['temperature'] = float(keywords[temp_key])
-            except ValueError:
-                pass
-
-        if 'FILTER' in keywords:
-            metadata['filter'] = keywords['FILTER']
-
-        if 'TELESCOP' in keywords:
-            metadata['telescope'] = keywords['TELESCOP']
-        if 'INSTRUME' in keywords or 'CAMERA' in keywords:
-            camera_key = 'INSTRUME' if 'INSTRUME' in keywords else 'CAMERA'
-            metadata['camera'] = keywords[camera_key]
-
-        if 'FOCALLEN' in keywords:
-            try:
-                metadata['focalLength'] = float(keywords['FOCALLEN'])
-            except ValueError:
-                pass
-        if 'APTDIA' in keywords:
-            try:
-                metadata['aperture'] = float(keywords['APTDIA'])
-            except ValueError:
-                pass
-        if 'FOCRATIO' in keywords:
-            try:
-                metadata['fRatio'] = float(keywords['FOCRATIO'])
-            except ValueError:
-                pass
-
-        if 'XPIXSZ' in keywords:
-            try:
-                metadata['pixelSizeX'] = float(keywords['XPIXSZ'])
-            except ValueError:
-                pass
-        if 'YPIXSZ' in keywords:
-            try:
-                metadata['pixelSizeY'] = float(keywords['YPIXSZ'])
-            except ValueError:
-                pass
-        if 'PIXSIZE' in keywords:
-            try:
-                metadata['pixelSize'] = float(keywords['PIXSIZE'])
-            except ValueError:
-                pass
-
-        # Get image dimensions from Image element
-        image_elem = root.find('.//{http://www.pixinsight.com/xisf}Image')
-        if image_elem is None:
-            image_elem = root.find('.//Image')
-        if image_elem is not None:
-            geometry = image_elem.get('geometry')
-            if geometry:
-                dims = geometry.split(':')
-                if len(dims) >= 2:
-                    try:
-                        metadata['width'] = int(dims[0])
-                        metadata['height'] = int(dims[1])
-                    except ValueError:
-                        pass
-
-        # Also check NAXIS keywords
-        if 'NAXIS1' in keywords:
-            try:
-                metadata['width'] = int(float(keywords['NAXIS1']))
-            except ValueError:
-                pass
-        if 'NAXIS2' in keywords:
-            try:
-                metadata['height'] = int(float(keywords['NAXIS2']))
-            except ValueError:
-                pass
-
-        if 'XBINNING' in keywords:
-            try:
-                metadata['binningX'] = int(float(keywords['XBINNING']))
-            except ValueError:
-                pass
-        if 'YBINNING' in keywords:
-            try:
-                metadata['binningY'] = int(float(keywords['YBINNING']))
-            except ValueError:
-                pass
-
-        if 'SWCREATE' in keywords or 'PROGRAM' in keywords:
-            software_key = 'SWCREATE' if 'SWCREATE' in keywords else 'PROGRAM'
-            metadata['software'] = keywords[software_key]
-
-        if 'OBSERVER' in keywords:
-            metadata['observer'] = keywords['OBSERVER']
-        if 'SITELAT' in keywords:
-            try:
-                metadata['siteLatitude'] = float(keywords['SITELAT'])
-            except ValueError:
-                pass
-        if 'SITELONG' in keywords:
-            try:
-                metadata['siteLongitude'] = float(keywords['SITELONG'])
-            except ValueError:
-                pass
-        if 'SITEELEV' in keywords:
-            try:
-                metadata['siteElevation'] = float(keywords['SITEELEV'])
-            except ValueError:
-                pass
-
-        return metadata
-
-    except Exception as e:
-        return {
-            'success': False,
-            'error': f'Error reading XISF file: {str(e)}'
         }
 
 
@@ -394,15 +245,14 @@ def main():
     # Determine file type by extension
     ext = os.path.splitext(file_path)[1].lower()
 
-    if ext in ['.fits', '.fit', '.fts']:
-        metadata = extract_fits_metadata(file_path)
-    elif ext == '.xisf':
-        metadata = extract_xisf_metadata(file_path)
-    else:
-        metadata = {
+    if ext not in ['.fits', '.fit', '.fts']:
+        print(json.dumps({
             'success': False,
-            'error': f'Unsupported file type: {ext}'
-        }
+            'error': f'Unsupported file type: {ext}. This script only handles FITS files. Use convert_to_fits.py first.'
+        }))
+        sys.exit(1)
+
+    metadata = extract_fits_metadata(file_path)
 
     # Output JSON to stdout
     print(json.dumps(metadata, indent=2))

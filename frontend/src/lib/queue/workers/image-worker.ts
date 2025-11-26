@@ -1,10 +1,13 @@
 /**
  * Image Processing Worker
- * Processes uploaded FITS/XISF images:
- * 1. Extract metadata using Python script
- * 2. Plate solve if RA/Dec missing (via Astrometry.net)
- * 3. Match to target in database
- * 4. Create ImageUpload record
+ * Processes uploaded astronomical images with unified FITS pipeline:
+ * 1. Convert any format (XISF, RAW, TIFF, etc.) to FITS
+ * 2. Extract metadata from FITS
+ * 3. Plate solve if RA/Dec missing (via Astrometry.net)
+ * 4. Match to target in database
+ * 5. Create ImageUpload record
+ *
+ * Supported formats: FITS, XISF, CR2, CR3, NEF, ARW, DNG, RAF, ORF, RW2, PEF, SRW, TIFF, PNG, JPEG
  */
 import { Worker, Job } from 'bullmq';
 import { PrismaClient } from '@prisma/client';
@@ -16,7 +19,7 @@ import { tmpdir } from 'os';
 import { randomUUID } from 'crypto';
 import redisConnection from '../redis';
 import type { ProcessImageJobData } from '../queues';
-import { downloadFileToPath, getPresignedUrl } from '../../minio';
+import { downloadFileToPath, getPresignedUrl, uploadFile } from '../../minio';
 import { solveField } from '../../astrometry/client';
 
 const execAsync = promisify(exec);
@@ -25,12 +28,32 @@ const prisma = new PrismaClient();
 // Processing status constants
 const STATUS = {
   PENDING: 'PENDING',
+  CONVERTING: 'CONVERTING',
   EXTRACTING: 'EXTRACTING',
   PLATE_SOLVING: 'PLATE_SOLVING',
   MATCHING: 'MATCHING',
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED',
 } as const;
+
+// Supported file extensions
+const FITS_EXTENSIONS = new Set(['.fits', '.fit', '.fts']);
+const SUPPORTED_EXTENSIONS = new Set([
+  ...FITS_EXTENSIONS,
+  '.xisf',
+  '.tiff', '.tif',
+  '.cr2', '.cr3', '.nef', '.arw', '.dng', '.raf', '.orf', '.rw2', '.pef', '.srw',
+  '.png', '.jpg', '.jpeg',
+]);
+
+interface ConversionResult {
+  success: boolean;
+  error?: string;
+  output_path?: string;
+  original_format?: string;
+  method?: string;
+  copied?: boolean;
+}
 
 interface ExtractedMetadata {
   success: boolean;
@@ -98,7 +121,33 @@ async function updateJobStatus(
 }
 
 /**
- * Extract metadata from FITS/XISF file using Python script
+ * Convert any supported format to FITS using Python script
+ */
+async function convertToFits(inputPath: string, outputPath: string): Promise<ConversionResult> {
+  const scriptPath = join(process.cwd(), 'scripts', 'convert_to_fits.py');
+
+  try {
+    const { stdout, stderr } = await execAsync(
+      `python3 "${scriptPath}" "${inputPath}" "${outputPath}"`,
+      { timeout: 300000 } // 5 minute timeout for large files
+    );
+
+    if (stderr) {
+      console.warn('Conversion script stderr:', stderr);
+    }
+
+    return JSON.parse(stdout) as ConversionResult;
+  } catch (error) {
+    console.error('Error executing conversion script:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to convert file',
+    };
+  }
+}
+
+/**
+ * Extract metadata from FITS file using Python script
  */
 async function extractMetadata(filePath: string): Promise<ExtractedMetadata> {
   const scriptPath = join(process.cwd(), 'scripts', 'extract_fits_metadata.py');
@@ -237,24 +286,66 @@ async function findMatchingTarget(
 async function processImageJob(job: Job<ProcessImageJobData>) {
   const { jobId, userId, storageKey, originalName } = job.data;
   let tempFilePath: string | null = null;
+  let fitsFilePath: string | null = null;
+  let convertedStorageKey: string | null = null;
 
   console.log(`📸 [Job ${job.id}] Processing image: ${originalName}`);
 
   try {
-    // Update status to EXTRACTING
-    await updateJobStatus(jobId, STATUS.EXTRACTING);
-    await job.updateProgress(10);
+    // Get file extension
+    const ext = originalName.substring(originalName.lastIndexOf('.')).toLowerCase();
+
+    // Validate file extension
+    if (!SUPPORTED_EXTENSIONS.has(ext)) {
+      throw new Error(`Unsupported file type: ${ext}. Supported: ${[...SUPPORTED_EXTENSIONS].join(', ')}`);
+    }
 
     // Download file from MinIO to temp location
-    const ext = originalName.substring(originalName.lastIndexOf('.'));
-    tempFilePath = join(tmpdir(), `${randomUUID()}${ext}`);
+    const tempId = randomUUID();
+    tempFilePath = join(tmpdir(), `${tempId}${ext}`);
     await downloadFileToPath(storageKey, tempFilePath);
-    await job.updateProgress(20);
+    await job.updateProgress(10);
 
-    // Extract metadata using Python script
-    console.log(`  📋 Extracting metadata...`);
-    const metadata = await extractMetadata(tempFilePath);
-    await job.updateProgress(40);
+    // Check if conversion is needed
+    const needsConversion = !FITS_EXTENSIONS.has(ext);
+
+    if (needsConversion) {
+      // Update status to CONVERTING
+      await updateJobStatus(jobId, STATUS.CONVERTING);
+      console.log(`  🔄 Converting ${ext.toUpperCase()} to FITS...`);
+
+      fitsFilePath = join(tmpdir(), `${tempId}.fits`);
+      const conversionResult = await convertToFits(tempFilePath, fitsFilePath);
+      await job.updateProgress(25);
+
+      if (!conversionResult.success) {
+        throw new Error(conversionResult.error || 'Failed to convert file to FITS');
+      }
+
+      console.log(`  ✓ Converted from ${conversionResult.original_format} (method: ${conversionResult.method || 'default'})`);
+
+      // Upload the converted FITS file to MinIO for plate solving
+      // Read FITS file as buffer and upload
+      const { readFile } = await import('fs/promises');
+      const fitsBuffer = await readFile(fitsFilePath);
+      const uploadedKey = await uploadFile(fitsBuffer, `${tempId}.fits`, 'application/fits', 'astro-images');
+      convertedStorageKey = uploadedKey;
+
+      console.log(`  ✓ Uploaded converted FITS to storage`);
+    } else {
+      // Already FITS, use original file
+      fitsFilePath = tempFilePath;
+      tempFilePath = null; // Don't delete the FITS file yet
+    }
+
+    // Update status to EXTRACTING
+    await updateJobStatus(jobId, STATUS.EXTRACTING);
+    await job.updateProgress(30);
+
+    // Extract metadata from FITS file
+    console.log(`  📋 Extracting metadata from FITS...`);
+    const metadata = await extractMetadata(fitsFilePath);
+    await job.updateProgress(45);
 
     if (!metadata.success) {
       throw new Error(metadata.error || 'Failed to extract metadata');
@@ -314,8 +405,12 @@ async function processImageJob(job: Job<ProcessImageJobData>) {
       await job.updateProgress(55);
 
       try {
-        // Get a presigned URL for the file
-        const fileUrl = await getPresignedUrl(storageKey, undefined, 3600);
+        // Use the converted FITS file for plate solving (better compatibility)
+        // If we converted, use the converted file; otherwise use original
+        const plateSolveKey = convertedStorageKey || storageKey;
+        const fileUrl = await getPresignedUrl(plateSolveKey, undefined, 3600);
+        console.log(`  🔭 Plate solving using: ${plateSolveKey}`);
+
         const plateSolveResult = await solveField(fileUrl, {
           scaleUnits: 'degwidth',
           scaleType: 'ul',
@@ -455,14 +550,26 @@ async function processImageJob(job: Job<ProcessImageJobData>) {
 
     throw error;
   } finally {
-    // Clean up temp file
-    if (tempFilePath) {
+    // Clean up temp files
+    const filesToClean = [tempFilePath, fitsFilePath].filter(
+      (f): f is string => f !== null
+    );
+    // Remove duplicates (if fitsFilePath === tempFilePath for native FITS)
+    const uniqueFiles = [...new Set(filesToClean)];
+
+    for (const filePath of uniqueFiles) {
       try {
-        await unlink(tempFilePath);
+        await unlink(filePath);
       } catch (cleanupError) {
-        console.warn('Error cleaning up temp file:', cleanupError);
+        // Ignore errors for already deleted files
+        if ((cleanupError as NodeJS.ErrnoException).code !== 'ENOENT') {
+          console.warn('Error cleaning up temp file:', cleanupError);
+        }
       }
     }
+
+    // Note: We keep the converted FITS in MinIO storage for potential re-processing
+    // It can be cleaned up periodically via a scheduled job
   }
 }
 
