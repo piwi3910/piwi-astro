@@ -101,16 +101,14 @@ async function login(): Promise<string> {
 }
 
 /**
- * Submit a URL for plate solving
+ * Build request data with common options
  */
-async function submitUrl(
+function buildRequestData(
   sessionKey: string,
-  imageUrl: string,
   options: PlateSolveOptions = {}
-): Promise<number> {
+): Record<string, unknown> {
   const requestData: Record<string, unknown> = {
     session: sessionKey,
-    url: imageUrl,
     allow_commercial_use: 'n',
     allow_modifications: 'n',
     publicly_visible: 'n',
@@ -157,6 +155,57 @@ async function submitUrl(
   if (options.crpixCenter !== undefined) {
     requestData.crpix_center = options.crpixCenter;
   }
+
+  return requestData;
+}
+
+/**
+ * Submit a file directly for plate solving (preferred method)
+ */
+async function submitFile(
+  sessionKey: string,
+  fileBuffer: Buffer,
+  fileName: string,
+  options: PlateSolveOptions = {}
+): Promise<number> {
+  const requestData = buildRequestData(sessionKey, options);
+
+  // Create multipart form data
+  // Convert Buffer to ArrayBuffer for Blob compatibility
+  const arrayBuffer = fileBuffer.buffer.slice(
+    fileBuffer.byteOffset,
+    fileBuffer.byteOffset + fileBuffer.length
+  ) as ArrayBuffer;
+  const formData = new FormData();
+  formData.append('request-json', JSON.stringify(requestData));
+  formData.append('file', new Blob([arrayBuffer]), fileName);
+
+  const response = await fetch(`${ASTROMETRY_API_URL}/upload`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  const data = await response.json();
+
+  if (data.status !== 'success') {
+    throw new Error(
+      `Astrometry.net file upload failed: ${data.errormessage || 'Unknown error'}`
+    );
+  }
+
+  return data.subid;
+}
+
+/**
+ * Submit a URL for plate solving (fallback method - requires publicly accessible URL)
+ */
+async function submitUrl(
+  sessionKey: string,
+  imageUrl: string,
+  options: PlateSolveOptions = {}
+): Promise<number> {
+  const requestData = buildRequestData(sessionKey, options);
+  requestData.url = imageUrl;
 
   const response = await fetch(`${ASTROMETRY_API_URL}/url_upload`, {
     method: 'POST',
@@ -275,7 +324,58 @@ async function waitForJob(
 }
 
 /**
- * Solve an image field (main entry point)
+ * Solve an image field using file upload (preferred method)
+ * This uploads the file directly to Astrometry.net, avoiding URL accessibility issues
+ */
+export async function solveFieldWithFile(
+  fileBuffer: Buffer,
+  fileName: string,
+  options: PlateSolveOptions = {}
+): Promise<PlateSolveResult> {
+  try {
+    // Login and get session
+    const sessionKey = await login();
+
+    // Submit file for solving
+    const submissionId = await submitFile(sessionKey, fileBuffer, fileName, options);
+    console.log(`  📤 Uploaded to Astrometry.net (submission ID: ${submissionId})`);
+
+    // Wait for job to complete
+    const { jobId, success } = await waitForJob(submissionId);
+
+    if (!success) {
+      return {
+        success: false,
+        error: 'Plate solving failed - no solution found',
+        submissionId,
+        jobId,
+      };
+    }
+
+    // Get calibration and objects
+    const [calibration, objects] = await Promise.all([
+      getCalibration(jobId),
+      getObjectsInField(jobId),
+    ]);
+
+    return {
+      success: true,
+      submissionId,
+      jobId,
+      calibration,
+      objects,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+    };
+  }
+}
+
+/**
+ * Solve an image field using URL (requires publicly accessible URL)
+ * @deprecated Use solveFieldWithFile for local/private files
  */
 export async function solveField(
   imageUrl: string,

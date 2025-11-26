@@ -19,8 +19,8 @@ import { tmpdir } from 'os';
 import { randomUUID } from 'crypto';
 import redisConnection from '../redis';
 import type { ProcessImageJobData } from '../queues';
-import { downloadFileToPath, getPresignedUrl, uploadFile } from '../../minio';
-import { solveField } from '../../astrometry/client';
+import { downloadFileToPath, getPresignedUrl } from '../../minio';
+import { solveFieldWithFile } from '../../astrometry/client';
 
 const execAsync = promisify(exec);
 const prisma = new PrismaClient();
@@ -290,7 +290,6 @@ async function processImageJob(job: Job<ProcessImageJobData>) {
   const { jobId, userId, storageKey, originalName } = job.data;
   let tempFilePath: string | null = null;
   let fitsFilePath: string | null = null;
-  let convertedStorageKey: string | null = null;
 
   console.log(`📸 [Job ${job.id}] Processing image: ${originalName}`);
 
@@ -326,15 +325,6 @@ async function processImageJob(job: Job<ProcessImageJobData>) {
       }
 
       console.log(`  ✓ Converted from ${conversionResult.original_format} (method: ${conversionResult.method || 'default'})`);
-
-      // Upload the converted FITS file to MinIO for plate solving
-      // Read FITS file as buffer and upload
-      const { readFile } = await import('fs/promises');
-      const fitsBuffer = await readFile(fitsFilePath);
-      const uploadedKey = await uploadFile(fitsBuffer, `${tempId}.fits`, 'application/fits', 'astro-images');
-      convertedStorageKey = uploadedKey;
-
-      console.log(`  ✓ Uploaded converted FITS to storage`);
     } else {
       // Already FITS, use original file
       fitsFilePath = tempFilePath;
@@ -408,13 +398,13 @@ async function processImageJob(job: Job<ProcessImageJobData>) {
       await job.updateProgress(55);
 
       try {
-        // Use the converted FITS file for plate solving (better compatibility)
-        // If we converted, use the converted file; otherwise use original
-        const plateSolveKey = convertedStorageKey || storageKey;
-        const fileUrl = await getPresignedUrl(plateSolveKey, undefined, 3600);
-        console.log(`  🔭 Plate solving using: ${plateSolveKey}`);
+        // Read the FITS file as a buffer for direct upload to Astrometry.net
+        const { readFile } = await import('fs/promises');
+        const fileBuffer = await readFile(fitsFilePath);
+        const fileName = `${randomUUID()}.fits`;
+        console.log(`  🔭 Plate solving via file upload (${(fileBuffer.length / 1024 / 1024).toFixed(2)} MB)...`);
 
-        const plateSolveResult = await solveField(fileUrl, {
+        const plateSolveResult = await solveFieldWithFile(fileBuffer, fileName, {
           scaleUnits: 'degwidth',
           scaleType: 'ul',
           scaleLower: 0.1,
@@ -570,9 +560,6 @@ async function processImageJob(job: Job<ProcessImageJobData>) {
         }
       }
     }
-
-    // Note: We keep the converted FITS in MinIO storage for potential re-processing
-    // It can be cleaned up periodically via a scheduled job
   }
 }
 
