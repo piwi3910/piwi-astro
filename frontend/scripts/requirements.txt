@@ -1,0 +1,17 @@
+# Python dependencies for FITS/XISF image processing pipeline
+# Install with: pip install -r requirements.txt
+
+# Core astronomy library for FITS handling
+astropy>=7.0.0
+
+# XISF (PixInsight format) support
+xisf>=0.9.0
+
+# RAW camera file support (CR2, NEF, ARW, etc.)
+rawpy>=0.20.0
+
+# Image handling (TIFF, PNG, JPEG)
+Pillow>=10.0.0
+
+# Numerical operations
+numpy>=2.0.0

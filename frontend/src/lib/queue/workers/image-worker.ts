@@ -25,6 +25,9 @@ import { solveField } from '../../astrometry/client';
 const execAsync = promisify(exec);
 const prisma = new PrismaClient();
 
+// Path to Python in venv (falls back to system python3 if venv doesn't exist)
+const PYTHON_PATH = join(process.cwd(), 'venv', 'bin', 'python3');
+
 // Processing status constants
 const STATUS = {
   PENDING: 'PENDING',
@@ -128,7 +131,7 @@ async function convertToFits(inputPath: string, outputPath: string): Promise<Con
 
   try {
     const { stdout, stderr } = await execAsync(
-      `python3 "${scriptPath}" "${inputPath}" "${outputPath}"`,
+      `"${PYTHON_PATH}" "${scriptPath}" "${inputPath}" "${outputPath}"`,
       { timeout: 300000 } // 5 minute timeout for large files
     );
 
@@ -153,7 +156,7 @@ async function extractMetadata(filePath: string): Promise<ExtractedMetadata> {
   const scriptPath = join(process.cwd(), 'scripts', 'extract_fits_metadata.py');
 
   try {
-    const { stdout, stderr } = await execAsync(`python3 "${scriptPath}" "${filePath}"`);
+    const { stdout, stderr } = await execAsync(`"${PYTHON_PATH}" "${scriptPath}" "${filePath}"`);
 
     if (stderr) {
       console.warn('Python script stderr:', stderr);

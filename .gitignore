@@ -42,3 +42,8 @@ prisma/migrations/
 
 # Docker
 docker-compose.override.yml
+
+# Python virtual environment
+venv/
+__pycache__/
+*.pyc
