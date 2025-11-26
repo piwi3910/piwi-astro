@@ -142,19 +142,53 @@ def extract_fits_metadata(file_path: str) -> Dict[str, Any]:
 
 
 def extract_xisf_metadata(file_path: str) -> Dict[str, Any]:
-    """Extract metadata from XISF file (XML-based format)"""
-    try:
-        # XISF files are XML-based
-        tree = ET.parse(file_path)
-        root = tree.getroot()
+    """Extract metadata from XISF file
 
+    XISF files have a binary structure:
+    - Signature: 'XISF0100' (8 bytes)
+    - Header length: 4 bytes (little-endian uint32)
+    - Reserved: 4 bytes
+    - XML header (variable length)
+    - Binary image data
+    """
+    try:
         metadata = {
             'fileType': 'XISF',
             'success': True,
         }
 
+        with open(file_path, 'rb') as f:
+            # Read and validate signature
+            signature = f.read(8)
+            if signature != b'XISF0100':
+                return {
+                    'success': False,
+                    'error': f'Invalid XISF signature: {signature}'
+                }
+
+            # Read header length (little-endian uint32)
+            header_length_bytes = f.read(4)
+            header_length = int.from_bytes(header_length_bytes, byteorder='little')
+
+            # Skip reserved bytes
+            f.read(4)
+
+            # Read XML header
+            xml_data = f.read(header_length)
+
+            # Parse XML
+            root = ET.fromstring(xml_data)
+
         # XISF stores metadata in FITSKeyword elements
-        fits_keywords = root.findall('.//{http://www.pixinsight.com/xisf}FITSKeyword')
+        # Handle both namespaced and non-namespaced versions
+        namespaces = {
+            'xisf': 'http://www.pixinsight.com/xisf'
+        }
+
+        fits_keywords = root.findall('.//xisf:FITSKeyword', namespaces)
+        if not fits_keywords:
+            # Try without namespace
+            fits_keywords = root.findall('.//FITSKeyword')
 
         # Build a dictionary of FITS keywords
         keywords = {}
@@ -162,6 +196,8 @@ def extract_xisf_metadata(file_path: str) -> Dict[str, Any]:
             name = keyword.get('name')
             value = keyword.get('value')
             if name and value:
+                # Strip quotes from values
+                value = value.strip("'").strip()
                 keywords[name] = value
 
         # Now extract metadata using similar logic to FITS
@@ -170,12 +206,16 @@ def extract_xisf_metadata(file_path: str) -> Dict[str, Any]:
                 metadata['ra'] = float(keywords['RA'])
             except ValueError:
                 metadata['raStr'] = keywords['RA']
+        if 'OBJCTRA' in keywords:
+            metadata['raStr'] = keywords['OBJCTRA']
 
         if 'DEC' in keywords:
             try:
                 metadata['dec'] = float(keywords['DEC'])
             except ValueError:
                 metadata['decStr'] = keywords['DEC']
+        if 'OBJCTDEC' in keywords:
+            metadata['decStr'] = keywords['OBJCTDEC']
 
         if 'OBJECT' in keywords:
             metadata['targetName'] = keywords['OBJECT']
@@ -187,24 +227,42 @@ def extract_xisf_metadata(file_path: str) -> Dict[str, Any]:
 
         if 'EXPTIME' in keywords or 'EXPOSURE' in keywords:
             exp_key = 'EXPTIME' if 'EXPTIME' in keywords else 'EXPOSURE'
-            metadata['exposureTime'] = float(keywords[exp_key])
+            try:
+                metadata['exposureTime'] = float(keywords[exp_key])
+            except ValueError:
+                pass
 
         if 'NCOMBINE' in keywords or 'STACKCNT' in keywords:
             count_key = 'NCOMBINE' if 'NCOMBINE' in keywords else 'STACKCNT'
-            metadata['exposureCount'] = int(keywords[count_key])
-            if 'exposureTime' in metadata:
-                metadata['totalIntegrationTime'] = metadata['exposureTime'] * metadata['exposureCount']
+            try:
+                metadata['exposureCount'] = int(float(keywords[count_key]))
+                if 'exposureTime' in metadata:
+                    metadata['totalIntegrationTime'] = metadata['exposureTime'] * metadata['exposureCount']
+            except ValueError:
+                pass
 
         if 'GAIN' in keywords:
-            metadata['gain'] = float(keywords['GAIN'])
+            try:
+                metadata['gain'] = float(keywords['GAIN'])
+            except ValueError:
+                pass
         if 'ISO' in keywords:
-            metadata['iso'] = int(keywords['ISO'])
+            try:
+                metadata['iso'] = int(float(keywords['ISO']))
+            except ValueError:
+                pass
         if 'OFFSET' in keywords:
-            metadata['offset'] = int(keywords['OFFSET'])
+            try:
+                metadata['offset'] = int(float(keywords['OFFSET']))
+            except ValueError:
+                pass
 
         if 'CCD-TEMP' in keywords or 'SET-TEMP' in keywords:
             temp_key = 'CCD-TEMP' if 'CCD-TEMP' in keywords else 'SET-TEMP'
-            metadata['temperature'] = float(keywords[temp_key])
+            try:
+                metadata['temperature'] = float(keywords[temp_key])
+            except ValueError:
+                pass
 
         if 'FILTER' in keywords:
             metadata['filter'] = keywords['FILTER']
@@ -216,33 +274,74 @@ def extract_xisf_metadata(file_path: str) -> Dict[str, Any]:
             metadata['camera'] = keywords[camera_key]
 
         if 'FOCALLEN' in keywords:
-            metadata['focalLength'] = float(keywords['FOCALLEN'])
+            try:
+                metadata['focalLength'] = float(keywords['FOCALLEN'])
+            except ValueError:
+                pass
         if 'APTDIA' in keywords:
-            metadata['aperture'] = float(keywords['APTDIA'])
+            try:
+                metadata['aperture'] = float(keywords['APTDIA'])
+            except ValueError:
+                pass
         if 'FOCRATIO' in keywords:
-            metadata['fRatio'] = float(keywords['FOCRATIO'])
+            try:
+                metadata['fRatio'] = float(keywords['FOCRATIO'])
+            except ValueError:
+                pass
 
         if 'XPIXSZ' in keywords:
-            metadata['pixelSizeX'] = float(keywords['XPIXSZ'])
+            try:
+                metadata['pixelSizeX'] = float(keywords['XPIXSZ'])
+            except ValueError:
+                pass
         if 'YPIXSZ' in keywords:
-            metadata['pixelSizeY'] = float(keywords['YPIXSZ'])
+            try:
+                metadata['pixelSizeY'] = float(keywords['YPIXSZ'])
+            except ValueError:
+                pass
         if 'PIXSIZE' in keywords:
-            metadata['pixelSize'] = float(keywords['PIXSIZE'])
+            try:
+                metadata['pixelSize'] = float(keywords['PIXSIZE'])
+            except ValueError:
+                pass
 
         # Get image dimensions from Image element
         image_elem = root.find('.//{http://www.pixinsight.com/xisf}Image')
+        if image_elem is None:
+            image_elem = root.find('.//Image')
         if image_elem is not None:
             geometry = image_elem.get('geometry')
             if geometry:
                 dims = geometry.split(':')
                 if len(dims) >= 2:
-                    metadata['width'] = int(dims[0])
-                    metadata['height'] = int(dims[1])
+                    try:
+                        metadata['width'] = int(dims[0])
+                        metadata['height'] = int(dims[1])
+                    except ValueError:
+                        pass
+
+        # Also check NAXIS keywords
+        if 'NAXIS1' in keywords:
+            try:
+                metadata['width'] = int(float(keywords['NAXIS1']))
+            except ValueError:
+                pass
+        if 'NAXIS2' in keywords:
+            try:
+                metadata['height'] = int(float(keywords['NAXIS2']))
+            except ValueError:
+                pass
 
         if 'XBINNING' in keywords:
-            metadata['binningX'] = int(keywords['XBINNING'])
+            try:
+                metadata['binningX'] = int(float(keywords['XBINNING']))
+            except ValueError:
+                pass
         if 'YBINNING' in keywords:
-            metadata['binningY'] = int(keywords['YBINNING'])
+            try:
+                metadata['binningY'] = int(float(keywords['YBINNING']))
+            except ValueError:
+                pass
 
         if 'SWCREATE' in keywords or 'PROGRAM' in keywords:
             software_key = 'SWCREATE' if 'SWCREATE' in keywords else 'PROGRAM'
@@ -251,11 +350,20 @@ def extract_xisf_metadata(file_path: str) -> Dict[str, Any]:
         if 'OBSERVER' in keywords:
             metadata['observer'] = keywords['OBSERVER']
         if 'SITELAT' in keywords:
-            metadata['siteLatitude'] = float(keywords['SITELAT'])
+            try:
+                metadata['siteLatitude'] = float(keywords['SITELAT'])
+            except ValueError:
+                pass
         if 'SITELONG' in keywords:
-            metadata['siteLongitude'] = float(keywords['SITELONG'])
+            try:
+                metadata['siteLongitude'] = float(keywords['SITELONG'])
+            except ValueError:
+                pass
         if 'SITEELEV' in keywords:
-            metadata['siteElevation'] = float(keywords['SITEELEV'])
+            try:
+                metadata['siteElevation'] = float(keywords['SITEELEV'])
+            except ValueError:
+                pass
 
         return metadata
 
