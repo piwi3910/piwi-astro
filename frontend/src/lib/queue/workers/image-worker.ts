@@ -10,14 +10,14 @@ import { Worker, Job } from 'bullmq';
 import { PrismaClient } from '@prisma/client';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { writeFile, unlink } from 'fs/promises';
+import { unlink } from 'fs/promises';
 import { join } from 'path';
 import { tmpdir } from 'os';
 import { randomUUID } from 'crypto';
 import redisConnection from '../redis';
 import type { ProcessImageJobData } from '../queues';
-import { downloadFileToPath, getPresignedUrl, deleteFile } from '../../minio';
-import { solveField, type PlateSolveResult } from '../../astrometry/client';
+import { downloadFileToPath, getPresignedUrl } from '../../minio';
+import { solveField } from '../../astrometry/client';
 
 const execAsync = promisify(exec);
 const prisma = new PrismaClient();
@@ -294,14 +294,14 @@ async function processImageJob(job: Job<ProcessImageJobData>) {
     // Update job with extracted metadata
     await updateJobStatus(jobId, STATUS.EXTRACTING, {
       extractedMetadata: metadata,
-      targetName: metadata.targetName ?? null,
+      targetName: metadata.targetName,
       ra: ra ?? undefined,
       dec: dec ?? undefined,
-      exposureTime: metadata.exposureTime ?? undefined,
+      exposureTime: metadata.exposureTime,
       totalIntegration: totalIntegration
         ? totalIntegration / 60
         : undefined, // Convert to minutes
-      filter: metadata.filter ?? undefined,
+      filter: metadata.filter,
       captureDate: captureDate ?? undefined,
     });
 
