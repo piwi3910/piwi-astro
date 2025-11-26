@@ -50,7 +50,7 @@ export default function LoginPage(): JSX.Element {
 
   return (
     <Container size="xs" py={80}>
-      <Paper withBorder shadow="md" p={30} radius="md">
+      <Paper withBorder shadow="md" p={30} radius="md" style={{ backgroundColor: 'var(--mantine-color-dark-7)' }}>
         <Title order={2} ta="center" mb="md">
           Welcome to piwi-astro
         </Title>

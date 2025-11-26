@@ -379,7 +379,7 @@ export default function SessionsPage(): JSX.Element {
                     ref={(el) => {
                       sessionRefs.current[session.id] = el;
                     }}
-                    style={{ transition: 'box-shadow 0.3s ease' }}
+                    style={{ transition: 'box-shadow 0.3s ease', backgroundColor: '#1a1b1e' }}
                   >
                     <Stack gap="sm">
                       <Group justify="space-between">
@@ -453,7 +453,7 @@ export default function SessionsPage(): JSX.Element {
           </Tabs.Panel>
 
           <Tabs.Panel value="calendar" pt="md">
-            <Paper withBorder p="md">
+            <Paper withBorder p="md" style={{ backgroundColor: '#1a1b1e' }}>
               {/* Calendar Header */}
               <Group justify="space-between" mb="md">
                 <Group gap="xs">
@@ -479,8 +479,9 @@ export default function SessionsPage(): JSX.Element {
                     key={day}
                     p="xs"
                     style={{
-                      borderBottom: '1px solid var(--mantine-color-dark-4)',
+                      borderBottom: '1px solid #373a40',
                       textAlign: 'center',
+                      backgroundColor: '#1a1b1e',
                     }}
                   >
                     <Text size="sm" fw={600} c="dimmed">
@@ -498,14 +499,13 @@ export default function SessionsPage(): JSX.Element {
                     p="xs"
                     style={{
                       minHeight: 100,
-                      borderBottom: '1px solid var(--mantine-color-dark-4)',
-                      borderRight: (index + 1) % 7 !== 0 ? '1px solid var(--mantine-color-dark-4)' : undefined,
+                      borderBottom: '1px solid #373a40',
+                      borderRight: (index + 1) % 7 !== 0 ? '1px solid #373a40' : undefined,
                       backgroundColor: isToday(day.date)
-                        ? 'var(--mantine-color-blue-9)'
+                        ? '#1971c2'
                         : day.isCurrentMonth
-                          ? 'var(--mantine-color-dark-6)'
-                          : 'var(--mantine-color-dark-8)',
-                      opacity: day.isCurrentMonth ? 1 : 0.5,
+                          ? '#25262b'
+                          : '#1a1b1e',
                     }}
                   >
                     <Text

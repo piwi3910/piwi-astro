@@ -18,12 +18,20 @@ const theme = createTheme({
   components: {
     Paper: {
       defaultProps: {
-        bg: 'dark.7',
+        styles: {
+          root: {
+            backgroundColor: 'var(--mantine-color-dark-7)',
+          },
+        },
       },
     },
     Card: {
       defaultProps: {
-        bg: 'dark.7',
+        styles: {
+          root: {
+            backgroundColor: 'var(--mantine-color-dark-7)',
+          },
+        },
       },
     },
     Modal: {

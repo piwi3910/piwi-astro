@@ -1972,7 +1972,7 @@ export default function TargetsPage(): JSX.Element {
         </Group>
 
         <Collapse in={showSort}>
-          <Paper p="md" mt="xs" withBorder>
+          <Paper p="md" mt="xs" withBorder style={{ backgroundColor: '#1a1b1e' }}>
             <Stack gap="md">
               <Group grow>
                 <Select
@@ -2018,7 +2018,7 @@ export default function TargetsPage(): JSX.Element {
 
         <div>
           <Collapse in={showFilters}>
-            <Paper p="md" mt="xs" withBorder>
+            <Paper p="md" mt="xs" withBorder style={{ backgroundColor: '#1a1b1e' }}>
               <Stack gap="md">
                 <div style={{ paddingLeft: 16, paddingRight: 16 }}>
                   <Text size="sm" fw={500} mb={8}>
@@ -2289,7 +2289,7 @@ export default function TargetsPage(): JSX.Element {
                   const imageUrl = getTargetImageUrl(target);
 
                   return (
-                    <Paper key={target.id} p="xs" withBorder style={{ backgroundColor: 'var(--mantine-color-dark-7)', marginBottom: 8 }}>
+                    <Paper key={target.id} p="xs" withBorder style={{ backgroundColor: '#1a1b1e', marginBottom: 8 }}>
                       <Group align="flex-start" gap="sm" wrap="nowrap">
                         {/* Preview Image - Click to enlarge */}
                         <Box
