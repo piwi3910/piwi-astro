@@ -91,6 +91,18 @@ export async function POST(request: Request) {
       },
     });
 
+    // Update user target status to PLANNED if it exists and is still in WISHLIST
+    await prisma.userTarget.updateMany({
+      where: {
+        userId,
+        targetId: data.targetId,
+        status: 'WISHLIST',
+      },
+      data: {
+        status: 'PLANNED',
+      },
+    });
+
     return NextResponse.json(sessionTarget, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {

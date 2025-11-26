@@ -80,7 +80,33 @@ export async function DELETE(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }
 
+  const targetId = existing.targetId;
+
   await prisma.sessionTarget.delete({ where: { id } });
+
+  // Check if this target is still in any other sessions
+  const remainingSessionTargets = await prisma.sessionTarget.findFirst({
+    where: {
+      targetId,
+      session: {
+        userId,
+      },
+    },
+  });
+
+  // If not in any other sessions, revert user target status from PLANNED to WISHLIST
+  if (!remainingSessionTargets) {
+    await prisma.userTarget.updateMany({
+      where: {
+        userId,
+        targetId,
+        status: 'PLANNED',
+      },
+      data: {
+        status: 'WISHLIST',
+      },
+    });
+  }
 
   return new NextResponse(null, { status: 204 });
 }

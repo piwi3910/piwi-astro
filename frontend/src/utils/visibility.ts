@@ -627,18 +627,56 @@ export async function fetchCometPositions(
 }
 
 /**
+ * Check if a target is well-visible on a given date
+ * Returns visibility info: hours visible above 30° and max altitude
+ */
+export function checkTargetVisibilityOnDate(
+  target: TargetCoordinates,
+  location: ObserverLocation,
+  date: Date
+): { hoursAbove30: number; maxAltitude: number } {
+  // Get sunset time (approximate: 6 PM local) and check for 12 hours
+  const nightStart = new Date(date);
+  nightStart.setHours(18, 0, 0, 0); // 6 PM
+
+  const altitudeData = calculateAltitudeOverTime(target, location, nightStart, 12, 30);
+
+  let hoursAbove30 = 0;
+  let maxAltitude = -90;
+
+  for (const point of altitudeData) {
+    if (point.altitude > maxAltitude) {
+      maxAltitude = point.altitude;
+    }
+    if (point.altitude >= 30) {
+      hoursAbove30 += 0.5; // 30-minute intervals
+    }
+  }
+
+  return { hoursAbove30, maxAltitude };
+}
+
+/**
  * Calculate the best date to observe a deep sky object
  * The best date is when the object culminates (reaches highest altitude) around midnight
  * This occurs when the object's RA is 12 hours away from the Sun's RA
  *
+ * If the calculated best date is in the past but the target is still well-visible today
+ * (6+ hours above 30° altitude), today's date is returned instead.
+ *
  * @param target Target coordinates (RA/Dec)
  * @param referenceDate Optional reference date to search from (defaults to today)
+ * @param location Optional observer location for visibility check
  * @returns The date when the target is best positioned for night observation
  */
 export function calculateBestObservationDate(
   target: TargetCoordinates,
-  referenceDate: Date = new Date()
+  referenceDate: Date = new Date(),
+  location?: ObserverLocation
 ): Date {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   // Get the target's RA in hours
   const targetRAHours = target.raDeg / 15;
 
@@ -666,16 +704,29 @@ export function calculateBestObservationDate(
   // So 1 hour of RA ≈ 15.2 days
   const daysUntilBest = raDistance * 15.2;
 
-  // Calculate the best date
-  const bestDate = new Date(referenceDate);
+  // Calculate the theoretical best date
+  let bestDate = new Date(referenceDate);
   bestDate.setDate(bestDate.getDate() + Math.round(daysUntilBest));
+  bestDate.setHours(0, 0, 0, 0);
 
-  // If the best date is in the past (more than a few days ago), add a year
-  const today = new Date();
   const daysDiff = (bestDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
-  if (daysDiff < -30) {
+
+  // If the best date is in the past or today, check visibility
+  if (daysDiff <= 0) {
+    if (location) {
+      const todayVisibility = checkTargetVisibilityOnDate(target, location, today);
+
+      // If target is visible for 6+ hours above 30° today, use today's date
+      if (todayVisibility.hoursAbove30 >= 6 && todayVisibility.maxAltitude >= 30) {
+        return today;
+      }
+    }
+
+    // Target is not well-visible today, return next year's best date
     bestDate.setFullYear(bestDate.getFullYear() + 1);
+    return bestDate;
   }
 
+  // Best date is in the future - return it
   return bestDate;
 }

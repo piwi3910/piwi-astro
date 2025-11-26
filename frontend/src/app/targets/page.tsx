@@ -48,7 +48,7 @@ import {
   IconHeartFilled,
   IconCalendarSearch,
 } from '@tabler/icons-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   calculateAltitudeOverTime,
   getDirectionFromAzimuth,
@@ -175,7 +175,19 @@ async function fetchTargets(params: {
   return data;
 }
 
-async function addToWishlist(targetId: string): Promise<void> {
+interface UserTargetResponse {
+  id: string;
+  targetId: string;
+  status: string;
+}
+
+async function fetchUserTargets(): Promise<UserTargetResponse[]> {
+  const response = await fetch('/api/user-targets');
+  if (!response.ok) return [];
+  return response.json();
+}
+
+async function addToWishlist(targetId: string): Promise<UserTargetResponse> {
   const response = await fetch('/api/user-targets', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -184,6 +196,16 @@ async function addToWishlist(targetId: string): Promise<void> {
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || 'Failed to add target');
+  }
+  return response.json();
+}
+
+async function removeFromWishlist(userTargetId: string): Promise<void> {
+  const response = await fetch(`/api/user-targets/${userTargetId}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to remove target from wishlist');
   }
 }
 
@@ -948,7 +970,8 @@ export default function TargetsPage(): JSX.Element {
   const showMoonOverlay = true; // Always show moon overlay
   const [sortBy, setSortBy] = useState<'magnitude' | 'size' | 'tonights-best'>('tonights-best');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-  const [addedTargets, setAddedTargets] = useState<Set<string>>(new Set());
+  // Map of targetId -> userTargetId for tracking wishlist items
+  const [addedTargets, setAddedTargets] = useState<Map<string, string>>(new Map());
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImageTarget, setSelectedImageTarget] = useState<Target | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
@@ -959,7 +982,30 @@ export default function TargetsPage(): JSX.Element {
 
   const { data: session } = useSession();
   const router = useRouter();
+  const urlSearchParams = useSearchParams();
   const queryClient = useQueryClient();
+
+  // Read URL params on mount (for navigation from wishlist page)
+  useEffect(() => {
+    const dateParam = urlSearchParams.get('date');
+    const searchParam = urlSearchParams.get('search');
+
+    if (dateParam) {
+      const parsedDate = new Date(dateParam);
+      if (!isNaN(parsedDate.getTime())) {
+        setSelectedDate(parsedDate);
+      }
+    }
+
+    if (searchParam) {
+      setSearch(searchParam);
+    }
+
+    // Clear URL params after reading them to avoid confusion on refresh
+    if (dateParam || searchParam) {
+      router.replace('/targets', { scroll: false });
+    }
+  }, []); // Only run once on mount
 
   const { data: locations, isLoading: locationsLoading } = useQuery({
     queryKey: ['locations'],
@@ -970,6 +1016,24 @@ export default function TargetsPage(): JSX.Element {
     queryKey: ['rigs'],
     queryFn: fetchRigs,
   });
+
+  // Fetch user's wishlist targets to populate addedTargets map
+  const { data: userTargets } = useQuery({
+    queryKey: ['user-targets'],
+    queryFn: fetchUserTargets,
+    enabled: !!session?.user,
+  });
+
+  // Populate addedTargets map when userTargets data changes
+  useEffect(() => {
+    if (userTargets) {
+      const newMap = new Map<string, string>();
+      for (const ut of userTargets) {
+        newMap.set(ut.targetId, ut.id);
+      }
+      setAddedTargets(newMap);
+    }
+  }, [userTargets]);
 
   // Auto-select favorite location
   useEffect(() => {
@@ -1141,9 +1205,27 @@ export default function TargetsPage(): JSX.Element {
 
   const addMutation = useMutation({
     mutationFn: addToWishlist,
-    onSuccess: (_, targetId) => {
+    onSuccess: (data, targetId) => {
       queryClient.invalidateQueries({ queryKey: ['user-targets'] });
-      setAddedTargets((prev) => new Set(prev).add(targetId));
+      setAddedTargets((prev) => new Map(prev).set(targetId, data.id));
+    },
+  });
+
+  const removeMutation = useMutation({
+    mutationFn: removeFromWishlist,
+    onSuccess: (_, userTargetId) => {
+      queryClient.invalidateQueries({ queryKey: ['user-targets'] });
+      setAddedTargets((prev) => {
+        const newMap = new Map(prev);
+        // Find and delete by userTargetId value
+        for (const [targetId, utId] of newMap) {
+          if (utId === userTargetId) {
+            newMap.delete(targetId);
+            break;
+          }
+        }
+        return newMap;
+      });
     },
   });
 
@@ -1231,12 +1313,19 @@ export default function TargetsPage(): JSX.Element {
     return colors[type] || 'gray';
   };
 
-  const handleAddToWishlist = (targetId: string): void => {
+  const handleToggleWishlist = (targetId: string): void => {
     if (!session) {
       router.push('/login');
       return;
     }
-    addMutation.mutate(targetId);
+    const userTargetId = addedTargets.get(targetId);
+    if (userTargetId) {
+      // Already in wishlist, remove it
+      removeMutation.mutate(userTargetId);
+    } else {
+      // Not in wishlist, add it
+      addMutation.mutate(targetId);
+    }
   };
 
   const handleFindBestDate = (target: Target): void => {
@@ -1245,8 +1334,15 @@ export default function TargetsPage(): JSX.Element {
       return;
     }
 
+    // Pass location for visibility check (if target is still well-visible today)
+    const locationForCalc = selectedLocation
+      ? { latitude: selectedLocation.latitude, longitude: selectedLocation.longitude }
+      : undefined;
+
     const bestDate = calculateBestObservationDate(
-      { raDeg: target.raDeg, decDeg: target.decDeg }
+      { raDeg: target.raDeg, decDeg: target.decDeg },
+      new Date(),
+      locationForCalc
     );
 
     // Set the search filter to the target's catalog ID or name to keep it visible
@@ -2245,13 +2341,12 @@ export default function TargetsPage(): JSX.Element {
                             )}
                             {session && (
                               <>
-                                <Tooltip label={isAdded ? 'Added to wishlist' : 'Add to wishlist'}>
+                                <Tooltip label={isAdded ? 'Remove from wishlist' : 'Add to wishlist'}>
                                   <ActionIcon
                                     variant="subtle"
                                     color={isAdded ? 'red' : 'gray'}
-                                    onClick={() => handleAddToWishlist(target.id)}
-                                    loading={addMutation.isPending}
-                                    disabled={isAdded}
+                                    onClick={() => handleToggleWishlist(target.id)}
+                                    loading={addMutation.isPending || removeMutation.isPending}
                                     size="sm"
                                   >
                                     {isAdded ? <IconHeartFilled size={14} /> : <IconHeart size={14} />}

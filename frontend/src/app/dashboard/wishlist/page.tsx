@@ -16,9 +16,14 @@ import {
   Modal,
   Textarea,
   Rating,
+  Image,
+  Box,
+  Tooltip,
 } from '@mantine/core';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { IconEdit, IconTrash, IconStar } from '@tabler/icons-react';
+import { useRouter } from 'next/navigation';
+import { IconEdit, IconTrash, IconStar, IconCalendarSearch } from '@tabler/icons-react';
+import { calculateBestObservationDate } from '@/utils/visibility';
 
 interface UserTarget {
   id: string;
@@ -35,13 +40,83 @@ interface UserTarget {
     type: string;
     magnitude: number | null;
     constellation: string | null;
+    raDeg: number;
+    decDeg: number;
+    sizeMajorArcmin: number | null;
+    sizeMinorArcmin: number | null;
+    thumbnailUrl: string | null;
+    previewImageUrl: string | null;
+    isDynamic: boolean;
+    solarSystemBody: string | null;
   };
+}
+
+// Get target image URL (similar to targets page logic)
+function getTargetImageUrl(target: UserTarget['target']): string {
+  // Use stored thumbnail if available
+  if (target.thumbnailUrl) return target.thumbnailUrl;
+
+  let externalUrl: string;
+
+  if (target.type === 'Comet') {
+    externalUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Comet_Hale-Bopp_1995O1.jpg/150px-Comet_Hale-Bopp_1995O1.jpg';
+  } else if (target.solarSystemBody) {
+    const planetImages: Record<string, string> = {
+      'Mercury': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Mercury_in_color_-_Prockter07-edit1.jpg/150px-Mercury_in_color_-_Prockter07-edit1.jpg',
+      'Venus': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Venus-real_color.jpg/150px-Venus-real_color.jpg',
+      'Mars': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/OSIRIS_Mars_true_color.jpg/150px-OSIRIS_Mars_true_color.jpg',
+      'Jupiter': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Jupiter_New_Horizons.jpg/150px-Jupiter_New_Horizons.jpg',
+      'Saturn': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Saturn_during_Equinox.jpg/150px-Saturn_during_Equinox.jpg',
+      'Uranus': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Uranus_as_seen_by_NASA%27s_Voyager_2_%28remastered%29_-_JPEG_converted.jpg/150px-Uranus_as_seen_by_NASA%27s_Voyager_2_%28remastered%29_-_JPEG_converted.jpg',
+      'Neptune': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Neptune_-_Voyager_2_%2829347980845%29_flatten_crop.jpg/150px-Neptune_-_Voyager_2_%2829347980845%29_flatten_crop.jpg',
+      'Moon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/150px-FullMoon2010.jpg',
+    };
+    externalUrl = planetImages[target.solarSystemBody] || 'https://placehold.co/60x60/1a1b1e/white?text=?';
+  } else {
+    // Deep-sky objects - use HiPS2FITS
+    let fovDeg: number;
+    if (target.sizeMajorArcmin) {
+      const targetFov = (target.sizeMajorArcmin / 60) * 1.5;
+      fovDeg = Math.min(Math.max(targetFov, 0.05), 3);
+    } else {
+      fovDeg = 0.5;
+    }
+
+    const params = new URLSearchParams({
+      hips: 'CDS/P/DSS2/color',
+      ra: target.raDeg.toString(),
+      dec: target.decDeg.toString(),
+      width: '60',
+      height: '60',
+      fov: fovDeg.toString(),
+      format: 'jpg',
+    });
+
+    externalUrl = `https://alasky.u-strasbg.fr/hips-image-services/hips2fits?${params}`;
+  }
+
+  // Proxy through image cache API
+  return `/api/image-proxy?url=${encodeURIComponent(externalUrl)}`;
+}
+
+interface Location {
+  id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  isFavorite: boolean;
 }
 
 async function fetchUserTargets(status?: string): Promise<UserTarget[]> {
   const params = status ? `?status=${status}` : '';
   const response = await fetch(`/api/user-targets${params}`);
   if (!response.ok) throw new Error('Failed to fetch targets');
+  return response.json();
+}
+
+async function fetchLocations(): Promise<Location[]> {
+  const response = await fetch('/api/locations');
+  if (!response.ok) throw new Error('Failed to fetch locations');
   return response.json();
 }
 
@@ -67,12 +142,21 @@ export default function WishlistPage(): JSX.Element {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState({ status: '', rating: 0, notes: '' });
 
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const { data: targets, isLoading } = useQuery({
     queryKey: ['user-targets', activeTab],
     queryFn: () => fetchUserTargets(activeTab),
   });
+
+  const { data: locations } = useQuery({
+    queryKey: ['locations'],
+    queryFn: fetchLocations,
+  });
+
+  // Get favorite or first location for visibility calculations
+  const defaultLocation = locations?.find((loc) => loc.isFavorite) || locations?.[0];
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<UserTarget> }) =>
@@ -122,6 +206,30 @@ export default function WishlistPage(): JSX.Element {
     return colors[status] || 'gray';
   };
 
+  const handleFindBestDate = (userTarget: UserTarget): void => {
+    // Don't calculate for dynamic objects (planets, comets, moon)
+    if (userTarget.target.isDynamic) {
+      return;
+    }
+
+    // Pass location for visibility check (if target is still well-visible today)
+    const locationForCalc = defaultLocation
+      ? { latitude: defaultLocation.latitude, longitude: defaultLocation.longitude }
+      : undefined;
+
+    const bestDate = calculateBestObservationDate(
+      { raDeg: userTarget.target.raDeg, decDeg: userTarget.target.decDeg },
+      new Date(),
+      locationForCalc
+    );
+
+    // Navigate to targets page with date and search filter
+    const searchTerm = userTarget.target.catalogId || userTarget.target.name;
+    const dateStr = bestDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+
+    router.push(`/targets?date=${dateStr}&search=${encodeURIComponent(searchTerm)}`);
+  };
+
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
@@ -144,6 +252,7 @@ export default function WishlistPage(): JSX.Element {
               <Table>
                 <Table.Thead>
                   <Table.Tr>
+                    <Table.Th style={{ width: 70 }}>Image</Table.Th>
                     <Table.Th>Catalog ID</Table.Th>
                     <Table.Th>Name</Table.Th>
                     <Table.Th>Type</Table.Th>
@@ -156,6 +265,18 @@ export default function WishlistPage(): JSX.Element {
                 <Table.Tbody>
                   {targets.map((ut) => (
                     <Table.Tr key={ut.id}>
+                      <Table.Td>
+                        <Box style={{ width: 60, height: 60 }}>
+                          <Image
+                            src={getTargetImageUrl(ut.target)}
+                            width={60}
+                            height={60}
+                            alt={ut.target.name}
+                            radius="sm"
+                            fallbackSrc="https://placehold.co/60x60/1a1b1e/white?text=No+Image"
+                          />
+                        </Box>
+                      </Table.Td>
                       <Table.Td>{ut.target.catalogId || '-'}</Table.Td>
                       <Table.Td>{ut.target.name}</Table.Td>
                       <Table.Td>{ut.target.type}</Table.Td>
@@ -177,16 +298,31 @@ export default function WishlistPage(): JSX.Element {
                       <Table.Td>{ut.timesShot}</Table.Td>
                       <Table.Td>
                         <Group gap="xs">
-                          <ActionIcon variant="subtle" onClick={() => handleEdit(ut)}>
-                            <IconEdit size={16} />
-                          </ActionIcon>
-                          <ActionIcon
-                            variant="subtle"
-                            color="red"
-                            onClick={() => deleteMutation.mutate(ut.id)}
-                          >
-                            <IconTrash size={16} />
-                          </ActionIcon>
+                          {!ut.target.isDynamic && (
+                            <Tooltip label="Find best observation date">
+                              <ActionIcon
+                                variant="subtle"
+                                color="teal"
+                                onClick={() => handleFindBestDate(ut)}
+                              >
+                                <IconCalendarSearch size={16} />
+                              </ActionIcon>
+                            </Tooltip>
+                          )}
+                          <Tooltip label="Edit target">
+                            <ActionIcon variant="subtle" onClick={() => handleEdit(ut)}>
+                              <IconEdit size={16} />
+                            </ActionIcon>
+                          </Tooltip>
+                          <Tooltip label="Remove from list">
+                            <ActionIcon
+                              variant="subtle"
+                              color="red"
+                              onClick={() => deleteMutation.mutate(ut.id)}
+                            >
+                              <IconTrash size={16} />
+                            </ActionIcon>
+                          </Tooltip>
                         </Group>
                       </Table.Td>
                     </Table.Tr>
