@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Container,
   Title,
@@ -22,7 +22,7 @@ import {
 } from '@mantine/core';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { IconEdit, IconTrash, IconStar, IconCalendarSearch } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconStar, IconCalendarSearch, IconArrowUp } from '@tabler/icons-react';
 import { calculateBestObservationDate } from '@/utils/visibility';
 
 interface UserTarget {
@@ -141,6 +141,7 @@ export default function WishlistPage(): JSX.Element {
   const [activeTab, setActiveTab] = useState<string>('WISHLIST');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState({ status: '', rating: 0, notes: '' });
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -173,6 +174,20 @@ export default function WishlistPage(): JSX.Element {
       queryClient.invalidateQueries({ queryKey: ['user-targets'] });
     },
   });
+
+  // Track scroll position to show/hide scroll-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleEdit = (userTarget: UserTarget): void => {
     setEditingId(userTarget.id);
@@ -373,6 +388,28 @@ export default function WishlistPage(): JSX.Element {
             </Group>
           </Stack>
         </Modal>
+
+        {/* Scroll to top button */}
+        <ActionIcon
+          variant="filled"
+          color="blue"
+          size="xl"
+          radius="xl"
+          onClick={scrollToTop}
+          style={{
+            position: 'fixed',
+            bottom: 24,
+            right: 24,
+            opacity: showScrollTop ? 1 : 0,
+            visibility: showScrollTop ? 'visible' : 'hidden',
+            transition: 'opacity 0.3s, visibility 0.3s',
+            zIndex: 1000,
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+          }}
+          aria-label="Scroll to top"
+        >
+          <IconArrowUp size={24} />
+        </ActionIcon>
       </Stack>
     </Container>
   );

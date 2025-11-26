@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import {
   Container,
   Title,
@@ -30,6 +30,7 @@ import {
   IconList,
   IconChevronLeft,
   IconChevronRight,
+  IconArrowUp,
 } from '@tabler/icons-react';
 
 interface Location {
@@ -114,6 +115,7 @@ export default function SessionsPage(): JSX.Element {
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [editingSession, setEditingSession] = useState<Session | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const [sessionForm, setSessionForm] = useState({
     name: '',
@@ -160,6 +162,20 @@ export default function SessionsPage(): JSX.Element {
       queryClient.invalidateQueries({ queryKey: ['sessions'] });
     },
   });
+
+  // Track scroll position to show/hide scroll-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Calendar state
   const [calendarDate, setCalendarDate] = useState(new Date());
@@ -621,6 +637,27 @@ export default function SessionsPage(): JSX.Element {
           </Stack>
         </Modal>
 
+        {/* Scroll to top button */}
+        <ActionIcon
+          variant="filled"
+          color="blue"
+          size="xl"
+          radius="xl"
+          onClick={scrollToTop}
+          style={{
+            position: 'fixed',
+            bottom: 24,
+            right: 24,
+            opacity: showScrollTop ? 1 : 0,
+            visibility: showScrollTop ? 'visible' : 'hidden',
+            transition: 'opacity 0.3s, visibility 0.3s',
+            zIndex: 1000,
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+          }}
+          aria-label="Scroll to top"
+        >
+          <IconArrowUp size={24} />
+        </ActionIcon>
       </Stack>
     </Container>
   );

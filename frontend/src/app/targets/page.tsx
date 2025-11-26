@@ -30,7 +30,7 @@ import {
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { List } from 'react-window';
+import { Virtuoso } from 'react-virtuoso';
 import { useSession } from 'next-auth/react';
 import {
   IconSearch,
@@ -47,6 +47,7 @@ import {
   IconHeart,
   IconHeartFilled,
   IconCalendarSearch,
+  IconArrowUp,
 } from '@tabler/icons-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -978,6 +979,7 @@ export default function TargetsPage(): JSX.Element {
   const [loadingDots, setLoadingDots] = useState('.');
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [searchHistoryOpen, setSearchHistoryOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const { data: session } = useSession();
@@ -1092,7 +1094,19 @@ export default function TargetsPage(): JSX.Element {
     saveSearchTerm();
   }, [debouncedSearchForHistory, session?.user]);
 
-  // Removed page state - using infinite scroll now
+  // Track scroll position to show/hide scroll-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Calculate current moon phase
   const currentMoonPhase = useMemo(() => {
@@ -2195,7 +2209,7 @@ export default function TargetsPage(): JSX.Element {
         </div>
 
         {/* Target Grid */}
-        <div style={{ position: 'relative', minHeight: 400 }}>
+        <div style={{ position: 'relative' }}>
           {isLoading && (
             <Paper
               p="xl"
@@ -2241,30 +2255,20 @@ export default function TargetsPage(): JSX.Element {
                 {isFetchingNextPage && ' (loading more...)'}
               </Text>
 
-              <List
-                style={{ height: '800px', width: '100%' }}
-                rowComponent={({ index, style, ...rowProps }: any) => {
-                  // Show loading indicator at the end
-                  if (index >= allTargets.length) {
-                    return (
-                      <div style={style}>
-                        <Paper p="md" withBorder style={{ backgroundColor: 'var(--mantine-color-dark-7)', margin: '8px 0' }}>
-                          <Center>
-                            <Loader size="sm" />
-                            <Text size="sm" c="dimmed" ml="sm">Loading more targets...</Text>
-                          </Center>
-                        </Paper>
-                      </div>
-                    );
+              <Virtuoso
+                useWindowScroll
+                data={allTargets}
+                endReached={() => {
+                  if (!isFetchingNextPage && hasNextPage) {
+                    fetchNextPage();
                   }
-
-                  const target = allTargets[index];
+                }}
+                itemContent={(index, target) => {
                   const isAdded = addedTargets.has(target.id);
                   const imageUrl = getTargetImageUrl(target);
 
                   return (
-                    <div style={style}>
-                      <Paper key={target.id} p="xs" withBorder style={{ backgroundColor: 'var(--mantine-color-dark-7)', margin: '8px 0' }}>
+                    <Paper key={target.id} p="xs" withBorder style={{ backgroundColor: 'var(--mantine-color-dark-7)', marginBottom: 8 }}>
                       <Group align="flex-start" gap="sm" wrap="nowrap">
                         {/* Preview Image - Click to enlarge */}
                         <Box
@@ -2409,21 +2413,17 @@ export default function TargetsPage(): JSX.Element {
                         )}
                       </Group>
                     </Paper>
-                    </div>
                   );
                 }}
-                rowCount={allTargets.length + (hasNextPage ? 1 : 0)}
-                rowHeight={220}
-                rowProps={{}}
-                onRowsRendered={({ stopIndex }: any) => {
-                  // Load next page when user scrolls near the bottom
-                  if (
-                    !isFetchingNextPage &&
-                    hasNextPage &&
-                    stopIndex >= allTargets.length - 3
-                  ) {
-                    fetchNextPage();
-                  }
+                components={{
+                  Footer: () => hasNextPage ? (
+                    <Paper p="md" withBorder style={{ backgroundColor: 'var(--mantine-color-dark-7)', margin: '8px 0' }}>
+                      <Center>
+                        <Loader size="sm" />
+                        <Text size="sm" c="dimmed" ml="sm">Loading more targets...</Text>
+                      </Center>
+                    </Paper>
+                  ) : null,
                 }}
               />
             </>
@@ -2506,6 +2506,28 @@ export default function TargetsPage(): JSX.Element {
           </Stack>
         )}
       </Modal>
+
+      {/* Scroll to top button */}
+      <ActionIcon
+        variant="filled"
+        color="blue"
+        size="xl"
+        radius="xl"
+        onClick={scrollToTop}
+        style={{
+          position: 'fixed',
+          bottom: 24,
+          right: 24,
+          opacity: showScrollTop ? 1 : 0,
+          visibility: showScrollTop ? 'visible' : 'hidden',
+          transition: 'opacity 0.3s, visibility 0.3s',
+          zIndex: 1000,
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+        }}
+        aria-label="Scroll to top"
+      >
+        <IconArrowUp size={24} />
+      </ActionIcon>
     </Container>
   );
 }
