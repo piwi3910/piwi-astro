@@ -22,9 +22,35 @@ export const catalogUpdateQueue = new Queue('catalog-updates', {
   },
 });
 
-// Job type definitions
+// Queue for image processing (metadata extraction, plate solving)
+export const imageProcessingQueue = new Queue('image-processing', {
+  connection: redisConnection,
+  defaultJobOptions: {
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 5000,
+    },
+    removeOnComplete: {
+      count: 500, // Keep last 500 completed jobs
+    },
+    removeOnFail: {
+      count: 200, // Keep last 200 failed jobs for debugging
+    },
+  },
+});
+
+// Job type definitions for catalog updates
 export interface UpdateCometsJobData {
   maxMagnitude?: number;
+}
+
+// Job type definitions for image processing
+export interface ProcessImageJobData {
+  jobId: string; // ImageProcessingJob.id from database
+  userId: string;
+  storageKey: string;
+  originalName: string;
 }
 
 export interface CleanupOldDataJobData {
@@ -71,4 +97,31 @@ export async function scheduleDataCleanup(daysOld: number = 30) {
       jobId: `cleanup-${Date.now()}`,
     }
   );
+}
+
+/**
+ * Add a job to process an uploaded image
+ */
+export async function scheduleImageProcessing(data: ProcessImageJobData) {
+  return imageProcessingQueue.add('process-image', data, {
+    jobId: `process-image-${data.jobId}`,
+  });
+}
+
+/**
+ * Get the status of an image processing job from BullMQ
+ */
+export async function getImageProcessingJobStatus(jobId: string) {
+  const job = await imageProcessingQueue.getJob(`process-image-${jobId}`);
+  if (!job) return null;
+
+  const state = await job.getState();
+  const progress = job.progress;
+
+  return {
+    state,
+    progress,
+    attemptsMade: job.attemptsMade,
+    failedReason: job.failedReason,
+  };
 }

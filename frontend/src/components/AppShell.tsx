@@ -21,6 +21,7 @@ import {
   IconHeart,
   IconTool,
   IconRuler2,
+  IconWorld,
 } from '@tabler/icons-react';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -33,12 +34,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const navItems = session
     ? [
         { label: 'Dashboard', href: '/dashboard', icon: IconHome },
-        { label: 'Gallery', href: '/gallery', icon: IconPhoto },
         { label: 'Locations', href: '/dashboard/locations', icon: IconMapPin },
         { label: 'Gear', href: '/dashboard/gear', icon: IconTelescope },
       ]
     : [
-        { label: 'Gallery', href: '/gallery', icon: IconPhoto },
         { label: 'Targets', href: '/targets', icon: IconStar },
       ];
 
@@ -67,22 +66,58 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </Group>
 
           <Group visibleFrom="sm">
-            {navItems.slice(0, 3).map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                style={{ textDecoration: 'none' }}
-              >
+            {/* Dashboard link - only for authenticated users */}
+            {session && (
+              <Link href="/dashboard" style={{ textDecoration: 'none' }}>
                 <Button
-                  variant={isActive(item.href) ? 'filled' : 'subtle'}
-                  leftSection={<item.icon size={16} />}
+                  variant={isActive('/dashboard') ? 'filled' : 'subtle'}
+                  leftSection={<IconHome size={16} />}
                   size="sm"
                 >
-                  {item.label}
+                  Dashboard
                 </Button>
               </Link>
-            ))}
+            )}
 
+            {/* Gallery dropdown - for all users */}
+            <Menu shadow="md" width={180}>
+              <Menu.Target>
+                <Button
+                  variant={
+                    isActive('/gallery') || isActive('/dashboard/images')
+                      ? 'filled'
+                      : 'subtle'
+                  }
+                  leftSection={<IconPhoto size={16} />}
+                  rightSection={<IconChevronDown size={14} />}
+                  size="sm"
+                >
+                  Gallery
+                </Button>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Link
+                  href="/gallery"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <Menu.Item leftSection={<IconWorld size={14} />}>
+                    Public
+                  </Menu.Item>
+                </Link>
+                {session && (
+                  <Link
+                    href="/dashboard/images"
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <Menu.Item leftSection={<IconPhoto size={14} />}>
+                      My Images
+                    </Menu.Item>
+                  </Link>
+                )}
+              </Menu.Dropdown>
+            </Menu>
+
+            {/* Targets dropdown - only for authenticated users */}
             {session && (
               <Menu shadow="md" width={180}>
                 <Menu.Target>
@@ -130,7 +165,21 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               </Menu>
             )}
 
-            {navItems.slice(3).map((item) => (
+            {/* Targets link for unauthenticated users */}
+            {!session && (
+              <Link href="/targets" style={{ textDecoration: 'none' }}>
+                <Button
+                  variant={isActive('/targets') ? 'filled' : 'subtle'}
+                  leftSection={<IconStar size={16} />}
+                  size="sm"
+                >
+                  Targets
+                </Button>
+              </Link>
+            )}
+
+            {/* Locations and Gear - only for authenticated users */}
+            {session && navItems.slice(1).map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -207,14 +256,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     <Menu.Item leftSection={<IconUser size={14} />}>Profile</Menu.Item>
                   </Link>
                   <Link
-                    href="/dashboard/images"
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <Menu.Item leftSection={<IconPhoto size={14} />}>
-                      My Images
-                    </Menu.Item>
-                  </Link>
-                  <Link
                     href="/dashboard/settings"
                     style={{ textDecoration: 'none', color: 'inherit' }}
                   >
@@ -252,24 +293,60 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
       <AppShell.Navbar p="md" hiddenFrom="sm">
         <AppShell.Section grow>
-          {navItems.slice(0, 3).map((item) => (
+          {/* Dashboard - only for authenticated users */}
+          {session && (
             <Link
-              key={item.href}
-              href={item.href}
+              href="/dashboard"
               style={{ textDecoration: 'none' }}
               onClick={toggle}
             >
               <Button
-                variant={isActive(item.href) ? 'filled' : 'subtle'}
-                leftSection={<item.icon size={16} />}
+                variant={isActive('/dashboard') ? 'filled' : 'subtle'}
+                leftSection={<IconHome size={16} />}
                 fullWidth
                 mb="xs"
               >
-                {item.label}
+                Dashboard
               </Button>
             </Link>
-          ))}
+          )}
 
+          {/* Gallery section - for all users */}
+          <Text size="xs" c="dimmed" fw={500} mt="md" mb="xs" pl="xs">
+            Gallery
+          </Text>
+          <Link
+            href="/gallery"
+            style={{ textDecoration: 'none' }}
+            onClick={toggle}
+          >
+            <Button
+              variant={isActive('/gallery') ? 'filled' : 'subtle'}
+              leftSection={<IconWorld size={16} />}
+              fullWidth
+              mb="xs"
+            >
+              Public
+            </Button>
+          </Link>
+          {session && (
+            <Link
+              href="/dashboard/images"
+              style={{ textDecoration: 'none' }}
+              onClick={toggle}
+            >
+              <Button
+                variant={isActive('/dashboard/images') ? 'filled' : 'subtle'}
+                leftSection={<IconPhoto size={16} />}
+                fullWidth
+                mb="xs"
+              >
+                My Images
+              </Button>
+            </Link>
+          )}
+
+          {/* Targets section - only for authenticated users */}
           {session && (
             <>
               <Text size="xs" c="dimmed" fw={500} mt="md" mb="xs" pl="xs">
@@ -320,7 +397,26 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             </>
           )}
 
-          {navItems.slice(3).map((item) => (
+          {/* Targets link for unauthenticated users */}
+          {!session && (
+            <Link
+              href="/targets"
+              style={{ textDecoration: 'none' }}
+              onClick={toggle}
+            >
+              <Button
+                variant={isActive('/targets') ? 'filled' : 'subtle'}
+                leftSection={<IconStar size={16} />}
+                fullWidth
+                mb="xs"
+              >
+                Targets
+              </Button>
+            </Link>
+          )}
+
+          {/* Locations and Gear - only for authenticated users */}
+          {session && navItems.slice(1).map((item) => (
             <Link
               key={item.href}
               href={item.href}

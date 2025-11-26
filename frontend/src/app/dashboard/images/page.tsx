@@ -32,7 +32,9 @@ import {
   IconUpload,
   IconEye,
   IconStar,
+  IconListDetails,
 } from '@tabler/icons-react';
+import Link from 'next/link';
 
 interface Target {
   catalogId: string | null;
@@ -409,12 +411,22 @@ export default function ImagesPage(): JSX.Element {
       <Stack gap="lg">
         <Group justify="space-between">
           <Title order={1}>My Images</Title>
-          <Button
-            leftSection={<IconUpload size={16} />}
-            onClick={() => setUploadModalOpen(true)}
-          >
-            Upload Image
-          </Button>
+          <Group gap="sm">
+            <Link href="/dashboard/images/upload">
+              <Button
+                leftSection={<IconListDetails size={16} />}
+                variant="light"
+              >
+                Batch Upload
+              </Button>
+            </Link>
+            <Button
+              leftSection={<IconUpload size={16} />}
+              onClick={() => setUploadModalOpen(true)}
+            >
+              Upload Image
+            </Button>
+          </Group>
         </Group>
 
         {images && images.length > 0 ? (

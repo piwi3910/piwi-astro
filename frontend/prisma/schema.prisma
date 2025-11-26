@@ -35,6 +35,7 @@ model User {
   userTargets  UserTarget[]
   images       ImageUpload[]
   locations    Location[]
+  processingJobs ImageProcessingJob[]
 
   @@index([username])
   @@index([email])
@@ -204,6 +205,7 @@ model Target {
   userTargets    UserTarget[]
   sessionTargets SessionTarget[]
   images         ImageUpload[]
+  processingJobs ImageProcessingJob[]
 
   @@index([catalogId])
   @@index([type])
@@ -326,10 +328,57 @@ model ImageUpload {
   target  Target   @relation(fields: [targetId], references: [id], onDelete: Cascade)
   session Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
   rig     Rig?     @relation(fields: [rigId], references: [id], onDelete: SetNull)
+  processingJob ImageProcessingJob?
 
   @@index([userId])
   @@index([targetId])
   @@index([sessionId])
   @@index([visibility, uploadedAt])
   @@index([featured])
+}
+
+model ImageProcessingJob {
+  id            String   @id @default(uuid())
+  userId        String
+
+  // File reference
+  storageKey    String   // Raw file in MinIO
+  originalName  String   // Original filename
+  fileSize      Int      // File size in bytes
+
+  // Processing status
+  status        String   @default("PENDING") // PENDING | EXTRACTING | PLATE_SOLVING | COMPLETED | FAILED
+  errorMessage  String?
+  errorDetails  String?  // JSON string with detailed error info
+
+  // Extracted metadata (populated during processing)
+  extractedMetadata Json?   // Full extracted metadata JSON
+
+  // Target matching
+  targetId      String?  // Matched target after plate solving
+  targetMatch   String?  // How target was matched: METADATA | PLATE_SOLVE | MANUAL
+
+  // Key extracted fields (denormalized for quick display)
+  targetName    String?  // From OBJECT header
+  ra            Float?   // Right Ascension in degrees
+  dec           Float?   // Declination in degrees
+  exposureTime  Float?   // Single exposure time
+  totalIntegration Float? // Total integration time
+  filter        String?
+  captureDate   DateTime?
+
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  completedAt   DateTime?
+
+  // Relations
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  target        Target?  @relation(fields: [targetId], references: [id], onDelete: SetNull)
+  imageUpload   ImageUpload? @relation(fields: [imageUploadId], references: [id])
+  imageUploadId String?  @unique
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
 }

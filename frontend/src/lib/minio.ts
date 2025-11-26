@@ -94,4 +94,26 @@ export async function fileExists(objectName: string, bucketName: string = BUCKET
   }
 }
 
+export async function downloadFile(
+  objectName: string,
+  bucketName: string = BUCKET_IMAGES
+): Promise<Buffer> {
+  const stream = await minioClient.getObject(bucketName, objectName);
+  const chunks: Buffer[] = [];
+
+  return new Promise((resolve, reject) => {
+    stream.on('data', (chunk: Buffer) => chunks.push(chunk));
+    stream.on('end', () => resolve(Buffer.concat(chunks)));
+    stream.on('error', reject);
+  });
+}
+
+export async function downloadFileToPath(
+  objectName: string,
+  destPath: string,
+  bucketName: string = BUCKET_IMAGES
+): Promise<void> {
+  await minioClient.fGetObject(bucketName, objectName, destPath);
+}
+
 export { minioClient, BUCKET_IMAGES, BUCKET_CACHE };
