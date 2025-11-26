@@ -16,7 +16,6 @@ import {
   TextInput,
   Textarea,
   Select,
-  FileInput,
   NumberInput,
   Grid,
   SimpleGrid,
@@ -26,13 +25,11 @@ import {
 import { DateTimePicker } from '@mantine/dates';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  IconPlus,
   IconEdit,
   IconTrash,
   IconUpload,
   IconEye,
   IconStar,
-  IconListDetails,
 } from '@tabler/icons-react';
 import Link from 'next/link';
 
@@ -63,53 +60,9 @@ interface ImageUpload {
   target: Target;
 }
 
-interface UserTarget {
-  id: string;
-  targetId: string;
-  target: Target;
-}
-
-interface Session {
-  id: string;
-  date: string;
-  location: string;
-}
-
-interface Rig {
-  id: string;
-  name: string;
-}
-
 async function fetchImages(): Promise<ImageUpload[]> {
   const response = await fetch('/api/images');
   if (!response.ok) throw new Error('Failed to fetch images');
-  return response.json();
-}
-
-async function fetchUserTargets(): Promise<UserTarget[]> {
-  const response = await fetch('/api/user-targets');
-  if (!response.ok) throw new Error('Failed to fetch targets');
-  return response.json();
-}
-
-async function fetchSessions(): Promise<Session[]> {
-  const response = await fetch('/api/sessions');
-  if (!response.ok) throw new Error('Failed to fetch sessions');
-  return response.json();
-}
-
-async function fetchRigs(): Promise<Rig[]> {
-  const response = await fetch('/api/rigs');
-  if (!response.ok) throw new Error('Failed to fetch rigs');
-  return response.json();
-}
-
-async function uploadImage(formData: FormData): Promise<ImageUpload> {
-  const response = await fetch('/api/images', {
-    method: 'POST',
-    body: formData,
-  });
-  if (!response.ok) throw new Error('Failed to upload image');
   return response.json();
 }
 
@@ -131,29 +84,8 @@ async function deleteImage(id: string): Promise<void> {
 }
 
 export default function ImagesPage(): JSX.Element {
-  const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingImage, setEditingImage] = useState<ImageUpload | null>(null);
-
-  const [uploadForm, setUploadForm] = useState({
-    file: null as File | null,
-    targetId: '',
-    sessionId: '',
-    rigId: '',
-    visibility: 'PRIVATE',
-    title: '',
-    description: '',
-    captureDate: null as Date | null,
-    exposureTime: 0,
-    exposureCount: 0,
-    iso: 0,
-    focalLength: 0,
-    aperture: 0,
-  });
-
-  const [extractingMetadata, setExtractingMetadata] = useState(false);
-  const [extractedMetadata, setExtractedMetadata] = useState<any>(null);
-  const [metadataError, setMetadataError] = useState<string | null>(null);
 
   const [editForm, setEditForm] = useState({
     visibility: 'PRIVATE',
@@ -175,30 +107,6 @@ export default function ImagesPage(): JSX.Element {
     queryFn: fetchImages,
   });
 
-  const { data: userTargets } = useQuery({
-    queryKey: ['user-targets'],
-    queryFn: fetchUserTargets,
-  });
-
-  const { data: sessions } = useQuery({
-    queryKey: ['sessions'],
-    queryFn: fetchSessions,
-  });
-
-  const { data: rigs } = useQuery({
-    queryKey: ['rigs'],
-    queryFn: fetchRigs,
-  });
-
-  const uploadMutation = useMutation({
-    mutationFn: uploadImage,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['images'] });
-      setUploadModalOpen(false);
-      resetUploadForm();
-    },
-  });
-
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<ImageUpload> }) =>
       updateImage(id, data),
@@ -215,139 +123,6 @@ export default function ImagesPage(): JSX.Element {
       queryClient.invalidateQueries({ queryKey: ['images'] });
     },
   });
-
-  const resetUploadForm = (): void => {
-    setUploadForm({
-      file: null,
-      targetId: '',
-      sessionId: '',
-      rigId: '',
-      visibility: 'PRIVATE',
-      title: '',
-      description: '',
-      captureDate: null,
-      exposureTime: 0,
-      exposureCount: 0,
-      iso: 0,
-      focalLength: 0,
-      aperture: 0,
-    });
-    setExtractedMetadata(null);
-    setMetadataError(null);
-  };
-
-  const handleFileSelect = async (file: File | null): Promise<void> => {
-    if (!file) {
-      setUploadForm({ ...uploadForm, file: null });
-      setExtractedMetadata(null);
-      setMetadataError(null);
-      return;
-    }
-
-    setUploadForm({ ...uploadForm, file });
-    setExtractingMetadata(true);
-    setMetadataError(null);
-
-    try {
-      // Call metadata extraction API
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const response = await fetch('/api/images/extract-metadata', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to extract metadata');
-      }
-
-      const metadata = await response.json();
-      setExtractedMetadata(metadata);
-
-      // Auto-populate form fields from extracted metadata
-      const updates: any = {};
-
-      if (metadata.targetName) {
-        updates.title = metadata.targetName;
-      }
-
-      if (metadata.captureDate) {
-        try {
-          updates.captureDate = new Date(metadata.captureDate);
-        } catch (e) {
-          console.error('Invalid date format:', e);
-        }
-      }
-
-      if (metadata.exposureTime) {
-        updates.exposureTime = metadata.exposureTime;
-      }
-
-      if (metadata.exposureCount) {
-        updates.exposureCount = metadata.exposureCount;
-      }
-
-      if (metadata.iso) {
-        updates.iso = metadata.iso;
-      } else if (metadata.gain) {
-        // Use gain as ISO if ISO not present
-        updates.iso = Math.round(metadata.gain);
-      }
-
-      if (metadata.focalLength) {
-        updates.focalLength = metadata.focalLength;
-      }
-
-      if (metadata.aperture) {
-        updates.aperture = metadata.aperture;
-      }
-
-      // Try to match target by name or coordinates
-      if (metadata.targetName && userTargets) {
-        const matchedTarget = userTargets.find(
-          (ut) =>
-            ut.target.name.toLowerCase() === metadata.targetName.toLowerCase() ||
-            (ut.target.catalogId &&
-              ut.target.catalogId.toLowerCase() === metadata.targetName.toLowerCase())
-        );
-        if (matchedTarget) {
-          updates.targetId = matchedTarget.targetId;
-        }
-      }
-
-      setUploadForm({ ...uploadForm, file, ...updates });
-    } catch (error) {
-      console.error('Error extracting metadata:', error);
-      setMetadataError(error instanceof Error ? error.message : 'Failed to extract metadata');
-    } finally {
-      setExtractingMetadata(false);
-    }
-  };
-
-  const handleUpload = (): void => {
-    if (!uploadForm.file || !uploadForm.targetId) return;
-
-    const formData = new FormData();
-    formData.append('file', uploadForm.file);
-    formData.append('targetId', uploadForm.targetId);
-    if (uploadForm.sessionId) formData.append('sessionId', uploadForm.sessionId);
-    if (uploadForm.rigId) formData.append('rigId', uploadForm.rigId);
-    formData.append('visibility', uploadForm.visibility);
-    if (uploadForm.title) formData.append('title', uploadForm.title);
-    if (uploadForm.description) formData.append('description', uploadForm.description);
-    if (uploadForm.captureDate)
-      formData.append('captureDate', uploadForm.captureDate.toISOString());
-    if (uploadForm.exposureTime) formData.append('exposureTime', uploadForm.exposureTime.toString());
-    if (uploadForm.exposureCount)
-      formData.append('exposureCount', uploadForm.exposureCount.toString());
-    if (uploadForm.iso) formData.append('iso', uploadForm.iso.toString());
-    if (uploadForm.focalLength) formData.append('focalLength', uploadForm.focalLength.toString());
-    if (uploadForm.aperture) formData.append('aperture', uploadForm.aperture.toString());
-
-    uploadMutation.mutate(formData);
-  };
 
   const handleEdit = (image: ImageUpload): void => {
     setEditingImage(image);
@@ -411,22 +186,9 @@ export default function ImagesPage(): JSX.Element {
       <Stack gap="lg">
         <Group justify="space-between">
           <Title order={1}>My Images</Title>
-          <Group gap="sm">
-            <Link href="/dashboard/images/upload">
-              <Button
-                leftSection={<IconListDetails size={16} />}
-                variant="light"
-              >
-                Batch Upload
-              </Button>
-            </Link>
-            <Button
-              leftSection={<IconUpload size={16} />}
-              onClick={() => setUploadModalOpen(true)}
-            >
-              Upload Image
-            </Button>
-          </Group>
+          <Link href="/dashboard/images/upload">
+            <Button leftSection={<IconUpload size={16} />}>Upload Image</Button>
+          </Link>
         </Group>
 
         {images && images.length > 0 ? (
@@ -504,227 +266,6 @@ export default function ImagesPage(): JSX.Element {
             No images uploaded yet. Upload your first astrophotography image!
           </Text>
         )}
-
-        {/* Upload Modal */}
-        <Modal
-          opened={uploadModalOpen}
-          onClose={() => {
-            setUploadModalOpen(false);
-            resetUploadForm();
-          }}
-          title="Upload Image"
-          size="lg"
-        >
-          <Stack gap="md">
-            <FileInput
-              label="FITS/XISF File"
-              placeholder="Select FITS or XISF file"
-              accept=".fits,.fit,.fts,.xisf"
-              value={uploadForm.file}
-              onChange={handleFileSelect}
-              leftSection={<IconUpload size={16} />}
-              description={
-                extractingMetadata
-                  ? 'Extracting metadata...'
-                  : extractedMetadata
-                  ? `Detected: ${extractedMetadata.targetName || 'Unknown target'} • ${extractedMetadata.fileType || ''}`
-                  : 'Upload FITS (.fits, .fit, .fts) or XISF (.xisf) files only'
-              }
-              error={metadataError}
-              disabled={extractingMetadata}
-              required
-            />
-
-            {extractingMetadata && (
-              <Group gap="xs">
-                <Loader size="sm" />
-                <Text size="sm" c="dimmed">
-                  Analyzing file and extracting metadata...
-                </Text>
-              </Group>
-            )}
-
-            {extractedMetadata && (
-              <Stack gap="xs">
-                <Text size="sm" fw={500} c="teal">
-                  ✓ Metadata extracted successfully
-                </Text>
-                <Text size="xs" c="dimmed">
-                  Form fields have been auto-populated. Please review and adjust as needed.
-                </Text>
-                {extractedMetadata.ra && extractedMetadata.dec && (
-                  <Text size="xs" c="dimmed">
-                    Coordinates: RA {extractedMetadata.ra.toFixed(4)}°, Dec{' '}
-                    {extractedMetadata.dec.toFixed(4)}°
-                  </Text>
-                )}
-              </Stack>
-            )}
-
-            <Select
-              label="Target"
-              placeholder="Select target"
-              data={
-                userTargets?.map((ut) => ({
-                  value: ut.targetId,
-                  label: `${ut.target.name}${
-                    ut.target.catalogId ? ` (${ut.target.catalogId})` : ''
-                  }`,
-                })) || []
-              }
-              value={uploadForm.targetId}
-              onChange={(val) => setUploadForm({ ...uploadForm, targetId: val || '' })}
-              searchable
-              required
-            />
-
-            <Grid>
-              <Grid.Col span={6}>
-                <Select
-                  label="Session"
-                  placeholder="Optional"
-                  data={
-                    sessions?.map((s) => ({
-                      value: s.id,
-                      label: `${new Date(s.date).toLocaleDateString()} - ${s.location}`,
-                    })) || []
-                  }
-                  value={uploadForm.sessionId}
-                  onChange={(val) => setUploadForm({ ...uploadForm, sessionId: val || '' })}
-                  clearable
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <Select
-                  label="Rig"
-                  placeholder="Optional"
-                  data={rigs?.map((r) => ({ value: r.id, label: r.name })) || []}
-                  value={uploadForm.rigId}
-                  onChange={(val) => setUploadForm({ ...uploadForm, rigId: val || '' })}
-                  clearable
-                />
-              </Grid.Col>
-            </Grid>
-
-            <Select
-              label="Visibility"
-              data={[
-                { value: 'PRIVATE', label: 'Private' },
-                { value: 'PUBLIC', label: 'Public' },
-                { value: 'UNLISTED', label: 'Unlisted' },
-              ]}
-              value={uploadForm.visibility}
-              onChange={(val) =>
-                setUploadForm({ ...uploadForm, visibility: val || 'PRIVATE' })
-              }
-            />
-
-            <TextInput
-              label="Title"
-              placeholder="Optional title"
-              value={uploadForm.title}
-              onChange={(e) => setUploadForm({ ...uploadForm, title: e.target.value })}
-            />
-
-            <Textarea
-              label="Description"
-              placeholder="Optional description"
-              value={uploadForm.description}
-              onChange={(e) =>
-                setUploadForm({ ...uploadForm, description: e.target.value })
-              }
-              minRows={2}
-            />
-
-            <DateTimePicker
-              label="Capture Date"
-              placeholder="Optional"
-              value={uploadForm.captureDate}
-              onChange={(val) => setUploadForm({ ...uploadForm, captureDate: val })}
-              clearable
-            />
-
-            <Grid>
-              <Grid.Col span={6}>
-                <NumberInput
-                  label="Exposure Time (s)"
-                  placeholder="Optional"
-                  value={uploadForm.exposureTime}
-                  onChange={(val) =>
-                    setUploadForm({ ...uploadForm, exposureTime: Number(val) })
-                  }
-                  min={0}
-                  step={0.1}
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <NumberInput
-                  label="Exposure Count"
-                  placeholder="Optional"
-                  value={uploadForm.exposureCount}
-                  onChange={(val) =>
-                    setUploadForm({ ...uploadForm, exposureCount: Number(val) })
-                  }
-                  min={0}
-                />
-              </Grid.Col>
-            </Grid>
-
-            <Grid>
-              <Grid.Col span={4}>
-                <NumberInput
-                  label="ISO"
-                  placeholder="Optional"
-                  value={uploadForm.iso}
-                  onChange={(val) => setUploadForm({ ...uploadForm, iso: Number(val) })}
-                  min={0}
-                />
-              </Grid.Col>
-              <Grid.Col span={4}>
-                <NumberInput
-                  label="Focal Length (mm)"
-                  placeholder="Optional"
-                  value={uploadForm.focalLength}
-                  onChange={(val) =>
-                    setUploadForm({ ...uploadForm, focalLength: Number(val) })
-                  }
-                  min={0}
-                />
-              </Grid.Col>
-              <Grid.Col span={4}>
-                <NumberInput
-                  label="Aperture (f/)"
-                  placeholder="Optional"
-                  value={uploadForm.aperture}
-                  onChange={(val) =>
-                    setUploadForm({ ...uploadForm, aperture: Number(val) })
-                  }
-                  min={0}
-                  step={0.1}
-                />
-              </Grid.Col>
-            </Grid>
-
-            <Group justify="flex-end">
-              <Button
-                variant="subtle"
-                onClick={() => {
-                  setUploadModalOpen(false);
-                  resetUploadForm();
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleUpload}
-                loading={uploadMutation.isPending}
-                disabled={!uploadForm.file || !uploadForm.targetId}
-              >
-                Upload
-              </Button>
-            </Group>
-          </Stack>
-        </Modal>
 
         {/* Edit Modal */}
         <Modal
