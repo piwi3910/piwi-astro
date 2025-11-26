@@ -23,6 +23,7 @@ import {
   IconRuler2,
   IconWorld,
 } from '@tabler/icons-react';
+import { StarfieldBackground } from './StarfieldBackground';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
@@ -38,16 +39,33 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <AppShell
-      header={{ height: 60 }}
-      navbar={{
-        width: 250,
-        breakpoint: 'sm',
-        collapsed: { mobile: !opened },
-      }}
-      padding="md"
-    >
-      <AppShell.Header>
+    <>
+      <StarfieldBackground starCount={180} opacity={0.8} animated={true} showConstellations={true} />
+      <AppShell
+        header={{ height: 60 }}
+        navbar={{
+          width: 250,
+          breakpoint: 'sm',
+          collapsed: { mobile: !opened },
+        }}
+        padding="md"
+        styles={{
+          main: {
+            background: 'transparent',
+          },
+          header: {
+            background: 'rgba(13, 17, 23, 0.92)',
+            backdropFilter: 'blur(4px)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          },
+          navbar: {
+            background: 'rgba(13, 17, 23, 0.94)',
+            backdropFilter: 'blur(4px)',
+            borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+          },
+        }}
+      >
+        <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
           <Group>
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
@@ -437,7 +455,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </AppShell.Section>
       </AppShell.Navbar>
 
-      <AppShell.Main>{children}</AppShell.Main>
-    </AppShell>
+        <AppShell.Main>{children}</AppShell.Main>
+      </AppShell>
+    </>
   );
 }

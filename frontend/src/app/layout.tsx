@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning style={{ background: '#0d1117' }}>
         <MantineProvider forceColorScheme="dark">
           <Notifications />
           <Providers>{children}</Providers>
