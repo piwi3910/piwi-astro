@@ -32,7 +32,7 @@ import json
 import os
 import numpy as np
 from typing import Dict, Any, Optional, Tuple
-from datetime import datetime
+from datetime import datetime, timezone
 import xml.etree.ElementTree as ET
 
 
@@ -122,7 +122,7 @@ def convert_xisf_to_fits(input_path: str, output_path: str) -> Dict[str, Any]:
                     im_data = im_data.squeeze(axis=-1)
 
             # Add conversion info
-            header['HISTORY'] = f'Converted from XISF by AstroPlanner on {datetime.utcnow().isoformat()}'
+            header['HISTORY'] = f'Converted from XISF by AstroPlanner on {datetime.now(timezone.utc).isoformat()}'
             header['ORIGFMT'] = ('XISF', 'Original file format')
 
             # Create and write FITS
@@ -229,7 +229,7 @@ def convert_xisf_to_fits(input_path: str, output_path: str) -> Dict[str, Any]:
                 except Exception:
                     pass
 
-            header['HISTORY'] = f'Converted from XISF (manual) on {datetime.utcnow().isoformat()}'
+            header['HISTORY'] = f'Converted from XISF (manual) on {datetime.now(timezone.utc).isoformat()}'
             header['ORIGFMT'] = ('XISF', 'Original file format')
 
             # Write FITS
@@ -295,7 +295,7 @@ def convert_raw_to_fits(input_path: str, output_path: str) -> Dict[str, Any]:
             except Exception as meta_error:
                 header['HISTORY'] = f'Metadata extraction partial: {str(meta_error)}'
 
-            header['HISTORY'] = f'Converted from RAW by AstroPlanner on {datetime.utcnow().isoformat()}'
+            header['HISTORY'] = f'Converted from RAW by AstroPlanner on {datetime.now(timezone.utc).isoformat()}'
             header['ORIGFMT'] = ('RAW', 'Original file format')
             header['ORIGFILE'] = (os.path.basename(input_path)[:68], 'Original filename')
 
@@ -359,7 +359,7 @@ def convert_tiff_to_fits(input_path: str, output_path: str) -> Dict[str, Any]:
             header['NAXIS2'] = im_data.shape[0] if len(im_data.shape) >= 2 else 1
             header['BITPIX'] = -32 if im_data.dtype in [np.float32, np.float64] else (16 if im_data.dtype == np.uint16 else 8)
 
-            header['HISTORY'] = f'Converted from TIFF by AstroPlanner on {datetime.utcnow().isoformat()}'
+            header['HISTORY'] = f'Converted from TIFF by AstroPlanner on {datetime.now(timezone.utc).isoformat()}'
             header['ORIGFMT'] = ('TIFF', 'Original file format')
             header['ORIGFILE'] = (os.path.basename(input_path)[:68], 'Original filename')
 
@@ -423,7 +423,7 @@ def convert_image_to_fits(input_path: str, output_path: str) -> Dict[str, Any]:
             ext = os.path.splitext(input_path)[1].lower()
             fmt = 'JPEG' if ext in ['.jpg', '.jpeg'] else 'PNG'
 
-            header['HISTORY'] = f'Converted from {fmt} by AstroPlanner on {datetime.utcnow().isoformat()}'
+            header['HISTORY'] = f'Converted from {fmt} by AstroPlanner on {datetime.now(timezone.utc).isoformat()}'
             header['ORIGFMT'] = (fmt, 'Original file format')
             header['ORIGFILE'] = (os.path.basename(input_path)[:68], 'Original filename')
 
