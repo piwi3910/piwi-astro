@@ -13,6 +13,9 @@ const ASTROMETRY_API_KEY = process.env.ASTROMETRY_API_KEY;
 const POLL_INTERVAL_MS = 5000; // 5 seconds
 const MAX_POLL_ATTEMPTS = 120; // 10 minutes max wait time
 
+// Upload timeout (5 minutes for large files)
+const UPLOAD_TIMEOUT_MS = 300000;
+
 export interface PlateSolveOptions {
   // Scale parameters
   scaleUnits?: 'degwidth' | 'arcminwidth' | 'arcsecperpix';
@@ -180,20 +183,34 @@ async function submitFile(
   formData.append('request-json', JSON.stringify(requestData));
   formData.append('file', new Blob([arrayBuffer]), fileName);
 
-  const response = await fetch(`${ASTROMETRY_API_URL}/upload`, {
-    method: 'POST',
-    body: formData,
-  });
+  // Use AbortController for timeout on large uploads
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), UPLOAD_TIMEOUT_MS);
 
-  const data = await response.json();
+  try {
+    const response = await fetch(`${ASTROMETRY_API_URL}/upload`, {
+      method: 'POST',
+      body: formData,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
 
-  if (data.status !== 'success') {
-    throw new Error(
-      `Astrometry.net file upload failed: ${data.errormessage || 'Unknown error'}`
-    );
+    const data = await response.json();
+
+    if (data.status !== 'success') {
+      throw new Error(
+        `Astrometry.net file upload failed: ${data.errormessage || 'Unknown error'}`
+      );
+    }
+
+    return data.subid;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error(`File upload timed out after ${UPLOAD_TIMEOUT_MS / 1000} seconds`);
+    }
+    throw error;
   }
-
-  return data.subid;
 }
 
 /**

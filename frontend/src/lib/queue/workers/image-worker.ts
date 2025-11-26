@@ -417,6 +417,8 @@ async function processImageJob(job: Job<ProcessImageJobData>) {
           scaleType: 'ul',
           scaleLower: 0.1,
           scaleUpper: 180,
+          // Downsample large images server-side to speed up solving
+          downsampleFactor: fileBuffer.length > 50 * 1024 * 1024 ? 4 : 2,
         });
 
         if (plateSolveResult.success && plateSolveResult.calibration) {
