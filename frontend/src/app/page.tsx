@@ -34,7 +34,7 @@ export default function HomePage(): JSX.Element {
             </Title>
           </Group>
           <Text size="xl" c="dimmed" ta="center" maw={600}>
-            Your complete astrophotography planning and portfolio platform
+            Your complete free astrophotography planning and portfolio platform
           </Text>
         </Stack>
 
