@@ -19,7 +19,7 @@ import { tmpdir } from 'os';
 import { randomUUID } from 'crypto';
 import redisConnection from '../redis';
 import type { ProcessImageJobData } from '../queues';
-import { downloadFileToPath, getPresignedUrl } from '../../minio';
+import { downloadFileToPath, getPresignedUrl, uploadFile } from '../../minio';
 import { solveFieldWithFile } from '../../astrometry/client';
 
 const execAsync = promisify(exec);
@@ -290,6 +290,7 @@ async function processImageJob(job: Job<ProcessImageJobData>) {
   const { jobId, userId, storageKey, originalName } = job.data;
   let tempFilePath: string | null = null;
   let fitsFilePath: string | null = null;
+  let fitsStorageKey: string | null = null;
 
   console.log(`📸 [Job ${job.id}] Processing image: ${originalName}`);
 
@@ -325,6 +326,13 @@ async function processImageJob(job: Job<ProcessImageJobData>) {
       }
 
       console.log(`  ✓ Converted from ${conversionResult.original_format} (method: ${conversionResult.method || 'default'})`);
+
+      // Upload the converted FITS file to MinIO for gallery display
+      const { readFile } = await import('fs/promises');
+      const fitsBuffer = await readFile(fitsFilePath);
+      const fitsFileName = originalName.replace(/\.[^.]+$/, '.fits');
+      fitsStorageKey = await uploadFile(fitsBuffer, fitsFileName, 'application/fits', 'astro-images');
+      console.log(`  ✓ Uploaded converted FITS to storage: ${fitsStorageKey}`);
     } else {
       // Already FITS, use original file
       fitsFilePath = tempFilePath;
@@ -464,6 +472,7 @@ async function processImageJob(job: Job<ProcessImageJobData>) {
           userId,
           targetId: targetMatch.targetId,
           storageKey,
+          fitsStorageKey: fitsStorageKey ?? undefined,
           url: await getPresignedUrl(storageKey),
           visibility: 'PRIVATE',
           title: metadata.targetName ?? originalName,

@@ -304,9 +304,10 @@ model ImageUpload {
   rigId     String?
 
   // Storage
-  storageKey   String
-  url          String
-  thumbnailUrl String?
+  storageKey     String   // Original uploaded file
+  fitsStorageKey String?  // Converted FITS version (if original was not FITS)
+  url            String
+  thumbnailUrl   String?
 
   // Public/Private
   visibility  String  @default("PRIVATE") // PUBLIC | PRIVATE | UNLISTED
