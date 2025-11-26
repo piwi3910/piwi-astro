@@ -44,6 +44,9 @@ import {
   IconArrowsSort,
   IconSelector,
   IconHistory,
+  IconHeart,
+  IconHeartFilled,
+  IconCalendarSearch,
 } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import {
@@ -54,6 +57,7 @@ import {
   getSafeMoonSeparation,
   calculateSunAltitudeOverTime,
   calculatePlanetPosition,
+  calculateBestObservationDate,
 } from '@/utils/visibility';
 
 interface Location {
@@ -1143,6 +1147,76 @@ export default function TargetsPage(): JSX.Element {
     },
   });
 
+  // Create session with target, location, gear, and date
+  const createSessionMutation = useMutation({
+    mutationFn: async (params: { targetId: string; targetName: string }) => {
+      if (!selectedLocation || !selectedGear) {
+        throw new Error('Location and gear must be selected');
+      }
+
+      // First create the session
+      const sessionResponse = await fetch('/api/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: `${params.targetName} Session`,
+          locationName: selectedLocation.name,
+          latitude: selectedLocation.latitude,
+          longitude: selectedLocation.longitude,
+          date: selectedDate.toISOString(),
+        }),
+      });
+
+      if (!sessionResponse.ok) {
+        const errorData = await sessionResponse.json();
+        console.error('Session creation error:', errorData);
+        throw new Error('Failed to create session');
+      }
+
+      const createdSession = await sessionResponse.json();
+
+      // Then add the target to the session
+      const targetResponse = await fetch('/api/session-targets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: createdSession.id,
+          targetId: params.targetId,
+          rigId: selectedGear.id,
+          priority: 1,
+        }),
+      });
+
+      if (!targetResponse.ok) {
+        const errorData = await targetResponse.json();
+        console.error('Session target creation error:', errorData);
+        throw new Error('Failed to add target to session');
+      }
+
+      return createdSession;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sessions'] });
+      router.push('/dashboard/sessions');
+    },
+  });
+
+  const handleCreateSession = (targetId: string, targetName: string): void => {
+    if (!session) {
+      router.push('/login');
+      return;
+    }
+    if (!selectedLocation) {
+      alert('Please select a location first');
+      return;
+    }
+    if (!selectedGear) {
+      alert('Please select gear first');
+      return;
+    }
+    createSessionMutation.mutate({ targetId, targetName });
+  };
+
   const getTypeColor = (type: string): string => {
     const colors: Record<string, string> = {
       Galaxy: 'blue',
@@ -1163,6 +1237,24 @@ export default function TargetsPage(): JSX.Element {
       return;
     }
     addMutation.mutate(targetId);
+  };
+
+  const handleFindBestDate = (target: Target): void => {
+    // Don't calculate for dynamic objects (planets, comets, moon)
+    if (target.isDynamic) {
+      return;
+    }
+
+    const bestDate = calculateBestObservationDate(
+      { raDeg: target.raDeg, decDeg: target.decDeg }
+    );
+
+    // Set the search filter to the target's catalog ID or name to keep it visible
+    const searchTerm = target.catalogId || target.name;
+    setSearch(searchTerm);
+
+    // Update the selected date to the best observation date
+    setSelectedDate(bestDate);
   };
 
   // Format RA in HH:MM:SS format
@@ -2152,18 +2244,44 @@ export default function TargetsPage(): JSX.Element {
                               </Badge>
                             )}
                             {session && (
-                              <Tooltip label={isAdded ? 'Added to wishlist' : 'Add to wishlist'}>
-                                <ActionIcon
-                                  variant="subtle"
-                                  color={isAdded ? 'green' : 'blue'}
-                                  onClick={() => handleAddToWishlist(target.id)}
-                                  loading={addMutation.isPending}
-                                  disabled={isAdded}
-                                  size="sm"
-                                >
-                                  {isAdded ? <IconCheck size={14} /> : <IconPlus size={14} />}
-                                </ActionIcon>
-                              </Tooltip>
+                              <>
+                                <Tooltip label={isAdded ? 'Added to wishlist' : 'Add to wishlist'}>
+                                  <ActionIcon
+                                    variant="subtle"
+                                    color={isAdded ? 'red' : 'gray'}
+                                    onClick={() => handleAddToWishlist(target.id)}
+                                    loading={addMutation.isPending}
+                                    disabled={isAdded}
+                                    size="sm"
+                                  >
+                                    {isAdded ? <IconHeartFilled size={14} /> : <IconHeart size={14} />}
+                                  </ActionIcon>
+                                </Tooltip>
+                                {!target.isDynamic && (
+                                  <Tooltip label="Find best observation date">
+                                    <ActionIcon
+                                      variant="subtle"
+                                      color="teal"
+                                      onClick={() => handleFindBestDate(target)}
+                                      size="sm"
+                                    >
+                                      <IconCalendarSearch size={14} />
+                                    </ActionIcon>
+                                  </Tooltip>
+                                )}
+                                <Tooltip label={selectedGear ? 'Create session with this target' : 'Select gear to create session'}>
+                                  <ActionIcon
+                                    variant="subtle"
+                                    color="blue"
+                                    onClick={() => handleCreateSession(target.id, target.name)}
+                                    loading={createSessionMutation.isPending}
+                                    disabled={!selectedGear || !selectedLocation}
+                                    size="sm"
+                                  >
+                                    <IconPlus size={14} />
+                                  </ActionIcon>
+                                </Tooltip>
+                              </>
                             )}
                           </Group>
                         </Stack>

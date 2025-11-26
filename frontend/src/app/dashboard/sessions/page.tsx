@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import {
   Container,
   Title,
@@ -14,21 +14,30 @@ import {
   Modal,
   TextInput,
   Textarea,
-  Table,
   Select,
-  NumberInput,
   Tabs,
+  Paper,
+  SimpleGrid,
+  Box,
+  Tooltip,
 } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  IconPlus,
   IconEdit,
   IconTrash,
   IconCalendar,
   IconList,
-  IconTarget,
+  IconChevronLeft,
+  IconChevronRight,
 } from '@tabler/icons-react';
+
+interface Location {
+  id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+}
 
 interface Target {
   catalogId: string | null;
@@ -41,26 +50,18 @@ interface Target {
 interface SessionTarget {
   id: string;
   targetId: string;
-  priority: number;
-  duration: number | null;
-  notes: string | null;
   target: Target;
 }
 
 interface Session {
   id: string;
+  name: string;
   date: string;
-  location: string;
-  conditions: string | null;
+  locationName: string | null;
+  latitude: number;
+  longitude: number;
   notes: string | null;
   sessionTargets: SessionTarget[];
-}
-
-interface UserTarget {
-  id: string;
-  targetId: string;
-  status: string;
-  target: Target;
 }
 
 async function fetchSessions(): Promise<Session[]> {
@@ -69,10 +70,18 @@ async function fetchSessions(): Promise<Session[]> {
   return response.json();
 }
 
+async function fetchLocations(): Promise<Location[]> {
+  const response = await fetch('/api/locations');
+  if (!response.ok) throw new Error('Failed to fetch locations');
+  return response.json();
+}
+
 async function createSession(data: {
+  name: string;
   date: string;
-  location: string;
-  conditions?: string;
+  locationName?: string;
+  latitude: number;
+  longitude: number;
   notes?: string;
 }): Promise<Session> {
   const response = await fetch('/api/sessions', {
@@ -101,74 +110,15 @@ async function deleteSession(id: string): Promise<void> {
   if (!response.ok) throw new Error('Failed to delete session');
 }
 
-async function fetchUserTargets(): Promise<UserTarget[]> {
-  const response = await fetch('/api/user-targets');
-  if (!response.ok) throw new Error('Failed to fetch user targets');
-  return response.json();
-}
-
-async function addTargetToSession(data: {
-  sessionId: string;
-  targetId: string;
-  priority?: number;
-  duration?: number;
-  notes?: string;
-}): Promise<SessionTarget> {
-  const response = await fetch('/api/session-targets', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) throw new Error('Failed to add target to session');
-  return response.json();
-}
-
-async function removeTargetFromSession(id: string): Promise<void> {
-  const response = await fetch(`/api/session-targets/${id}`, {
-    method: 'DELETE',
-  });
-  if (!response.ok) throw new Error('Failed to remove target from session');
-}
-
-async function updateSessionTarget(
-  id: string,
-  data: { priority?: number; duration?: number; notes?: string }
-): Promise<SessionTarget> {
-  const response = await fetch(`/api/session-targets/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) throw new Error('Failed to update session target');
-  return response.json();
-}
-
 export default function SessionsPage(): JSX.Element {
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
-  const [targetModalOpen, setTargetModalOpen] = useState(false);
-  const [editTargetModalOpen, setEditTargetModalOpen] = useState(false);
   const [editingSession, setEditingSession] = useState<Session | null>(null);
-  const [editingSessionTarget, setEditingSessionTarget] = useState<SessionTarget | null>(null);
-  const [selectedSession, setSelectedSession] = useState<string | null>(null);
 
   const [sessionForm, setSessionForm] = useState({
+    name: '',
     date: new Date(),
-    location: '',
-    conditions: '',
-    notes: '',
-  });
-
-  const [targetForm, setTargetForm] = useState({
-    targetId: '',
-    priority: 0,
-    duration: 0,
-    notes: '',
-  });
-
-  const [editTargetForm, setEditTargetForm] = useState({
-    priority: 0,
-    duration: 0,
+    locationId: '',
     notes: '',
   });
 
@@ -179,9 +129,9 @@ export default function SessionsPage(): JSX.Element {
     queryFn: fetchSessions,
   });
 
-  const { data: userTargets } = useQuery({
-    queryKey: ['user-targets'],
-    queryFn: fetchUserTargets,
+  const { data: locations } = useQuery({
+    queryKey: ['locations'],
+    queryFn: fetchLocations,
   });
 
   const createMutation = useMutation({
@@ -211,67 +161,154 @@ export default function SessionsPage(): JSX.Element {
     },
   });
 
-  const addTargetMutation = useMutation({
-    mutationFn: addTargetToSession,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sessions'] });
-      setTargetModalOpen(false);
-      resetTargetForm();
-    },
-  });
+  // Calendar state
+  const [calendarDate, setCalendarDate] = useState(new Date());
+  const sessionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const removeTargetMutation = useMutation({
-    mutationFn: removeTargetFromSession,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sessions'] });
-    },
-  });
+  // Get calendar data
+  const calendarData = useMemo(() => {
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
 
-  const updateSessionTargetMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { priority?: number; duration?: number; notes?: string } }) =>
-      updateSessionTarget(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sessions'] });
-      setEditTargetModalOpen(false);
-      setEditingSessionTarget(null);
-    },
-  });
+    // First day of the month
+    const firstDay = new Date(year, month, 1);
+    // Last day of the month
+    const lastDay = new Date(year, month + 1, 0);
 
-  const resetSessionForm = (): void => {
-    setSessionForm({
-      date: new Date(),
-      location: '',
-      conditions: '',
-      notes: '',
+    // Day of week for first day, adjusted for Monday start (0 = Monday, 6 = Sunday)
+    const dayOfWeek = firstDay.getDay();
+    const startDayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+    // Total days in month
+    const daysInMonth = lastDay.getDate();
+
+    // Build array of days including padding for previous month
+    const days: { date: Date; isCurrentMonth: boolean; sessions: Session[] }[] = [];
+
+    // Add days from previous month to fill the first week
+    const prevMonthLastDay = new Date(year, month, 0).getDate();
+    for (let i = startDayOfWeek - 1; i >= 0; i--) {
+      const date = new Date(year, month - 1, prevMonthLastDay - i);
+      days.push({ date, isCurrentMonth: false, sessions: [] });
+    }
+
+    // Add days of current month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      days.push({ date, isCurrentMonth: true, sessions: [] });
+    }
+
+    // Add days from next month to complete the grid (6 rows = 42 days)
+    const remainingDays = 42 - days.length;
+    for (let day = 1; day <= remainingDays; day++) {
+      const date = new Date(year, month + 1, day);
+      days.push({ date, isCurrentMonth: false, sessions: [] });
+    }
+
+    // Map sessions to days
+    if (sessions) {
+      sessions.forEach((session) => {
+        const sessionDate = new Date(session.date);
+        const dayIndex = days.findIndex(
+          (d) =>
+            d.date.getFullYear() === sessionDate.getFullYear() &&
+            d.date.getMonth() === sessionDate.getMonth() &&
+            d.date.getDate() === sessionDate.getDate()
+        );
+        if (dayIndex !== -1) {
+          days[dayIndex].sessions.push(session);
+        }
+      });
+    }
+
+    return { days, year, month };
+  }, [calendarDate, sessions]);
+
+  const navigateMonth = (direction: 'prev' | 'next'): void => {
+    setCalendarDate((prev) => {
+      const newDate = new Date(prev);
+      if (direction === 'prev') {
+        newDate.setMonth(newDate.getMonth() - 1);
+      } else {
+        newDate.setMonth(newDate.getMonth() + 1);
+      }
+      return newDate;
     });
   };
 
-  const resetTargetForm = (): void => {
-    setTargetForm({
-      targetId: '',
-      priority: 0,
-      duration: 0,
+  const goToToday = (): void => {
+    setCalendarDate(new Date());
+  };
+
+  const handleCalendarSessionClick = (session: Session): void => {
+    // Switch to list view and scroll to the session
+    setViewMode('list');
+    // Use setTimeout to allow the view to switch before scrolling
+    setTimeout(() => {
+      const element = sessionRefs.current[session.id];
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Add a brief highlight effect
+        element.style.boxShadow = '0 0 0 3px var(--mantine-color-blue-5)';
+        setTimeout(() => {
+          element.style.boxShadow = '';
+        }, 2000);
+      }
+    }, 100);
+  };
+
+  const isToday = (date: Date): boolean => {
+    const today = new Date();
+    return (
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()
+    );
+  };
+
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  const resetSessionForm = (): void => {
+    setSessionForm({
+      name: '',
+      date: new Date(),
+      locationId: '',
       notes: '',
     });
   };
 
   const handleCreateSession = (): void => {
+    const selectedLocation = locations?.find((l) => l.id === sessionForm.locationId);
+    if (!selectedLocation) return;
+
     createMutation.mutate({
+      name: sessionForm.name,
       date: sessionForm.date.toISOString(),
-      location: sessionForm.location,
-      conditions: sessionForm.conditions || undefined,
+      locationName: selectedLocation.name,
+      latitude: selectedLocation.latitude,
+      longitude: selectedLocation.longitude,
       notes: sessionForm.notes || undefined,
     });
   };
 
   const handleUpdateSession = (): void => {
     if (editingSession) {
+      const selectedLocation = locations?.find((l) => l.id === sessionForm.locationId);
+      if (!selectedLocation) return;
+
       updateMutation.mutate({
         id: editingSession.id,
         data: {
+          name: sessionForm.name,
           date: sessionForm.date.toISOString(),
-          location: sessionForm.location,
-          conditions: sessionForm.conditions || undefined,
+          locationName: selectedLocation.name,
+          latitude: selectedLocation.latitude,
+          longitude: selectedLocation.longitude,
           notes: sessionForm.notes || undefined,
         },
       });
@@ -280,53 +317,17 @@ export default function SessionsPage(): JSX.Element {
 
   const handleEditSession = (session: Session): void => {
     setEditingSession(session);
+    // Find matching location by coordinates
+    const matchingLocation = locations?.find(
+      (l) => l.latitude === session.latitude && l.longitude === session.longitude
+    );
     setSessionForm({
+      name: session.name,
       date: new Date(session.date),
-      location: session.location,
-      conditions: session.conditions || '',
+      locationId: matchingLocation?.id || '',
       notes: session.notes || '',
     });
     setSessionModalOpen(true);
-  };
-
-  const handleAddTarget = (): void => {
-    if (selectedSession && targetForm.targetId) {
-      addTargetMutation.mutate({
-        sessionId: selectedSession,
-        targetId: targetForm.targetId,
-        priority: targetForm.priority,
-        duration: targetForm.duration || undefined,
-        notes: targetForm.notes || undefined,
-      });
-    }
-  };
-
-  const handleOpenTargetModal = (sessionId: string): void => {
-    setSelectedSession(sessionId);
-    setTargetModalOpen(true);
-  };
-
-  const handleEditSessionTarget = (sessionTarget: SessionTarget): void => {
-    setEditingSessionTarget(sessionTarget);
-    setEditTargetForm({
-      priority: sessionTarget.priority,
-      duration: sessionTarget.duration || 0,
-      notes: sessionTarget.notes || '',
-    });
-    setEditTargetModalOpen(true);
-  };
-
-  const handleUpdateSessionTarget = (): void => {
-    if (editingSessionTarget) {
-      updateSessionTargetMutation.mutate({
-        id: editingSessionTarget.id,
-        data: {
-          priority: editTargetForm.priority,
-          duration: editTargetForm.duration || undefined,
-          notes: editTargetForm.notes || undefined,
-        },
-      });
-    }
   };
 
   if (isLoading) {
@@ -338,18 +339,6 @@ export default function SessionsPage(): JSX.Element {
       <Stack gap="lg">
         <Group justify="space-between">
           <Title order={1}>Imaging Sessions</Title>
-          <Group>
-            <Button
-              leftSection={<IconPlus size={16} />}
-              onClick={() => {
-                setEditingSession(null);
-                resetSessionForm();
-                setSessionModalOpen(true);
-              }}
-            >
-              New Session
-            </Button>
-          </Group>
         </Group>
 
         <Tabs value={viewMode} onChange={(val) => setViewMode(val as 'list' | 'calendar')}>
@@ -366,22 +355,28 @@ export default function SessionsPage(): JSX.Element {
             {sessions && sessions.length > 0 ? (
               <Stack gap="md">
                 {sessions.map((session) => (
-                  <Card key={session.id} shadow="sm" padding="lg" withBorder>
+                  <Card
+                    key={session.id}
+                    shadow="sm"
+                    padding="lg"
+                    withBorder
+                    ref={(el) => {
+                      sessionRefs.current[session.id] = el;
+                    }}
+                    style={{ transition: 'box-shadow 0.3s ease' }}
+                  >
                     <Stack gap="sm">
                       <Group justify="space-between">
                         <div>
                           <Text fw={600} size="lg">
+                            {session.name}
+                          </Text>
+                          <Text size="sm" c="dimmed">
                             {new Date(session.date).toLocaleDateString('en-US', {
                               weekday: 'long',
                               year: 'numeric',
                               month: 'long',
                               day: 'numeric',
-                            })}
-                          </Text>
-                          <Text size="sm" c="dimmed">
-                            {new Date(session.date).toLocaleTimeString('en-US', {
-                              hour: '2-digit',
-                              minute: '2-digit',
                             })}
                           </Text>
                         </div>
@@ -403,12 +398,9 @@ export default function SessionsPage(): JSX.Element {
                       </Group>
 
                       <Group gap="lg">
-                        <Text size="sm">
-                          <strong>Location:</strong> {session.location}
-                        </Text>
-                        {session.conditions && (
+                        {session.locationName && (
                           <Text size="sm">
-                            <strong>Conditions:</strong> {session.conditions}
+                            <strong>Location:</strong> {session.locationName}
                           </Text>
                         )}
                       </Group>
@@ -419,85 +411,20 @@ export default function SessionsPage(): JSX.Element {
                         </Text>
                       )}
 
-                      <div>
-                        <Group justify="space-between" mb="xs">
-                          <Text size="sm" fw={500}>
-                            Targets ({session.sessionTargets.length})
-                          </Text>
-                          <Button
-                            size="xs"
-                            variant="light"
-                            leftSection={<IconTarget size={14} />}
-                            onClick={() => handleOpenTargetModal(session.id)}
-                          >
-                            Add Target
-                          </Button>
+                      {session.sessionTargets.length > 0 && session.sessionTargets[0] && (
+                        <Group gap="sm">
+                          <Text size="sm" fw={500}>Target:</Text>
+                          <Text size="sm">{session.sessionTargets[0].target.name}</Text>
+                          {session.sessionTargets[0].target.catalogId && (
+                            <Text size="sm" c="dimmed">
+                              ({session.sessionTargets[0].target.catalogId})
+                            </Text>
+                          )}
+                          <Badge size="sm" variant="light">
+                            {session.sessionTargets[0].target.type}
+                          </Badge>
                         </Group>
-
-                        {session.sessionTargets.length > 0 ? (
-                          <Table>
-                            <Table.Thead>
-                              <Table.Tr>
-                                <Table.Th>Target</Table.Th>
-                                <Table.Th>Type</Table.Th>
-                                <Table.Th>Priority</Table.Th>
-                                <Table.Th>Duration</Table.Th>
-                                <Table.Th>Actions</Table.Th>
-                              </Table.Tr>
-                            </Table.Thead>
-                            <Table.Tbody>
-                              {session.sessionTargets.map((st) => (
-                                <Table.Tr key={st.id}>
-                                  <Table.Td>
-                                    <div>
-                                      <Text size="sm" fw={500}>
-                                        {st.target.name}
-                                      </Text>
-                                      {st.target.catalogId && (
-                                        <Text size="xs" c="dimmed">
-                                          {st.target.catalogId}
-                                        </Text>
-                                      )}
-                                    </div>
-                                  </Table.Td>
-                                  <Table.Td>
-                                    <Badge size="sm" variant="light">
-                                      {st.target.type}
-                                    </Badge>
-                                  </Table.Td>
-                                  <Table.Td>{st.priority}</Table.Td>
-                                  <Table.Td>
-                                    {st.duration ? `${st.duration} min` : '-'}
-                                  </Table.Td>
-                                  <Table.Td>
-                                    <Group gap="xs">
-                                      <ActionIcon
-                                        variant="subtle"
-                                        size="sm"
-                                        onClick={() => handleEditSessionTarget(st)}
-                                      >
-                                        <IconEdit size={14} />
-                                      </ActionIcon>
-                                      <ActionIcon
-                                        variant="subtle"
-                                        color="red"
-                                        size="sm"
-                                        onClick={() => removeTargetMutation.mutate(st.id)}
-                                      >
-                                        <IconTrash size={14} />
-                                      </ActionIcon>
-                                    </Group>
-                                  </Table.Td>
-                                </Table.Tr>
-                              ))}
-                            </Table.Tbody>
-                          </Table>
-                        ) : (
-                          <Text size="sm" c="dimmed" ta="center" py="md">
-                            No targets added yet
-                          </Text>
-                        )}
-                      </div>
+                      )}
                     </Stack>
                   </Card>
                 ))}
@@ -510,9 +437,111 @@ export default function SessionsPage(): JSX.Element {
           </Tabs.Panel>
 
           <Tabs.Panel value="calendar" pt="md">
-            <Text c="dimmed" ta="center" py="xl">
-              Calendar view coming soon
-            </Text>
+            <Paper withBorder p="md">
+              {/* Calendar Header */}
+              <Group justify="space-between" mb="md">
+                <Group gap="xs">
+                  <ActionIcon variant="subtle" onClick={() => navigateMonth('prev')}>
+                    <IconChevronLeft size={20} />
+                  </ActionIcon>
+                  <ActionIcon variant="subtle" onClick={() => navigateMonth('next')}>
+                    <IconChevronRight size={20} />
+                  </ActionIcon>
+                  <Title order={3} ml="sm">
+                    {monthNames[calendarData.month]} {calendarData.year}
+                  </Title>
+                </Group>
+                <Button variant="subtle" size="sm" onClick={goToToday}>
+                  Today
+                </Button>
+              </Group>
+
+              {/* Day Headers */}
+              <SimpleGrid cols={7} spacing={0}>
+                {dayNames.map((day) => (
+                  <Box
+                    key={day}
+                    p="xs"
+                    style={{
+                      borderBottom: '1px solid var(--mantine-color-dark-4)',
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Text size="sm" fw={600} c="dimmed">
+                      {day}
+                    </Text>
+                  </Box>
+                ))}
+              </SimpleGrid>
+
+              {/* Calendar Grid */}
+              <SimpleGrid cols={7} spacing={0}>
+                {calendarData.days.map((day, index) => (
+                  <Box
+                    key={index}
+                    p="xs"
+                    style={{
+                      minHeight: 100,
+                      borderBottom: '1px solid var(--mantine-color-dark-4)',
+                      borderRight: (index + 1) % 7 !== 0 ? '1px solid var(--mantine-color-dark-4)' : undefined,
+                      backgroundColor: isToday(day.date)
+                        ? 'var(--mantine-color-blue-9)'
+                        : day.isCurrentMonth
+                          ? 'var(--mantine-color-dark-6)'
+                          : 'var(--mantine-color-dark-8)',
+                      opacity: day.isCurrentMonth ? 1 : 0.5,
+                    }}
+                  >
+                    <Text
+                      size="sm"
+                      fw={isToday(day.date) ? 700 : 400}
+                      c={day.isCurrentMonth ? (isToday(day.date) ? 'blue.3' : 'inherit') : 'dark.3'}
+                      mb="xs"
+                    >
+                      {day.date.getDate()}
+                    </Text>
+                    <Stack gap={4}>
+                      {day.sessions.map((session) => (
+                        <Tooltip
+                          key={session.id}
+                          label={
+                            <Stack gap={2}>
+                              <Text size="xs" fw={500}>{session.name}</Text>
+                              {session.locationName && (
+                                <Text size="xs" c="dimmed">{session.locationName}</Text>
+                              )}
+                              {session.sessionTargets[0]?.target && (
+                                <Text size="xs">Target: {session.sessionTargets[0].target.name}</Text>
+                              )}
+                            </Stack>
+                          }
+                          withArrow
+                          multiline
+                          w={200}
+                        >
+                          <Box
+                            onClick={() => handleCalendarSessionClick(session)}
+                            style={{
+                              backgroundColor: 'var(--mantine-color-blue-6)',
+                              color: 'white',
+                              padding: '2px 6px',
+                              borderRadius: 4,
+                              cursor: 'pointer',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              fontSize: 11,
+                            }}
+                          >
+                            {session.name}
+                          </Box>
+                        </Tooltip>
+                      ))}
+                    </Stack>
+                  </Box>
+                ))}
+              </SimpleGrid>
+            </Paper>
           </Tabs.Panel>
         </Tabs>
 
@@ -528,30 +557,38 @@ export default function SessionsPage(): JSX.Element {
           size="md"
         >
           <Stack gap="md">
+            <TextInput
+              label="Session Name"
+              placeholder="e.g., M31 Imaging Session"
+              value={sessionForm.name}
+              onChange={(e) =>
+                setSessionForm({ ...sessionForm, name: e.target.value })
+              }
+              required
+            />
             <DateTimePicker
-              label="Date & Time"
+              label="Date"
               value={sessionForm.date}
               onChange={(val) =>
                 val && setSessionForm({ ...sessionForm, date: val })
               }
               required
             />
-            <TextInput
+            <Select
               label="Location"
-              placeholder="Backyard, Dark Sky Site, etc."
-              value={sessionForm.location}
-              onChange={(e) =>
-                setSessionForm({ ...sessionForm, location: e.target.value })
+              placeholder="Select a location"
+              data={
+                locations?.map((l) => ({
+                  value: l.id,
+                  label: l.name,
+                })) || []
               }
+              value={sessionForm.locationId}
+              onChange={(val) =>
+                setSessionForm({ ...sessionForm, locationId: val || '' })
+              }
+              searchable
               required
-            />
-            <TextInput
-              label="Conditions"
-              placeholder="Clear skies, no moon, etc."
-              value={sessionForm.conditions}
-              onChange={(e) =>
-                setSessionForm({ ...sessionForm, conditions: e.target.value })
-              }
             />
             <Textarea
               label="Notes"
@@ -576,6 +613,7 @@ export default function SessionsPage(): JSX.Element {
               <Button
                 onClick={editingSession ? handleUpdateSession : handleCreateSession}
                 loading={createMutation.isPending || updateMutation.isPending}
+                disabled={!sessionForm.name || !sessionForm.locationId}
               >
                 {editingSession ? 'Save' : 'Create'}
               </Button>
@@ -583,151 +621,6 @@ export default function SessionsPage(): JSX.Element {
           </Stack>
         </Modal>
 
-        {/* Add Target Modal */}
-        <Modal
-          opened={targetModalOpen}
-          onClose={() => {
-            setTargetModalOpen(false);
-            setSelectedSession(null);
-            resetTargetForm();
-          }}
-          title="Add Target to Session"
-          size="md"
-        >
-          <Stack gap="md">
-            <Select
-              label="Target"
-              placeholder="Select a target"
-              data={
-                userTargets?.map((ut) => ({
-                  value: ut.targetId,
-                  label: `${ut.target.name}${
-                    ut.target.catalogId ? ` (${ut.target.catalogId})` : ''
-                  }`,
-                })) || []
-              }
-              value={targetForm.targetId}
-              onChange={(val) =>
-                setTargetForm({ ...targetForm, targetId: val || '' })
-              }
-              searchable
-              required
-            />
-            <NumberInput
-              label="Priority"
-              description="Higher priority targets are listed first"
-              value={targetForm.priority}
-              onChange={(val) =>
-                setTargetForm({ ...targetForm, priority: Number(val) })
-              }
-              min={0}
-            />
-            <NumberInput
-              label="Duration (minutes)"
-              description="Planned imaging time"
-              value={targetForm.duration}
-              onChange={(val) =>
-                setTargetForm({ ...targetForm, duration: Number(val) })
-              }
-              min={0}
-            />
-            <Textarea
-              label="Notes"
-              placeholder="Target-specific notes for this session..."
-              value={targetForm.notes}
-              onChange={(e) =>
-                setTargetForm({ ...targetForm, notes: e.target.value })
-              }
-              minRows={2}
-            />
-            <Group justify="flex-end">
-              <Button
-                variant="subtle"
-                onClick={() => {
-                  setTargetModalOpen(false);
-                  setSelectedSession(null);
-                  resetTargetForm();
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleAddTarget}
-                loading={addTargetMutation.isPending}
-                disabled={!targetForm.targetId}
-              >
-                Add Target
-              </Button>
-            </Group>
-          </Stack>
-        </Modal>
-
-        {/* Edit Session Target Modal */}
-        <Modal
-          opened={editTargetModalOpen}
-          onClose={() => {
-            setEditTargetModalOpen(false);
-            setEditingSessionTarget(null);
-          }}
-          title="Edit Session Target"
-          size="md"
-        >
-          <Stack gap="md">
-            <Text size="sm" fw={600}>
-              Target: {editingSessionTarget?.target.name}
-              {editingSessionTarget?.target.catalogId && (
-                <Text size="xs" c="dimmed" component="span" ml="xs">
-                  ({editingSessionTarget.target.catalogId})
-                </Text>
-              )}
-            </Text>
-
-            <NumberInput
-              label="Priority"
-              description="Higher priority targets are listed first"
-              value={editTargetForm.priority}
-              onChange={(val) =>
-                setEditTargetForm({ ...editTargetForm, priority: Number(val) })
-              }
-              min={0}
-            />
-            <NumberInput
-              label="Duration (minutes)"
-              description="Planned imaging time"
-              value={editTargetForm.duration}
-              onChange={(val) =>
-                setEditTargetForm({ ...editTargetForm, duration: Number(val) })
-              }
-              min={0}
-            />
-            <Textarea
-              label="Notes"
-              placeholder="Target-specific notes for this session..."
-              value={editTargetForm.notes}
-              onChange={(e) =>
-                setEditTargetForm({ ...editTargetForm, notes: e.target.value })
-              }
-              minRows={2}
-            />
-            <Group justify="flex-end">
-              <Button
-                variant="subtle"
-                onClick={() => {
-                  setEditTargetModalOpen(false);
-                  setEditingSessionTarget(null);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleUpdateSessionTarget}
-                loading={updateSessionTargetMutation.isPending}
-              >
-                Save Changes
-              </Button>
-            </Group>
-          </Stack>
-        </Modal>
       </Stack>
     </Container>
   );

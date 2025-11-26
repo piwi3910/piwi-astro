@@ -16,6 +16,11 @@ import {
   IconUser,
   IconSettings,
   IconMapPin,
+  IconBook,
+  IconChevronDown,
+  IconHeart,
+  IconTool,
+  IconRuler2,
 } from '@tabler/icons-react';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -28,12 +33,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const navItems = session
     ? [
         { label: 'Dashboard', href: '/dashboard', icon: IconHome },
-        { label: 'Locations', href: '/dashboard/locations', icon: IconMapPin },
-        { label: 'Targets', href: '/targets', icon: IconStar },
         { label: 'Gallery', href: '/gallery', icon: IconPhoto },
+        { label: 'Locations', href: '/dashboard/locations', icon: IconMapPin },
         { label: 'Gear', href: '/dashboard/gear', icon: IconTelescope },
-        { label: 'Sessions', href: '/dashboard/sessions', icon: IconCalendar },
-        { label: 'FOV Planner', href: '/dashboard/fov-planner', icon: IconCamera },
       ]
     : [
         { label: 'Gallery', href: '/gallery', icon: IconPhoto },
@@ -65,7 +67,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </Group>
 
           <Group visibleFrom="sm">
-            {navItems.map((item) => (
+            {navItems.slice(0, 3).map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -80,6 +82,106 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 </Button>
               </Link>
             ))}
+
+            {session && (
+              <Menu shadow="md" width={180}>
+                <Menu.Target>
+                  <Button
+                    variant={
+                      isActive('/targets') ||
+                      isActive('/dashboard/wishlist') ||
+                      isActive('/dashboard/sessions')
+                        ? 'filled'
+                        : 'subtle'
+                    }
+                    leftSection={<IconStar size={16} />}
+                    rightSection={<IconChevronDown size={14} />}
+                    size="sm"
+                  >
+                    Targets
+                  </Button>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Link
+                    href="/targets"
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <Menu.Item leftSection={<IconBook size={14} />}>
+                      Catalog
+                    </Menu.Item>
+                  </Link>
+                  <Link
+                    href="/dashboard/wishlist"
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <Menu.Item leftSection={<IconHeart size={14} />}>
+                      My Wishlist
+                    </Menu.Item>
+                  </Link>
+                  <Link
+                    href="/dashboard/sessions"
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <Menu.Item leftSection={<IconCalendar size={14} />}>
+                      Sessions
+                    </Menu.Item>
+                  </Link>
+                </Menu.Dropdown>
+              </Menu>
+            )}
+
+            {navItems.slice(3).map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                style={{ textDecoration: 'none' }}
+              >
+                <Button
+                  variant={isActive(item.href) ? 'filled' : 'subtle'}
+                  leftSection={<item.icon size={16} />}
+                  size="sm"
+                >
+                  {item.label}
+                </Button>
+              </Link>
+            ))}
+
+            {session && (
+              <Menu shadow="md" width={180}>
+                <Menu.Target>
+                  <Button
+                    variant={
+                      isActive('/dashboard/fov-planner') || isActive('/dashboard/pixel-scale')
+                        ? 'filled'
+                        : 'subtle'
+                    }
+                    leftSection={<IconTool size={16} />}
+                    rightSection={<IconChevronDown size={14} />}
+                    size="sm"
+                  >
+                    Tools
+                  </Button>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Link
+                    href="/dashboard/fov-planner"
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <Menu.Item leftSection={<IconCamera size={14} />}>
+                      FOV Planner
+                    </Menu.Item>
+                  </Link>
+                  <Link
+                    href="/dashboard/pixel-scale"
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <Menu.Item leftSection={<IconRuler2 size={14} />}>
+                      Pixel Scale
+                    </Menu.Item>
+                  </Link>
+                </Menu.Dropdown>
+              </Menu>
+            )}
           </Group>
 
           <Group>
@@ -103,14 +205,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     style={{ textDecoration: 'none', color: 'inherit' }}
                   >
                     <Menu.Item leftSection={<IconUser size={14} />}>Profile</Menu.Item>
-                  </Link>
-                  <Link
-                    href="/dashboard/wishlist"
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <Menu.Item leftSection={<IconStar size={14} />}>
-                      My Wishlist
-                    </Menu.Item>
                   </Link>
                   <Link
                     href="/dashboard/images"
@@ -158,7 +252,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
       <AppShell.Navbar p="md" hiddenFrom="sm">
         <AppShell.Section grow>
-          {navItems.map((item) => (
+          {navItems.slice(0, 3).map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -175,6 +269,110 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               </Button>
             </Link>
           ))}
+
+          {session && (
+            <>
+              <Text size="xs" c="dimmed" fw={500} mt="md" mb="xs" pl="xs">
+                Targets
+              </Text>
+              <Link
+                href="/targets"
+                style={{ textDecoration: 'none' }}
+                onClick={toggle}
+              >
+                <Button
+                  variant={isActive('/targets') ? 'filled' : 'subtle'}
+                  leftSection={<IconBook size={16} />}
+                  fullWidth
+                  mb="xs"
+                >
+                  Catalog
+                </Button>
+              </Link>
+              <Link
+                href="/dashboard/wishlist"
+                style={{ textDecoration: 'none' }}
+                onClick={toggle}
+              >
+                <Button
+                  variant={isActive('/dashboard/wishlist') ? 'filled' : 'subtle'}
+                  leftSection={<IconHeart size={16} />}
+                  fullWidth
+                  mb="xs"
+                >
+                  My Wishlist
+                </Button>
+              </Link>
+              <Link
+                href="/dashboard/sessions"
+                style={{ textDecoration: 'none' }}
+                onClick={toggle}
+              >
+                <Button
+                  variant={isActive('/dashboard/sessions') ? 'filled' : 'subtle'}
+                  leftSection={<IconCalendar size={16} />}
+                  fullWidth
+                  mb="xs"
+                >
+                  Sessions
+                </Button>
+              </Link>
+            </>
+          )}
+
+          {navItems.slice(3).map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              style={{ textDecoration: 'none' }}
+              onClick={toggle}
+            >
+              <Button
+                variant={isActive(item.href) ? 'filled' : 'subtle'}
+                leftSection={<item.icon size={16} />}
+                fullWidth
+                mb="xs"
+              >
+                {item.label}
+              </Button>
+            </Link>
+          ))}
+
+          {session && (
+            <>
+              <Text size="xs" c="dimmed" fw={500} mt="md" mb="xs" pl="xs">
+                Tools
+              </Text>
+              <Link
+                href="/dashboard/fov-planner"
+                style={{ textDecoration: 'none' }}
+                onClick={toggle}
+              >
+                <Button
+                  variant={isActive('/dashboard/fov-planner') ? 'filled' : 'subtle'}
+                  leftSection={<IconCamera size={16} />}
+                  fullWidth
+                  mb="xs"
+                >
+                  FOV Planner
+                </Button>
+              </Link>
+              <Link
+                href="/dashboard/pixel-scale"
+                style={{ textDecoration: 'none' }}
+                onClick={toggle}
+              >
+                <Button
+                  variant={isActive('/dashboard/pixel-scale') ? 'filled' : 'subtle'}
+                  leftSection={<IconRuler2 size={16} />}
+                  fullWidth
+                  mb="xs"
+                >
+                  Pixel Scale
+                </Button>
+              </Link>
+            </>
+          )}
         </AppShell.Section>
       </AppShell.Navbar>
 

@@ -4,9 +4,10 @@ import { prisma } from '@/lib/db/prisma';
 import { getUserId } from '@/lib/auth/api-auth';
 
 const updateSessionSchema = z.object({
-  startTime: z.string().datetime().optional(),
-  location: z.string().min(1).optional(),
-  conditions: z.string().optional(),
+  date: z.string().datetime().optional(),
+  locationName: z.string().min(1).optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
   notes: z.string().optional(),
 }).partial();
 
@@ -67,9 +68,9 @@ export async function PUT(
       return NextResponse.json({ error: 'Session not found' }, { status: 404 });
     }
 
-    const updateData: typeof data & { date?: Date } = { ...data };
-    if (data.startTime) {
-      updateData.date = new Date(data.startTime);
+    const updateData: Omit<typeof data, 'date'> & { date?: Date } = { ...data };
+    if (data.date) {
+      updateData.date = new Date(data.date);
     }
 
     const updatedSession = await prisma.session.update({

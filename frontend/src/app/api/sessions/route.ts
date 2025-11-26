@@ -8,8 +8,7 @@ const sessionSchema = z.object({
   locationName: z.string().optional(),
   latitude: z.number(),
   longitude: z.number(),
-  startTime: z.string().datetime(),
-  endTime: z.string().datetime(),
+  date: z.string().datetime(),
   moonPhasePercent: z.number().optional(),
   seeingEstimate: z.string().optional(),
   notes: z.string().optional(),
@@ -25,7 +24,7 @@ export async function GET(request: Request) {
 
   const where: {
     userId: string;
-    startTime?: {
+    date?: {
       gte?: Date;
       lte?: Date;
     };
@@ -34,9 +33,9 @@ export async function GET(request: Request) {
   };
 
   if (from || to) {
-    where.startTime = {};
-    if (from) where.startTime.gte = new Date(from);
-    if (to) where.startTime.lte = new Date(to);
+    where.date = {};
+    if (from) where.date.gte = new Date(from);
+    if (to) where.date.lte = new Date(to);
   }
 
   // Check if pagination is requested
@@ -57,7 +56,7 @@ export async function GET(request: Request) {
         },
       },
       orderBy: {
-        startTime: 'desc',
+        date: 'desc',
       },
     });
     return NextResponse.json(sessions);
@@ -86,7 +85,7 @@ export async function GET(request: Request) {
         },
       },
       orderBy: {
-        startTime: 'desc',
+        date: 'desc',
       },
     }),
   ]);
@@ -113,8 +112,7 @@ export async function POST(request: Request) {
     const newSession = await prisma.session.create({
       data: {
         ...data,
-        startTime: new Date(data.startTime),
-        endTime: new Date(data.endTime),
+        date: new Date(data.date),
         userId,
       },
       include: {

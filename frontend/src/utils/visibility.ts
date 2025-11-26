@@ -625,3 +625,57 @@ export async function fetchCometPositions(
 
   return positions;
 }
+
+/**
+ * Calculate the best date to observe a deep sky object
+ * The best date is when the object culminates (reaches highest altitude) around midnight
+ * This occurs when the object's RA is 12 hours away from the Sun's RA
+ *
+ * @param target Target coordinates (RA/Dec)
+ * @param referenceDate Optional reference date to search from (defaults to today)
+ * @returns The date when the target is best positioned for night observation
+ */
+export function calculateBestObservationDate(
+  target: TargetCoordinates,
+  referenceDate: Date = new Date()
+): Date {
+  // Get the target's RA in hours
+  const targetRAHours = target.raDeg / 15;
+
+  // The Sun moves roughly 1 hour of RA per 15 days (or about 0.0667 hours per day)
+  // To find when the target culminates at midnight, we need the Sun's RA to be
+  // opposite to the target's RA (i.e., Sun's RA = target's RA - 12h or + 12h)
+
+  // Get Sun's current position
+  const sunEquator = Astronomy.Equator(Astronomy.Body.Sun, referenceDate, new Astronomy.Observer(0, 0, 0), true, true);
+  const sunRAHours = sunEquator.ra;
+
+  // Calculate the target's "opposition" RA (when Sun is 12h away, target is highest at midnight)
+  // We want: sunRA = targetRA - 12 (or + 12, normalized to 0-24)
+  let targetOppositionSunRA = targetRAHours - 12;
+  if (targetOppositionSunRA < 0) targetOppositionSunRA += 24;
+
+  // Calculate how many hours of RA the Sun needs to move to reach opposition point
+  let raDistance = targetOppositionSunRA - sunRAHours;
+
+  // Normalize to -12 to +12 hours (shortest path)
+  if (raDistance > 12) raDistance -= 24;
+  if (raDistance < -12) raDistance += 24;
+
+  // Convert RA distance to days (Sun moves ~1° per day, 15° per hour of RA)
+  // So 1 hour of RA ≈ 15.2 days
+  const daysUntilBest = raDistance * 15.2;
+
+  // Calculate the best date
+  const bestDate = new Date(referenceDate);
+  bestDate.setDate(bestDate.getDate() + Math.round(daysUntilBest));
+
+  // If the best date is in the past (more than a few days ago), add a year
+  const today = new Date();
+  const daysDiff = (bestDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
+  if (daysDiff < -30) {
+    bestDate.setFullYear(bestDate.getFullYear() + 1);
+  }
+
+  return bestDate;
+}

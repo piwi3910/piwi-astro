@@ -55,7 +55,7 @@ export async function GET() {
     prisma.userTarget.count({ where: { userId, status: 'SHOT' } }),
     prisma.userTarget.count({ where: { userId, status: 'PROCESSED' } }),
     prisma.session.count({ where: { userId } }),
-    prisma.session.count({ where: { userId, startTime: { gte: now } } }),
+    prisma.session.count({ where: { userId, date: { gte: now } } }),
     prisma.imageUpload.count({ where: { userId } }),
     prisma.imageUpload.count({ where: { userId, visibility: 'PUBLIC' } }),
   ]);

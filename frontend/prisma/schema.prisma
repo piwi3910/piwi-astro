@@ -240,8 +240,7 @@ model Session {
   locationName     String?
   latitude         Float
   longitude        Float
-  startTime        DateTime
-  endTime          DateTime
+  date             DateTime
   moonPhasePercent Float?
   seeingEstimate   String?
   notes            String?
@@ -251,7 +250,7 @@ model Session {
   images         ImageUpload[]
 
   @@index([userId])
-  @@index([startTime])
+  @@index([date])
 }
 
 model Location {
