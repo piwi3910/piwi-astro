@@ -123,6 +123,232 @@ export default function DashboardPage(): JSX.Element {
           </Text>
         </div>
 
+        {/* Quick Actions */}
+        <Card shadow="sm" padding="lg" withBorder>
+          <Stack gap="md">
+            <Text fw={600} size="lg">
+              Quick Actions
+            </Text>
+
+            <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
+              <Link href="/dashboard/gear" style={{ textDecoration: 'none' }}>
+                <Paper p="md" withBorder style={{ cursor: 'pointer' }}>
+                  <Stack align="center" gap="xs">
+                    <ThemeIcon size="xl" variant="light" color="blue">
+                      <IconSettings size={24} />
+                    </ThemeIcon>
+                    <Text size="sm" fw={500} ta="center">
+                      Manage Gear
+                    </Text>
+                  </Stack>
+                </Paper>
+              </Link>
+
+              <Link href="/targets" style={{ textDecoration: 'none' }}>
+                <Paper p="md" withBorder style={{ cursor: 'pointer' }}>
+                  <Stack align="center" gap="xs">
+                    <ThemeIcon size="xl" variant="light" color="grape">
+                      <IconStar size={24} />
+                    </ThemeIcon>
+                    <Text size="sm" fw={500} ta="center">
+                      Browse Targets
+                    </Text>
+                  </Stack>
+                </Paper>
+              </Link>
+
+              <Link href="/dashboard/sessions" style={{ textDecoration: 'none' }}>
+                <Paper p="md" withBorder style={{ cursor: 'pointer' }}>
+                  <Stack align="center" gap="xs">
+                    <ThemeIcon size="xl" variant="light" color="cyan">
+                      <IconCalendar size={24} />
+                    </ThemeIcon>
+                    <Text size="sm" fw={500} ta="center">
+                      Plan Session
+                    </Text>
+                  </Stack>
+                </Paper>
+              </Link>
+
+              <Link href="/dashboard/fov-planner" style={{ textDecoration: 'none' }}>
+                <Paper p="md" withBorder style={{ cursor: 'pointer' }}>
+                  <Stack align="center" gap="xs">
+                    <ThemeIcon size="xl" variant="light" color="green">
+                      <IconCamera size={24} />
+                    </ThemeIcon>
+                    <Text size="sm" fw={500} ta="center">
+                      FOV Planner
+                    </Text>
+                  </Stack>
+                </Paper>
+              </Link>
+            </SimpleGrid>
+          </Stack>
+        </Card>
+
+        <Grid>
+          {/* Target Progress */}
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Card shadow="sm" padding="lg" withBorder h="100%">
+              <Stack gap="md" h="100%" justify="space-between">
+                <div>
+                  <Group justify="space-between" mb="md">
+                    <Text fw={600} size="lg">
+                      Target Progress
+                    </Text>
+                    <ThemeIcon variant="light" color="green">
+                      <IconTrendingUp size={20} />
+                    </ThemeIcon>
+                  </Group>
+
+                  <div>
+                    <Group justify="space-between" mb="xs">
+                      <Text size="sm" c="dimmed">
+                        Completion Rate
+                      </Text>
+                      <Text size="sm" fw={600}>
+                        {targetProgress.toFixed(0)}%
+                      </Text>
+                    </Group>
+                    <Progress value={targetProgress} size="lg" radius="xl" />
+                  </div>
+
+                  <SimpleGrid cols={3} mt="md">
+                    <div>
+                      <Text size="xl" fw={700} c="blue">
+                        {stats.targetsWishlist}
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        Wishlist
+                      </Text>
+                    </div>
+                    <div>
+                      <Text size="xl" fw={700} c="cyan">
+                        {stats.targetsShot}
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        Shot
+                      </Text>
+                    </div>
+                    <div>
+                      <Text size="xl" fw={700} c="green">
+                        {stats.targetsProcessed}
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        Processed
+                      </Text>
+                    </div>
+                  </SimpleGrid>
+                </div>
+
+                <Link href="/dashboard/wishlist" style={{ textDecoration: 'none' }}>
+                  <Text size="sm" c="blue" style={{ cursor: 'pointer' }}>
+                    View all targets →
+                  </Text>
+                </Link>
+              </Stack>
+            </Card>
+          </Grid.Col>
+
+          {/* Upcoming Sessions */}
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Card shadow="sm" padding="lg" withBorder h="100%">
+              <Stack gap="md" h="100%" justify="space-between">
+                <div>
+                  <Group justify="space-between" mb="md">
+                    <Text fw={600} size="lg">
+                      Upcoming Sessions
+                    </Text>
+                    <ThemeIcon variant="light" color="cyan">
+                      <IconCalendar size={20} />
+                    </ThemeIcon>
+                  </Group>
+
+                  {upcomingSessions && upcomingSessions.length > 0 ? (
+                    <Stack gap="sm">
+                      {upcomingSessions.map((session) => (
+                        <Paper key={session.id} p="sm" withBorder>
+                          <Group justify="space-between">
+                            <div>
+                              <Text size="sm" fw={600}>
+                                {new Date(session.date).toLocaleDateString('en-US', {
+                                  weekday: 'short',
+                                  month: 'short',
+                                  day: 'numeric',
+                                })}
+                              </Text>
+                              <Text size="xs" c="dimmed">
+                                {session.location}
+                              </Text>
+                            </div>
+                            <Badge size="sm" variant="light">
+                              {session.sessionTargets.length} targets
+                            </Badge>
+                          </Group>
+                        </Paper>
+                      ))}
+                    </Stack>
+                  ) : (
+                    <Text size="sm" c="dimmed" ta="center" py="md">
+                      No upcoming sessions planned
+                    </Text>
+                  )}
+                </div>
+
+                <Link href="/dashboard/sessions" style={{ textDecoration: 'none' }}>
+                  <Text size="sm" c="blue" style={{ cursor: 'pointer' }}>
+                    View all sessions →
+                  </Text>
+                </Link>
+              </Stack>
+            </Card>
+          </Grid.Col>
+        </Grid>
+
+        {/* Recent Images */}
+        <Card shadow="sm" padding="lg" withBorder>
+          <Stack gap="md">
+            <Group justify="space-between">
+              <Text fw={600} size="lg">
+                Recent Images
+              </Text>
+              <ThemeIcon variant="light" color="orange">
+                <IconPhoto size={20} />
+              </ThemeIcon>
+            </Group>
+
+            {recentImages && recentImages.length > 0 ? (
+              <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
+                {recentImages.map((image) => (
+                  <Card key={image.id} shadow="xs" padding="xs" withBorder>
+                    <Card.Section>
+                      <Image
+                        src={image.url}
+                        height={120}
+                        alt={image.title || image.target.name}
+                        fit="cover"
+                      />
+                    </Card.Section>
+                    <Text size="xs" mt="xs" lineClamp={1}>
+                      {image.title || image.target.name}
+                    </Text>
+                  </Card>
+                ))}
+              </SimpleGrid>
+            ) : (
+              <Text size="sm" c="dimmed" ta="center" py="md">
+                No images uploaded yet
+              </Text>
+            )}
+
+            <Link href="/dashboard/images" style={{ textDecoration: 'none' }}>
+              <Text size="sm" c="blue" style={{ cursor: 'pointer' }}>
+                View all images →
+              </Text>
+            </Link>
+          </Stack>
+        </Card>
+
         {/* Quick Stats */}
         <SimpleGrid cols={{ base: 2, sm: 3, md: 4 }} spacing="md">
           <Paper p="md" withBorder>
@@ -201,228 +427,6 @@ export default function DashboardPage(): JSX.Element {
             </Group>
           </Paper>
         </SimpleGrid>
-
-        <Grid>
-          {/* Target Progress */}
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Card shadow="sm" padding="lg" withBorder>
-              <Stack gap="md">
-                <Group justify="space-between">
-                  <Text fw={600} size="lg">
-                    Target Progress
-                  </Text>
-                  <ThemeIcon variant="light" color="green">
-                    <IconTrendingUp size={20} />
-                  </ThemeIcon>
-                </Group>
-
-                <div>
-                  <Group justify="space-between" mb="xs">
-                    <Text size="sm" c="dimmed">
-                      Completion Rate
-                    </Text>
-                    <Text size="sm" fw={600}>
-                      {targetProgress.toFixed(0)}%
-                    </Text>
-                  </Group>
-                  <Progress value={targetProgress} size="lg" radius="xl" />
-                </div>
-
-                <SimpleGrid cols={3}>
-                  <div>
-                    <Text size="xl" fw={700} c="blue">
-                      {stats.targetsWishlist}
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      Wishlist
-                    </Text>
-                  </div>
-                  <div>
-                    <Text size="xl" fw={700} c="cyan">
-                      {stats.targetsShot}
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      Shot
-                    </Text>
-                  </div>
-                  <div>
-                    <Text size="xl" fw={700} c="green">
-                      {stats.targetsProcessed}
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      Processed
-                    </Text>
-                  </div>
-                </SimpleGrid>
-
-                <Link href="/dashboard/wishlist" style={{ textDecoration: 'none' }}>
-                  <Text size="sm" c="blue" style={{ cursor: 'pointer' }}>
-                    View all targets →
-                  </Text>
-                </Link>
-              </Stack>
-            </Card>
-          </Grid.Col>
-
-          {/* Upcoming Sessions */}
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Card shadow="sm" padding="lg" withBorder>
-              <Stack gap="md">
-                <Group justify="space-between">
-                  <Text fw={600} size="lg">
-                    Upcoming Sessions
-                  </Text>
-                  <ThemeIcon variant="light" color="cyan">
-                    <IconCalendar size={20} />
-                  </ThemeIcon>
-                </Group>
-
-                {upcomingSessions && upcomingSessions.length > 0 ? (
-                  <Stack gap="sm">
-                    {upcomingSessions.map((session) => (
-                      <Paper key={session.id} p="sm" withBorder>
-                        <Group justify="space-between">
-                          <div>
-                            <Text size="sm" fw={600}>
-                              {new Date(session.date).toLocaleDateString('en-US', {
-                                weekday: 'short',
-                                month: 'short',
-                                day: 'numeric',
-                              })}
-                            </Text>
-                            <Text size="xs" c="dimmed">
-                              {session.location}
-                            </Text>
-                          </div>
-                          <Badge size="sm" variant="light">
-                            {session.sessionTargets.length} targets
-                          </Badge>
-                        </Group>
-                      </Paper>
-                    ))}
-                  </Stack>
-                ) : (
-                  <Text size="sm" c="dimmed" ta="center" py="md">
-                    No upcoming sessions planned
-                  </Text>
-                )}
-
-                <Link href="/dashboard/sessions" style={{ textDecoration: 'none' }}>
-                  <Text size="sm" c="blue" style={{ cursor: 'pointer' }}>
-                    View all sessions →
-                  </Text>
-                </Link>
-              </Stack>
-            </Card>
-          </Grid.Col>
-        </Grid>
-
-        {/* Recent Images */}
-        <Card shadow="sm" padding="lg" withBorder>
-          <Stack gap="md">
-            <Group justify="space-between">
-              <Text fw={600} size="lg">
-                Recent Images
-              </Text>
-              <ThemeIcon variant="light" color="orange">
-                <IconPhoto size={20} />
-              </ThemeIcon>
-            </Group>
-
-            {recentImages && recentImages.length > 0 ? (
-              <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
-                {recentImages.map((image) => (
-                  <Card key={image.id} shadow="xs" padding="xs" withBorder>
-                    <Card.Section>
-                      <Image
-                        src={image.url}
-                        height={120}
-                        alt={image.title || image.target.name}
-                        fit="cover"
-                      />
-                    </Card.Section>
-                    <Text size="xs" mt="xs" lineClamp={1}>
-                      {image.title || image.target.name}
-                    </Text>
-                  </Card>
-                ))}
-              </SimpleGrid>
-            ) : (
-              <Text size="sm" c="dimmed" ta="center" py="md">
-                No images uploaded yet
-              </Text>
-            )}
-
-            <Link href="/dashboard/images" style={{ textDecoration: 'none' }}>
-              <Text size="sm" c="blue" style={{ cursor: 'pointer' }}>
-                View all images →
-              </Text>
-            </Link>
-          </Stack>
-        </Card>
-
-        {/* Quick Actions */}
-        <Card shadow="sm" padding="lg" withBorder>
-          <Stack gap="md">
-            <Text fw={600} size="lg">
-              Quick Actions
-            </Text>
-
-            <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
-              <Link href="/dashboard/gear" style={{ textDecoration: 'none' }}>
-                <Paper p="md" withBorder style={{ cursor: 'pointer' }}>
-                  <Stack align="center" gap="xs">
-                    <ThemeIcon size="xl" variant="light" color="blue">
-                      <IconSettings size={24} />
-                    </ThemeIcon>
-                    <Text size="sm" fw={500} ta="center">
-                      Manage Gear
-                    </Text>
-                  </Stack>
-                </Paper>
-              </Link>
-
-              <Link href="/targets" style={{ textDecoration: 'none' }}>
-                <Paper p="md" withBorder style={{ cursor: 'pointer' }}>
-                  <Stack align="center" gap="xs">
-                    <ThemeIcon size="xl" variant="light" color="grape">
-                      <IconStar size={24} />
-                    </ThemeIcon>
-                    <Text size="sm" fw={500} ta="center">
-                      Browse Targets
-                    </Text>
-                  </Stack>
-                </Paper>
-              </Link>
-
-              <Link href="/dashboard/sessions" style={{ textDecoration: 'none' }}>
-                <Paper p="md" withBorder style={{ cursor: 'pointer' }}>
-                  <Stack align="center" gap="xs">
-                    <ThemeIcon size="xl" variant="light" color="cyan">
-                      <IconCalendar size={24} />
-                    </ThemeIcon>
-                    <Text size="sm" fw={500} ta="center">
-                      Plan Session
-                    </Text>
-                  </Stack>
-                </Paper>
-              </Link>
-
-              <Link href="/dashboard/fov-planner" style={{ textDecoration: 'none' }}>
-                <Paper p="md" withBorder style={{ cursor: 'pointer' }}>
-                  <Stack align="center" gap="xs">
-                    <ThemeIcon size="xl" variant="light" color="green">
-                      <IconCamera size={24} />
-                    </ThemeIcon>
-                    <Text size="sm" fw={500} ta="center">
-                      FOV Planner
-                    </Text>
-                  </Stack>
-                </Paper>
-              </Link>
-            </SimpleGrid>
-          </Stack>
-        </Card>
       </Stack>
     </Container>
   );

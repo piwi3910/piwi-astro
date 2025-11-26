@@ -58,13 +58,11 @@ export async function GET(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }
 
-  // Increment view count if not owner
-  if (!isOwner) {
-    await prisma.imageUpload.update({
-      where: { id },
-      data: { viewCount: { increment: 1 } },
-    });
-  }
+  // Increment view count for all users (including owner)
+  await prisma.imageUpload.update({
+    where: { id },
+    data: { viewCount: { increment: 1 } },
+  });
 
   // Generate presigned URL
   const url = await getPresignedUrl(image.storageKey);

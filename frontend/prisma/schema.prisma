@@ -36,6 +36,7 @@ model User {
   images       ImageUpload[]
   locations    Location[]
   processingJobs ImageProcessingJob[]
+  imageLikes   ImageLike[]
 
   @@index([username])
   @@index([email])
@@ -310,11 +311,18 @@ model ImageUpload {
   thumbnailUrl   String?
 
   // Public/Private
-  visibility  String  @default("PRIVATE") // PUBLIC | PRIVATE | UNLISTED
-  title       String?
-  description String?
-  viewCount   Int     @default(0)
-  featured    Boolean @default(false)
+  visibility    String  @default("PRIVATE") // PUBLIC | PRIVATE | UNLISTED
+  title         String?
+  description   String?
+  viewCount     Int     @default(0)
+  downloadCount Int     @default(0)
+  featured      Boolean @default(false)
+
+  // Capture date (extracted from FITS/XISF metadata or manually set)
+  captureDate   DateTime?
+
+  // Relations for likes
+  likes         ImageLike[]
 
   // EXIF & Capture metadata
   exposureTimeSec     Float?
@@ -382,4 +390,18 @@ model ImageProcessingJob {
   @@index([userId])
   @@index([status])
   @@index([createdAt])
+}
+
+model ImageLike {
+  id        String   @id @default(uuid())
+  userId    String
+  imageId   String
+  createdAt DateTime @default(now())
+
+  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  image ImageUpload @relation(fields: [imageId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, imageId])
+  @@index([imageId])
+  @@index([userId])
 }

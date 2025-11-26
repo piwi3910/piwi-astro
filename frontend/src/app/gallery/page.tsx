@@ -18,9 +18,12 @@ import {
   Modal,
   Button,
   ActionIcon,
+  Tooltip,
 } from '@mantine/core';
-import { useQuery } from '@tanstack/react-query';
-import { IconSearch, IconEye, IconStar, IconZoomIn, IconDownload, IconX } from '@tabler/icons-react';
+import { useDebouncedValue } from '@mantine/hooks';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { IconSearch, IconEye, IconStar, IconZoomIn, IconDownload, IconX, IconHeart, IconHeartFilled } from '@tabler/icons-react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 
 interface Target {
@@ -44,6 +47,9 @@ interface ImageUpload {
   description: string | null;
   featured: boolean;
   viewCount: number;
+  downloadCount: number;
+  likeCount: number;
+  isLiked: boolean;
   captureDate: string | null;
   target: Target;
   user: User;
@@ -53,13 +59,15 @@ interface ImageUpload {
 async function fetchPublicImages(
   search: string,
   type: string,
-  constellation: string
+  constellation: string,
+  sortBy: string
 ): Promise<ImageUpload[]> {
   const params = new URLSearchParams({
     visibility: 'PUBLIC',
     ...(search && { search }),
     ...(type && { type }),
     ...(constellation && { constellation }),
+    ...(sortBy && { sortBy }),
   });
 
   const response = await fetch(`/api/images?${params}`);
@@ -67,19 +75,87 @@ async function fetchPublicImages(
   return response.json();
 }
 
+async function trackView(imageId: string): Promise<void> {
+  await fetch(`/api/images/${imageId}/view`, { method: 'POST' });
+}
+
+async function trackDownload(imageId: string): Promise<void> {
+  await fetch(`/api/images/${imageId}/download`, { method: 'POST' });
+}
+
+async function likeImage(imageId: string): Promise<{ liked: boolean; likeCount: number }> {
+  const response = await fetch(`/api/images/${imageId}/like`, { method: 'POST' });
+  return response.json();
+}
+
+async function unlikeImage(imageId: string): Promise<{ liked: boolean; likeCount: number }> {
+  const response = await fetch(`/api/images/${imageId}/like`, { method: 'DELETE' });
+  return response.json();
+}
+
 export default function GalleryPage(): JSX.Element {
+  const { data: session } = useSession();
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebouncedValue(search, 500);
   const [type, setType] = useState('');
   const [constellation, setConstellation] = useState('');
+  const [sortBy, setSortBy] = useState('latest');
   const [lightboxImage, setLightboxImage] = useState<ImageUpload | null>(null);
 
   const { data: images, isLoading } = useQuery({
-    queryKey: ['public-images', search, type, constellation],
-    queryFn: () => fetchPublicImages(search, type, constellation),
+    queryKey: ['public-images', debouncedSearch, type, constellation, sortBy],
+    queryFn: () => fetchPublicImages(debouncedSearch, type, constellation, sortBy),
   });
+
+  // Mutation for liking/unliking images
+  const likeMutation = useMutation({
+    mutationFn: async ({ imageId, isLiked }: { imageId: string; isLiked: boolean }) => {
+      if (isLiked) {
+        return unlikeImage(imageId);
+      } else {
+        return likeImage(imageId);
+      }
+    },
+    onSuccess: (data, variables) => {
+      // Update the image's like count and isLiked status in the cache
+      queryClient.setQueryData(
+        ['public-images', debouncedSearch, type, constellation, sortBy],
+        (oldData: ImageUpload[] | undefined) => {
+          if (!oldData) return oldData;
+          return oldData.map((img) =>
+            img.id === variables.imageId
+              ? { ...img, likeCount: data.likeCount, isLiked: data.liked }
+              : img
+          );
+        }
+      );
+    },
+  });
+
+  const handleLikeClick = (e: React.MouseEvent, image: ImageUpload) => {
+    e.stopPropagation();
+    if (!session) return; // Must be logged in to like
+    likeMutation.mutate({ imageId: image.id, isLiked: image.isLiked });
+  };
+
+  const handleOpenLightbox = (image: ImageUpload) => {
+    setLightboxImage(image);
+    // Track view when opening lightbox
+    trackView(image.id);
+  };
+
+  const handleCloseLightbox = () => {
+    setLightboxImage(null);
+    // Invalidate cache to refetch with updated view counts (important for "Most Viewed" sort)
+    queryClient.invalidateQueries({ queryKey: ['public-images', debouncedSearch, type, constellation, sortBy] });
+  };
 
   const handleDownload = async (image: ImageUpload) => {
     try {
+      // Track download
+      trackDownload(image.id);
+
       const response = await fetch(image.url);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -94,17 +170,6 @@ export default function GalleryPage(): JSX.Element {
       console.error('Download failed:', error);
     }
   };
-
-  if (isLoading) {
-    return (
-      <Container size="xl" py="xl">
-        <Stack align="center">
-          <Loader size="lg" />
-          <Text>Loading gallery...</Text>
-        </Stack>
-      </Container>
-    );
-  }
 
   return (
     <Container size="xl" py="xl">
@@ -169,10 +234,27 @@ export default function GalleryPage(): JSX.Element {
             onChange={(val) => setConstellation(val || '')}
             style={{ width: 200 }}
           />
+          <Select
+            placeholder="Sort by"
+            data={[
+              { value: 'latest', label: 'Latest' },
+              { value: 'mostViewed', label: 'Most Viewed' },
+              { value: 'mostDownloaded', label: 'Most Downloaded' },
+              { value: 'mostLiked', label: 'Most Liked' },
+            ]}
+            value={sortBy}
+            onChange={(val) => setSortBy(val || 'latest')}
+            style={{ width: 160 }}
+          />
         </Group>
 
         {/* Gallery Grid */}
-        {images && images.length > 0 ? (
+        {isLoading ? (
+          <Stack align="center" py="xl">
+            <Loader size="lg" />
+            <Text c="dimmed">Loading images...</Text>
+          </Stack>
+        ) : images && images.length > 0 ? (
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing="md">
             {images.map((image) => (
               <Card key={image.id} shadow="sm" padding="sm" withBorder>
@@ -184,7 +266,7 @@ export default function GalleryPage(): JSX.Element {
                     fit="cover"
                   />
                   <div
-                    onClick={() => setLightboxImage(image)}
+                    onClick={() => handleOpenLightbox(image)}
                     style={{
                       position: 'absolute',
                       top: 0,
@@ -251,20 +333,46 @@ export default function GalleryPage(): JSX.Element {
                     </Group>
                   </Link>
 
-                  <Group justify="space-between">
-                    {image.captureDate && (
-                      <Text size="xs" c="dimmed">
-                        {new Date(image.captureDate).toLocaleDateString()}
-                      </Text>
-                    )}
-                    {image.viewCount > 0 && (
-                      <Group gap={4}>
-                        <IconEye size={12} />
+                  <Group justify="space-between" align="center">
+                    <Group gap="sm">
+                      {image.captureDate && (
                         <Text size="xs" c="dimmed">
-                          {image.viewCount}
+                          {new Date(image.captureDate).toLocaleDateString()}
                         </Text>
-                      </Group>
-                    )}
+                      )}
+                    </Group>
+                    <Group gap="xs">
+                      {image.viewCount > 0 && (
+                        <Tooltip label="Views">
+                          <Group gap={4}>
+                            <IconEye size={12} />
+                            <Text size="xs" c="dimmed">
+                              {image.viewCount}
+                            </Text>
+                          </Group>
+                        </Tooltip>
+                      )}
+                      <Tooltip label={session ? (image.isLiked ? 'Unlike' : 'Like') : 'Login to like'}>
+                        <ActionIcon
+                          variant="subtle"
+                          size="sm"
+                          color={image.isLiked ? 'red' : 'gray'}
+                          onClick={(e) => handleLikeClick(e, image)}
+                          disabled={!session}
+                        >
+                          {image.isLiked ? (
+                            <IconHeartFilled size={14} />
+                          ) : (
+                            <IconHeart size={14} />
+                          )}
+                        </ActionIcon>
+                      </Tooltip>
+                      {image.likeCount > 0 && (
+                        <Text size="xs" c="dimmed">
+                          {image.likeCount}
+                        </Text>
+                      )}
+                    </Group>
                   </Group>
                 </Stack>
               </Card>
@@ -279,7 +387,7 @@ export default function GalleryPage(): JSX.Element {
         {/* Lightbox Modal */}
         <Modal
           opened={!!lightboxImage}
-          onClose={() => setLightboxImage(null)}
+          onClose={handleCloseLightbox}
           size="auto"
           padding={0}
           withCloseButton={false}
@@ -344,7 +452,7 @@ export default function GalleryPage(): JSX.Element {
                     variant="filled"
                     color="dark"
                     size="lg"
-                    onClick={() => setLightboxImage(null)}
+                    onClick={handleCloseLightbox}
                   >
                     <IconX size={18} />
                   </ActionIcon>

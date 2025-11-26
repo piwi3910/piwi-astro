@@ -30,6 +30,7 @@ export async function GET(request: Request) {
   const search = searchParams.get('search');
   const type = searchParams.get('type');
   const constellation = searchParams.get('constellation');
+  const sortBy = searchParams.get('sortBy') || 'latest'; // latest, mostViewed, mostDownloaded, mostLiked
 
   // Build where clause based on filters and auth
   const where: {
@@ -97,6 +98,26 @@ export async function GET(request: Request) {
     }
   }
 
+  // Build orderBy based on sortBy parameter
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let orderBy: any;
+
+  switch (sortBy) {
+    case 'mostViewed':
+      orderBy = [{ viewCount: 'desc' }, { uploadedAt: 'desc' }];
+      break;
+    case 'mostDownloaded':
+      orderBy = [{ downloadCount: 'desc' }, { uploadedAt: 'desc' }];
+      break;
+    case 'mostLiked':
+      orderBy = [{ likes: { _count: 'desc' } }, { uploadedAt: 'desc' }];
+      break;
+    case 'latest':
+    default:
+      orderBy = [{ uploadedAt: 'desc' }];
+      break;
+  }
+
   // Check if pagination is requested
   const hasPagination = searchParams.has('page') || searchParams.has('pageSize');
 
@@ -120,19 +141,30 @@ export async function GET(request: Request) {
             name: true,
           },
         },
+        _count: {
+          select: { likes: true },
+        },
+        // Include likes from current user to check if they liked each image
+        likes: authenticatedUserId
+          ? {
+              where: { userId: authenticatedUserId },
+              select: { id: true },
+            }
+          : false,
       },
-      orderBy: {
-        uploadedAt: 'desc',
-      },
+      orderBy,
     });
 
     // Generate presigned URLs for all images
     const imagesWithUrls = await Promise.all(
       images.map(async (image) => {
         const url = await getPresignedUrl(image.storageKey);
+        const { _count, likes, ...rest } = image;
         return {
-          ...image,
+          ...rest,
           url,
+          likeCount: _count.likes,
+          isLiked: Array.isArray(likes) && likes.length > 0,
         };
       })
     );
@@ -168,10 +200,18 @@ export async function GET(request: Request) {
             name: true,
           },
         },
+        _count: {
+          select: { likes: true },
+        },
+        // Include likes from current user to check if they liked each image
+        likes: authenticatedUserId
+          ? {
+              where: { userId: authenticatedUserId },
+              select: { id: true },
+            }
+          : false,
       },
-      orderBy: {
-        uploadedAt: 'desc',
-      },
+      orderBy,
     }),
   ]);
 
@@ -179,9 +219,12 @@ export async function GET(request: Request) {
   const imagesWithUrls = await Promise.all(
     images.map(async (image) => {
       const url = await getPresignedUrl(image.storageKey);
+      const { _count, likes, ...rest } = image;
       return {
-        ...image,
+        ...rest,
         url,
+        likeCount: _count.likes,
+        isLiked: Array.isArray(likes) && likes.length > 0,
       };
     })
   );
