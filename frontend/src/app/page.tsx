@@ -1,13 +1,17 @@
 'use client';
 
-import { Container, Title, Text, Button, Stack, Group, Grid, Card, ThemeIcon, Image, Box, Skeleton } from '@mantine/core';
+import { useRef } from 'react';
+import { Container, Title, Text, Button, Stack, Group, Grid, Card, ThemeIcon, Image, Box, Skeleton, rem } from '@mantine/core';
+import { Carousel } from '@mantine/carousel';
+import Autoplay from 'embla-carousel-autoplay';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { IconTelescope, IconPhoto, IconTarget, IconCalendar } from '@tabler/icons-react';
+import { IconTelescope, IconPhoto, IconTarget, IconCalendar, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 
 export default function HomePage(): JSX.Element {
   const { data: session, status } = useSession();
+  const autoplay = useRef(Autoplay({ delay: 4000, stopOnInteraction: false }));
 
   // Fetch latest public images
   const { data: images, isLoading: imagesLoading } = useQuery({
@@ -15,7 +19,7 @@ export default function HomePage(): JSX.Element {
     queryFn: async () => {
       const response = await fetch('/api/images?visibility=PUBLIC');
       const data = await response.json();
-      return data.slice(0, 6); // Get latest 6 images
+      return data.slice(0, 10); // Get latest 10 images for carousel
     },
   });
 
@@ -23,9 +27,12 @@ export default function HomePage(): JSX.Element {
     <Container size="lg" py="xl">
       <Stack gap="xl" align="center" style={{ minHeight: '80vh', justifyContent: 'center' }}>
         <Stack gap="md" align="center">
-          <Title order={1} size="3.5rem" ta="center">
-            piwi-astro
-          </Title>
+          <Group gap="md" align="center">
+            <IconTelescope size={56} />
+            <Title order={1} size="3.5rem" ta="center">
+              piwi-astro
+            </Title>
+          </Group>
           <Text size="xl" c="dimmed" ta="center" maw={600}>
             Your complete astrophotography planning and portfolio platform
           </Text>
@@ -85,42 +92,99 @@ export default function HomePage(): JSX.Element {
 
         {/* Latest Public Images Section */}
         <Box w="100%" mt="xl">
-          <Title order={2} size="2rem" ta="center" mb="md">
+          <Title order={2} size="2rem" ta="center" mb="lg">
             Latest Community Images
           </Title>
           {imagesLoading ? (
-            <Grid>
-              {[1, 2, 3].map((i) => (
-                <Grid.Col key={i} span={{ base: 12, sm: 6, md: 4 }}>
-                  <Skeleton height={200} />
-                </Grid.Col>
-              ))}
-            </Grid>
+            <Skeleton height={280} radius="md" />
           ) : images && images.length > 0 ? (
-            <Grid>
+            <Carousel
+              height={280}
+              slideSize={{ base: '100%', xs: '50%', sm: '33.333%', md: '25%' }}
+              slideGap="md"
+              loop
+              align="start"
+              plugins={[autoplay.current]}
+              onMouseEnter={autoplay.current.stop}
+              onMouseLeave={autoplay.current.reset}
+              nextControlIcon={<IconChevronRight style={{ width: rem(20), height: rem(20) }} />}
+              previousControlIcon={<IconChevronLeft style={{ width: rem(20), height: rem(20) }} />}
+              styles={{
+                control: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: 'white',
+                  width: rem(36),
+                  height: rem(36),
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                  },
+                },
+                controls: {
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                },
+              }}
+            >
               {images.map((image: any) => (
-                <Grid.Col key={image.id} span={{ base: 12, sm: 6, md: 4 }}>
-                  <Card shadow="sm" padding="xs" withBorder component={Link} href={`/gallery`} style={{ cursor: 'pointer', textDecoration: 'none' }}>
-                    <Card.Section>
+                <Carousel.Slide key={image.id}>
+                  <Card
+                    shadow="md"
+                    padding={0}
+                    radius="md"
+                    component={Link}
+                    href="/gallery"
+                    style={{
+                      cursor: 'pointer',
+                      textDecoration: 'none',
+                      height: '100%',
+                      overflow: 'hidden',
+                      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                    }}
+                    onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                      e.currentTarget.style.transform = 'translateY(-4px)';
+                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.4)';
+                    }}
+                    onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '';
+                    }}
+                  >
+                    <div style={{ position: 'relative', height: '100%' }}>
                       <Image
                         src={image.url}
-                        height={200}
                         alt={image.title || image.target?.name || 'Astrophoto'}
+                        height={280}
                         fit="cover"
                       />
-                    </Card.Section>
-                    <Stack gap="xs" mt="xs">
-                      <Text fw={500} size="sm" lineClamp={1}>
-                        {image.title || image.target?.name || 'Untitled'}
-                      </Text>
-                      <Text size="xs" c="dimmed" lineClamp={1}>
-                        by {image.user?.name || 'Anonymous'}
-                      </Text>
-                    </Stack>
+                      {/* Gradient overlay for text */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          padding: '12px',
+                          background: 'linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.6) 60%, transparent)',
+                        }}
+                      >
+                        <Text fw={600} size="sm" c="white" lineClamp={1}>
+                          {image.title || image.target?.name || 'Untitled'}
+                        </Text>
+                        <Text size="xs" c="gray.4" lineClamp={1}>
+                          by {image.user?.name || image.user?.username || 'Anonymous'}
+                        </Text>
+                        {image.target?.type && (
+                          <Text size="xs" c="gray.5" mt={2}>
+                            {image.target.type}
+                          </Text>
+                        )}
+                      </div>
+                    </div>
                   </Card>
-                </Grid.Col>
+                </Carousel.Slide>
               ))}
-            </Grid>
+            </Carousel>
           ) : (
             <Text ta="center" c="dimmed">
               No public images yet. Be the first to share your astrophotography!
@@ -130,8 +194,8 @@ export default function HomePage(): JSX.Element {
 
         <Grid mt="xl" w="100%">
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Card shadow="sm" padding="lg" withBorder>
-              <Stack align="center" gap="md">
+            <Card shadow="sm" padding="lg" withBorder h="100%">
+              <Stack align="center" gap="md" h="100%">
                 <ThemeIcon size={60} radius="md" variant="light" color="blue">
                   <IconTelescope size={32} />
                 </ThemeIcon>
@@ -148,8 +212,8 @@ export default function HomePage(): JSX.Element {
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Card shadow="sm" padding="lg" withBorder>
-              <Stack align="center" gap="md">
+            <Card shadow="sm" padding="lg" withBorder h="100%">
+              <Stack align="center" gap="md" h="100%">
                 <ThemeIcon size={60} radius="md" variant="light" color="grape">
                   <IconTarget size={32} />
                 </ThemeIcon>
@@ -166,8 +230,8 @@ export default function HomePage(): JSX.Element {
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Card shadow="sm" padding="lg" withBorder>
-              <Stack align="center" gap="md">
+            <Card shadow="sm" padding="lg" withBorder h="100%">
+              <Stack align="center" gap="md" h="100%">
                 <ThemeIcon size={60} radius="md" variant="light" color="cyan">
                   <IconCalendar size={32} />
                 </ThemeIcon>
@@ -184,8 +248,8 @@ export default function HomePage(): JSX.Element {
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Card shadow="sm" padding="lg" withBorder>
-              <Stack align="center" gap="md">
+            <Card shadow="sm" padding="lg" withBorder h="100%">
+              <Stack align="center" gap="md" h="100%">
                 <ThemeIcon size={60} radius="md" variant="light" color="orange">
                   <IconPhoto size={32} />
                 </ThemeIcon>

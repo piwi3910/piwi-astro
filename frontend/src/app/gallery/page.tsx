@@ -15,9 +15,12 @@ import {
   TextInput,
   Loader,
   Avatar,
+  Modal,
+  Button,
+  ActionIcon,
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import { IconSearch, IconEye, IconStar } from '@tabler/icons-react';
+import { IconSearch, IconEye, IconStar, IconZoomIn, IconDownload, IconX } from '@tabler/icons-react';
 import Link from 'next/link';
 
 interface Target {
@@ -68,11 +71,29 @@ export default function GalleryPage(): JSX.Element {
   const [search, setSearch] = useState('');
   const [type, setType] = useState('');
   const [constellation, setConstellation] = useState('');
+  const [lightboxImage, setLightboxImage] = useState<ImageUpload | null>(null);
 
   const { data: images, isLoading } = useQuery({
     queryKey: ['public-images', search, type, constellation],
     queryFn: () => fetchPublicImages(search, type, constellation),
   });
+
+  const handleDownload = async (image: ImageUpload) => {
+    try {
+      const response = await fetch(image.url);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = image.title || image.target.name || 'astrophoto.jpg';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Download failed:', error);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -155,13 +176,34 @@ export default function GalleryPage(): JSX.Element {
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing="md">
             {images.map((image) => (
               <Card key={image.id} shadow="sm" padding="sm" withBorder>
-                <Card.Section>
+                <Card.Section style={{ position: 'relative' }}>
                   <Image
                     src={image.url}
                     height={200}
                     alt={image.title || image.target.name}
                     fit="cover"
                   />
+                  <div
+                    onClick={() => setLightboxImage(image)}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: 'rgba(0, 0, 0, 0.4)',
+                      opacity: 0,
+                      transition: 'opacity 0.2s ease',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+                    onMouseLeave={(e) => (e.currentTarget.style.opacity = '0')}
+                  >
+                    <IconZoomIn size={32} color="white" />
+                  </div>
                 </Card.Section>
 
                 <Stack gap="xs" mt="sm">
@@ -233,6 +275,115 @@ export default function GalleryPage(): JSX.Element {
             No public images found. Try adjusting your filters.
           </Text>
         )}
+
+        {/* Lightbox Modal */}
+        <Modal
+          opened={!!lightboxImage}
+          onClose={() => setLightboxImage(null)}
+          size="auto"
+          padding={0}
+          withCloseButton={false}
+          centered
+          styles={{
+            content: {
+              background: 'transparent',
+              boxShadow: 'none',
+              maxWidth: '95vw',
+              maxHeight: '95vh',
+            },
+            body: {
+              padding: 0,
+            },
+          }}
+        >
+          {lightboxImage && (
+            <div style={{ position: 'relative' }}>
+              {/* Header with info and controls */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  padding: '12px 16px',
+                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.7), transparent)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  zIndex: 10,
+                }}
+              >
+                <div>
+                  <Text size="lg" fw={600} c="white">
+                    {lightboxImage.title || lightboxImage.target.name}
+                  </Text>
+                  <Text size="sm" c="gray.3">
+                    {lightboxImage.target.catalogId || lightboxImage.target.type}
+                    {lightboxImage.target.constellation && ` • ${lightboxImage.target.constellation}`}
+                  </Text>
+                  <Link
+                    href={`/users/${lightboxImage.user.username}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <Text size="xs" c="gray.4" mt={4}>
+                      by {lightboxImage.user.name || lightboxImage.user.username}
+                    </Text>
+                  </Link>
+                </div>
+                <Group gap="xs">
+                  <Button
+                    variant="filled"
+                    color="blue"
+                    size="sm"
+                    leftSection={<IconDownload size={16} />}
+                    onClick={() => handleDownload(lightboxImage)}
+                  >
+                    Download
+                  </Button>
+                  <ActionIcon
+                    variant="filled"
+                    color="dark"
+                    size="lg"
+                    onClick={() => setLightboxImage(null)}
+                  >
+                    <IconX size={18} />
+                  </ActionIcon>
+                </Group>
+              </div>
+
+              {/* Image */}
+              <img
+                src={lightboxImage.url}
+                alt={lightboxImage.title || lightboxImage.target.name}
+                style={{
+                  maxWidth: '95vw',
+                  maxHeight: '95vh',
+                  objectFit: 'contain',
+                  display: 'block',
+                  borderRadius: '8px',
+                }}
+              />
+
+              {/* Footer with description */}
+              {lightboxImage.description && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    padding: '12px 16px',
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
+                  }}
+                >
+                  <Text size="sm" c="gray.3">
+                    {lightboxImage.description}
+                  </Text>
+                </div>
+              )}
+            </div>
+          )}
+        </Modal>
       </Stack>
     </Container>
   );

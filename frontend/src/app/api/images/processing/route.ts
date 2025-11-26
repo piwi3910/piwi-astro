@@ -23,7 +23,10 @@ export async function GET(request: Request) {
   if (status) {
     if (status === 'processing') {
       // Group processing statuses together
-      where.status = { in: ['PENDING', 'EXTRACTING', 'PLATE_SOLVING', 'MATCHING'] };
+      where.status = { in: ['PENDING', 'PROCESSING', 'EXTRACTING', 'PLATE_SOLVING', 'MATCHING'] };
+    } else if (status === 'failed') {
+      // Group failed and needs_target together
+      where.status = { in: ['FAILED', 'NEEDS_TARGET'] };
     } else {
       where.status = status.toUpperCase();
     }
@@ -65,11 +68,10 @@ export async function GET(request: Request) {
 
   const counts = {
     pending: 0,
-    extracting: 0,
-    plateSolving: 0,
-    matching: 0,
+    processing: 0, // Aggregated count of all "in progress" statuses
     completed: 0,
     failed: 0,
+    needsTarget: 0,
   };
 
   statusCounts.forEach((s) => {
@@ -78,20 +80,20 @@ export async function GET(request: Request) {
       case 'PENDING':
         counts.pending = count;
         break;
+      case 'PROCESSING':
       case 'EXTRACTING':
-        counts.extracting = count;
-        break;
       case 'PLATE_SOLVING':
-        counts.plateSolving = count;
-        break;
       case 'MATCHING':
-        counts.matching = count;
+        counts.processing += count;
         break;
       case 'COMPLETED':
         counts.completed = count;
         break;
       case 'FAILED':
         counts.failed = count;
+        break;
+      case 'NEEDS_TARGET':
+        counts.needsTarget = count;
         break;
     }
   });

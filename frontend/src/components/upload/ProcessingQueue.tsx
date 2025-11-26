@@ -29,8 +29,6 @@ import {
   IconChevronDown,
   IconChevronRight,
   IconTarget,
-  IconCalendar,
-  IconFilter,
 } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 
@@ -40,17 +38,11 @@ interface ProcessingJob {
   fileSize: number;
   status: string;
   errorMessage: string | null;
-  errorDetails: string | null;
-  extractedMetadata: Record<string, unknown> | null;
   targetId: string | null;
   targetMatch: string | null;
   targetName: string | null;
   ra: number | null;
   dec: number | null;
-  exposureTime: number | null;
-  totalIntegration: number | null;
-  filter: string | null;
-  captureDate: string | null;
   createdAt: string;
   updatedAt: string;
   completedAt: string | null;
@@ -63,7 +55,6 @@ interface ProcessingJob {
   imageUpload: {
     id: string;
     url: string;
-    thumbnailUrl: string | null;
   } | null;
 }
 
@@ -77,11 +68,10 @@ interface ProcessingQueueResponse {
   };
   counts: {
     pending: number;
-    extracting: number;
-    plateSolving: number;
-    matching: number;
+    processing: number;
     completed: number;
     failed: number;
+    needsTarget: number;
   };
 }
 
@@ -142,13 +132,14 @@ function getStatusColor(status: string): string {
   switch (status) {
     case 'PENDING':
       return 'gray';
+    case 'PROCESSING':
     case 'EXTRACTING':
     case 'PLATE_SOLVING':
-    case 'MATCHING':
       return 'blue';
     case 'COMPLETED':
       return 'green';
     case 'FAILED':
+    case 'NEEDS_TARGET':
       return 'red';
     default:
       return 'gray';
@@ -159,13 +150,14 @@ function getStatusIcon(status: string) {
   switch (status) {
     case 'PENDING':
       return <IconClock size={14} />;
+    case 'PROCESSING':
     case 'EXTRACTING':
     case 'PLATE_SOLVING':
-    case 'MATCHING':
       return <IconLoader size={14} className="rotating" />;
     case 'COMPLETED':
       return <IconCheck size={14} />;
     case 'FAILED':
+    case 'NEEDS_TARGET':
       return <IconAlertCircle size={14} />;
     default:
       return <IconClock size={14} />;
@@ -238,9 +230,9 @@ function ProcessingJobCard({
           </Group>
 
           <Group gap="xs">
-            {job.status === 'FAILED' && (
+            {(job.status === 'FAILED' || job.status === 'NEEDS_TARGET') && (
               <>
-                <Tooltip label="Retry processing">
+                <Tooltip label="Retry plate solving">
                   <ActionIcon
                     variant="subtle"
                     color="blue"
@@ -301,43 +293,15 @@ function ProcessingJobCard({
                 )}
               </Group>
 
-              {/* Extracted metadata */}
-              {(job.ra !== null ||
-                job.dec !== null ||
-                job.exposureTime ||
-                job.filter ||
-                job.captureDate) && (
+              {/* Plate solve coordinates */}
+              {job.ra !== null && job.dec !== null && (
                 <Stack gap={2}>
                   <Text size="xs" c="dimmed" fw={500}>
-                    Extracted Metadata
+                    Plate Solve Result
                   </Text>
-                  <Group gap="md">
-                    {job.ra !== null && job.dec !== null && (
-                      <Text size="sm">
-                        RA: {job.ra.toFixed(4)}°, Dec: {job.dec.toFixed(4)}°
-                      </Text>
-                    )}
-                    {job.exposureTime && (
-                      <Group gap={4}>
-                        <IconClock size={12} />
-                        <Text size="sm">{job.exposureTime}s</Text>
-                      </Group>
-                    )}
-                    {job.filter && (
-                      <Group gap={4}>
-                        <IconFilter size={12} />
-                        <Text size="sm">{job.filter}</Text>
-                      </Group>
-                    )}
-                    {job.captureDate && (
-                      <Group gap={4}>
-                        <IconCalendar size={12} />
-                        <Text size="sm">
-                          {new Date(job.captureDate).toLocaleDateString()}
-                        </Text>
-                      </Group>
-                    )}
-                  </Group>
+                  <Text size="sm">
+                    RA: {job.ra.toFixed(4)}°, Dec: {job.dec.toFixed(4)}°
+                  </Text>
                 </Stack>
               )}
 
@@ -491,15 +455,13 @@ export function ProcessingQueue({ refreshTrigger }: ProcessingQueueProps) {
 
   const counts = data?.counts || {
     pending: 0,
-    extracting: 0,
-    plateSolving: 0,
-    matching: 0,
+    processing: 0,
     completed: 0,
     failed: 0,
+    needsTarget: 0,
   };
 
-  const processingCount =
-    counts.pending + counts.extracting + counts.plateSolving + counts.matching;
+  const processingCount = counts.pending + counts.processing;
 
   return (
     <>

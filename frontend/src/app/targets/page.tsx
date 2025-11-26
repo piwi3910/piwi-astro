@@ -982,10 +982,17 @@ export default function TargetsPage(): JSX.Element {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const urlSearchParams = useSearchParams();
   const queryClient = useQueryClient();
+
+  // Redirect unauthenticated users to login
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/login');
+    }
+  }, [status, router]);
 
   // Read URL params on mount (for navigation from wishlist page)
   useEffect(() => {
@@ -1575,6 +1582,20 @@ export default function TargetsPage(): JSX.Element {
             </Button>
           </Stack>
         </Paper>
+      </Container>
+    );
+  }
+
+  // Show loading while checking auth status
+  if (status === 'loading' || status === 'unauthenticated') {
+    return (
+      <Container size="xl" py="xl">
+        <Center style={{ height: '50vh' }}>
+          <Stack align="center" gap="md">
+            <Loader size="lg" />
+            <Text c="dimmed">Loading...</Text>
+          </Stack>
+        </Center>
       </Container>
     );
   }

@@ -62,6 +62,28 @@ export async function uploadFile(
   return objectName;
 }
 
+/**
+ * Upload file with UUID-only storage key (no filename in path)
+ * Returns the storage key (UUID with extension)
+ */
+export async function uploadFileWithUUID(
+  fileBuffer: Buffer,
+  extension: string,
+  contentType: string,
+  bucketName: string = BUCKET_IMAGES
+): Promise<string> {
+  await ensureBucketExists(bucketName);
+
+  const { randomUUID } = await import('crypto');
+  const objectName = `${randomUUID()}${extension}`;
+
+  await minioClient.putObject(bucketName, objectName, fileBuffer, fileBuffer.length, {
+    'Content-Type': contentType,
+  });
+
+  return objectName;
+}
+
 export async function getPresignedUrl(
   objectName: string,
   bucketName: string = BUCKET_IMAGES,
@@ -70,7 +92,7 @@ export async function getPresignedUrl(
   return await minioClient.presignedGetObject(bucketName, objectName, expirySeconds);
 }
 
-export async function getPublicUrl(objectName: string, bucketName: string = BUCKET_CACHE): string {
+export function getPublicUrl(objectName: string, bucketName: string = BUCKET_CACHE): string {
   const protocol = process.env.MINIO_USE_SSL === 'true' ? 'https' : 'http';
   const endpoint = process.env.MINIO_ENDPOINT || 'localhost';
   const port = process.env.MINIO_PORT || '9002';

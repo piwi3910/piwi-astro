@@ -20,7 +20,7 @@ export default function UploadPage() {
         <div>
           <Title order={1}>Upload Images</Title>
           <Text c="dimmed" mt="xs">
-            Upload your FITS and XISF files for automatic processing
+            Upload your astrophotography images for automatic target matching
           </Text>
         </div>
 
@@ -44,12 +44,11 @@ export default function UploadPage() {
                 <ImageDropzone onUploadComplete={handleUploadComplete} />
 
                 <Text size="xs" c="dimmed">
-                  Supported formats: FITS (.fits, .fit, .fts) and XISF (.xisf)
+                  Supported formats: PNG and JPEG (.png, .jpg, .jpeg)
                 </Text>
                 <Text size="xs" c="dimmed">
-                  Your images will be automatically processed to extract
-                  metadata. If coordinates are missing, plate solving will be
-                  attempted to identify the target.
+                  Your images will be plate-solved to identify the target
+                  based on star positions.
                 </Text>
               </Stack>
             </Paper>
@@ -88,7 +87,7 @@ export default function UploadPage() {
                     1. Upload
                   </Text>
                   <Text size="sm" c="dimmed">
-                    Drop your FITS or XISF files. They'll be uploaded to secure
+                    Drop your PNG or JPEG images. They&apos;ll be uploaded to secure
                     storage and queued for processing.
                   </Text>
                 </Stack>
@@ -96,11 +95,11 @@ export default function UploadPage() {
               <Grid.Col span={{ base: 12, sm: 4 }}>
                 <Stack gap="xs">
                   <Text size="sm" fw={500} c="blue">
-                    2. Extract Metadata
+                    2. Plate Solve
                   </Text>
                   <Text size="sm" c="dimmed">
-                    The system extracts target name, coordinates, exposure
-                    settings, and other metadata from the file headers.
+                    The system analyzes star positions in your image to
+                    determine the exact sky coordinates.
                   </Text>
                 </Stack>
               </Grid.Col>
@@ -110,9 +109,8 @@ export default function UploadPage() {
                     3. Match Target
                   </Text>
                   <Text size="sm" c="dimmed">
-                    The image is matched to a target in the catalog. If
-                    coordinates are missing, plate solving identifies the
-                    field.
+                    Using the coordinates from plate solving, the image is
+                    automatically matched to a target in the catalog.
                   </Text>
                 </Stack>
               </Grid.Col>
@@ -120,7 +118,7 @@ export default function UploadPage() {
 
             <Text size="xs" c="dimmed" mt="md">
               Note: If automatic matching fails, you can manually assign a
-              target to your image using the "Assign Target" button on failed
+              target to your image using the &quot;Assign Target&quot; button on failed
               jobs.
             </Text>
           </Stack>

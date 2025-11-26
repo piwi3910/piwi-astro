@@ -52,10 +52,10 @@ export async function GET(
     return NextResponse.json({ error: 'Profile is private' }, { status: 403 });
   }
 
-  // Generate presigned URLs for images (even public ones get presigned URLs for consistency)
+  // Generate presigned URLs for images
   const imagesWithUrls = await Promise.all(
     user.imageUploads.map(async (image) => {
-      const url = `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET_NAME || 'astroplanner-images'}/${image.s3Key}`;
+      const url = await getPresignedUrl(image.storageKey);
       return {
         ...image,
         url,

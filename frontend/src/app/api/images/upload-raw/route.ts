@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getUserId } from '@/lib/auth/api-auth';
-import { uploadFile } from '@/lib/minio';
+import { uploadFileWithUUID } from '@/lib/minio';
 import { scheduleImageProcessing } from '@/lib/queue/queues';
 
-const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB for FITS/XISF files
-const VALID_EXTENSIONS = ['.fits', '.fit', '.fts', '.xisf'];
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB for PNG/JPEG files
+const VALID_EXTENSIONS = ['.png', '.jpg', '.jpeg'];
 
 interface UploadResult {
   jobId: string;
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
           jobId: '',
           fileName: file.name,
           status: 'error',
-          error: `Invalid file type. Only FITS (.fits, .fit, .fts) and XISF (.xisf) files are supported.`,
+          error: `Invalid file type. Only PNG and JPEG files are supported.`,
         });
         continue;
       }
@@ -68,13 +68,14 @@ export async function POST(request: Request) {
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
-        // Determine content type
-        const contentType = fileName.endsWith('.xisf')
-          ? 'application/xisf'
-          : 'image/fits';
+        // Determine content type and extension
+        const ext = fileName.substring(fileName.lastIndexOf('.'));
+        const contentType = fileName.endsWith('.png')
+          ? 'image/png'
+          : 'image/jpeg';
 
-        // Upload to MinIO
-        const storageKey = await uploadFile(buffer, file.name, contentType);
+        // Upload to MinIO with UUID-only key
+        const storageKey = await uploadFileWithUUID(buffer, ext, contentType);
 
         // Create processing job record in database
         const processingJob = await prisma.imageProcessingJob.create({

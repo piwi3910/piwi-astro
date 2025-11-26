@@ -9,6 +9,7 @@ const updateImageSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
   featured: z.boolean().optional(),
+  targetId: z.string().uuid().optional(),
   exposureTime: z.number().optional(),
   exposureCount: z.number().int().optional(),
   iso: z.number().int().optional(),
@@ -65,11 +66,8 @@ export async function GET(
     });
   }
 
-  // Generate URL
-  const url =
-    image.visibility === 'PUBLIC'
-      ? `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET_NAME || 'astroplanner-images'}/${image.storageKey}`
-      : await getPresignedUrl(image.storageKey);
+  // Generate presigned URL
+  const url = await getPresignedUrl(image.storageKey);
 
   return NextResponse.json({ ...image, url });
 }
@@ -113,11 +111,8 @@ export async function PUT(
       },
     });
 
-    // Generate URL
-    const url =
-      updatedImage.visibility === 'PUBLIC'
-        ? `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET_NAME || 'astroplanner-images'}/${updatedImage.storageKey}`
-        : await getPresignedUrl(updatedImage.storageKey);
+    // Generate presigned URL
+    const url = await getPresignedUrl(updatedImage.storageKey);
 
     return NextResponse.json({ ...updatedImage, url });
   } catch (error) {

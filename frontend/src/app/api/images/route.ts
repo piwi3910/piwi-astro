@@ -126,14 +126,10 @@ export async function GET(request: Request) {
       },
     });
 
-    // Generate presigned URLs for private images
+    // Generate presigned URLs for all images
     const imagesWithUrls = await Promise.all(
       images.map(async (image) => {
-        const url =
-          image.visibility === 'PUBLIC'
-            ? `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET_NAME || 'astroplanner-images'}/${image.storageKey}`
-            : await getPresignedUrl(image.storageKey);
-
+        const url = await getPresignedUrl(image.storageKey);
         return {
           ...image,
           url,
@@ -179,14 +175,10 @@ export async function GET(request: Request) {
     }),
   ]);
 
-  // Generate presigned URLs for private images
+  // Generate presigned URLs for all images
   const imagesWithUrls = await Promise.all(
     images.map(async (image) => {
-      const url =
-        image.visibility === 'PUBLIC'
-          ? `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET_NAME || 'astroplanner-images'}/${image.storageKey}`
-          : await getPresignedUrl(image.storageKey);
-
+      const url = await getPresignedUrl(image.storageKey);
       return {
         ...image,
         url,
@@ -279,10 +271,7 @@ export async function POST(request: Request) {
       // Note: bucketName parameter is optional and defaults to BUCKET_IMAGES
     );
 
-    const url =
-      data.visibility === 'PUBLIC'
-        ? `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET_NAME || 'astroplanner-images'}/${storageKey}`
-        : await getPresignedUrl(storageKey);
+    const url = await getPresignedUrl(storageKey);
 
     // Save to database
     const imageUpload = await prisma.imageUpload.create({

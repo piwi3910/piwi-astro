@@ -4,7 +4,7 @@
  *
  * This script starts the BullMQ workers that process background jobs:
  * - Catalog worker: catalog updates, comet refreshes, etc.
- * - Image worker: FITS/XISF processing, plate solving, target matching
+ * - Image worker: PNG/JPEG plate solving and target matching
  *
  * Run with: npx tsx scripts/start-worker.ts
  * Or add to package.json: "worker": "tsx scripts/start-worker.ts"

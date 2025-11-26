@@ -19,6 +19,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@mantine/carousel": "7.13.2",
     "@mantine/core": "^7.13.2",
     "@mantine/dates": "^7.13.2",
     "@mantine/form": "^7.13.2",
@@ -31,6 +32,8 @@
     "bcryptjs": "^2.4.3",
     "bullmq": "^5.63.2",
     "dayjs": "^1.11.13",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "ioredis": "^5.8.2",
     "leaflet": "^1.9.4",
     "minio": "^8.0.1",

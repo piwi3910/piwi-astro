@@ -16,47 +16,57 @@ import {
   TextInput,
   Textarea,
   Select,
-  NumberInput,
-  Grid,
   SimpleGrid,
   Loader,
   Switch,
+  Menu,
+  Tooltip,
 } from '@mantine/core';
-import { DateTimePicker } from '@mantine/dates';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   IconEdit,
   IconTrash,
   IconUpload,
   IconEye,
+  IconEyeOff,
+  IconLink,
   IconStar,
+  IconZoomIn,
+  IconX,
+  IconChevronDown,
+  IconDownload,
 } from '@tabler/icons-react';
 import Link from 'next/link';
 
 interface Target {
+  id: string;
   catalogId: string | null;
   name: string;
   type: string;
 }
 
+async function fetchTargets(search: string): Promise<Target[]> {
+  if (!search || search.length < 2) return [];
+  const response = await fetch(`/api/targets?search=${encodeURIComponent(search)}&limit=20`);
+  if (!response.ok) return [];
+  const data = await response.json();
+  return data.targets || data;
+}
+
 interface ImageUpload {
   id: string;
-  filename: string;
-  s3Key: string;
+  storageKey: string;
   url: string;
-  fileSize: number;
-  mimeType: string;
   visibility: string;
   title: string | null;
   description: string | null;
   featured: boolean;
   viewCount: number;
-  captureDate: string | null;
-  exposureTime: number | null;
-  exposureCount: number | null;
-  iso: number | null;
-  focalLength: number | null;
-  aperture: number | null;
+  exposureTimeSec: number | null;
+  totalIntegrationMin: number | null;
+  filter: string | null;
+  isoGain: string | null;
+  uploadedAt: string;
   target: Target;
 }
 
@@ -86,18 +96,15 @@ async function deleteImage(id: string): Promise<void> {
 export default function ImagesPage(): JSX.Element {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingImage, setEditingImage] = useState<ImageUpload | null>(null);
+  const [lightboxImage, setLightboxImage] = useState<ImageUpload | null>(null);
+  const [targetSearch, setTargetSearch] = useState('');
+  const [selectedTargetId, setSelectedTargetId] = useState<string | null>(null);
 
   const [editForm, setEditForm] = useState({
     visibility: 'PRIVATE',
     title: '',
     description: '',
     featured: false,
-    captureDate: null as Date | null,
-    exposureTime: 0,
-    exposureCount: 0,
-    iso: 0,
-    focalLength: 0,
-    aperture: 0,
   });
 
   const queryClient = useQueryClient();
@@ -105,6 +112,12 @@ export default function ImagesPage(): JSX.Element {
   const { data: images, isLoading } = useQuery({
     queryKey: ['images'],
     queryFn: fetchImages,
+  });
+
+  const { data: searchedTargets } = useQuery({
+    queryKey: ['targets-search', targetSearch],
+    queryFn: () => fetchTargets(targetSearch),
+    enabled: targetSearch.length >= 2,
   });
 
   const updateMutation = useMutation({
@@ -131,18 +144,18 @@ export default function ImagesPage(): JSX.Element {
       title: image.title || '',
       description: image.description || '',
       featured: image.featured,
-      captureDate: image.captureDate ? new Date(image.captureDate) : null,
-      exposureTime: image.exposureTime || 0,
-      exposureCount: image.exposureCount || 0,
-      iso: image.iso || 0,
-      focalLength: image.focalLength || 0,
-      aperture: image.aperture || 0,
     });
+    // Set current target
+    setSelectedTargetId(image.target.id);
+    setTargetSearch(image.target.catalogId || image.target.name);
     setEditModalOpen(true);
   };
 
   const handleUpdate = (): void => {
     if (!editingImage) return;
+
+    // Only include targetId if it was changed
+    const targetChanged = selectedTargetId && selectedTargetId !== editingImage.target.id;
 
     updateMutation.mutate({
       id: editingImage.id,
@@ -151,12 +164,7 @@ export default function ImagesPage(): JSX.Element {
         title: editForm.title || undefined,
         description: editForm.description || undefined,
         featured: editForm.featured,
-        captureDate: editForm.captureDate?.toISOString(),
-        exposureTime: editForm.exposureTime || undefined,
-        exposureCount: editForm.exposureCount || undefined,
-        iso: editForm.iso || undefined,
-        focalLength: editForm.focalLength || undefined,
-        aperture: editForm.aperture || undefined,
+        ...(targetChanged && { targetId: selectedTargetId }),
       },
     });
   };
@@ -168,6 +176,43 @@ export default function ImagesPage(): JSX.Element {
       UNLISTED: 'yellow',
     };
     return colors[visibility] || 'gray';
+  };
+
+  const getVisibilityIcon = (visibility: string) => {
+    switch (visibility) {
+      case 'PUBLIC':
+        return <IconEye size={12} />;
+      case 'PRIVATE':
+        return <IconEyeOff size={12} />;
+      case 'UNLISTED':
+        return <IconLink size={12} />;
+      default:
+        return <IconEyeOff size={12} />;
+    }
+  };
+
+  const handleVisibilityChange = (imageId: string, newVisibility: string) => {
+    updateMutation.mutate({
+      id: imageId,
+      data: { visibility: newVisibility as ImageUpload['visibility'] },
+    });
+  };
+
+  const handleDownload = async (image: ImageUpload) => {
+    try {
+      const response = await fetch(image.url);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = image.title || image.target.name || 'astrophoto.jpg';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Download failed:', error);
+    }
   };
 
   if (isLoading) {
@@ -195,13 +240,57 @@ export default function ImagesPage(): JSX.Element {
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing="md">
             {images.map((image) => (
               <Card key={image.id} shadow="sm" padding="sm" withBorder>
-                <Card.Section>
+                <Card.Section
+                  style={{ position: 'relative', cursor: 'pointer' }}
+                  onClick={() => setLightboxImage(image)}
+                >
                   <Image
                     src={image.url}
                     height={200}
-                    alt={image.title || image.filename}
+                    alt={image.title || image.target.name}
                     fit="cover"
                   />
+                  {/* Clickable overlay with zoom icon */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'rgba(0, 0, 0, 0)',
+                      transition: 'background-color 0.2s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+                      const icon = e.currentTarget.querySelector('.zoom-icon') as HTMLElement;
+                      if (icon) icon.style.opacity = '1';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+                      const icon = e.currentTarget.querySelector('.zoom-icon') as HTMLElement;
+                      if (icon) icon.style.opacity = '0';
+                    }}
+                  >
+                    <div
+                      className="zoom-icon"
+                      style={{
+                        opacity: 0,
+                        transition: 'opacity 0.2s ease',
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        borderRadius: '50%',
+                        padding: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <IconZoomIn size={24} color="#333" />
+                    </div>
+                  </div>
                 </Card.Section>
 
                 <Stack gap="xs" mt="sm">
@@ -220,9 +309,45 @@ export default function ImagesPage(): JSX.Element {
                   </Group>
 
                   <Group gap="xs">
-                    <Badge size="xs" color={getVisibilityColor(image.visibility)}>
-                      {image.visibility}
-                    </Badge>
+                    <Menu shadow="md" width={140} position="bottom-start">
+                      <Menu.Target>
+                        <Tooltip label="Click to change visibility">
+                          <Badge
+                            size="xs"
+                            color={getVisibilityColor(image.visibility)}
+                            style={{ cursor: 'pointer' }}
+                            leftSection={getVisibilityIcon(image.visibility)}
+                            rightSection={<IconChevronDown size={10} />}
+                          >
+                            {image.visibility}
+                          </Badge>
+                        </Tooltip>
+                      </Menu.Target>
+                      <Menu.Dropdown>
+                        <Menu.Label>Change visibility</Menu.Label>
+                        <Menu.Item
+                          leftSection={<IconEyeOff size={14} />}
+                          onClick={() => handleVisibilityChange(image.id, 'PRIVATE')}
+                          disabled={image.visibility === 'PRIVATE'}
+                        >
+                          Private
+                        </Menu.Item>
+                        <Menu.Item
+                          leftSection={<IconLink size={14} />}
+                          onClick={() => handleVisibilityChange(image.id, 'UNLISTED')}
+                          disabled={image.visibility === 'UNLISTED'}
+                        >
+                          Unlisted
+                        </Menu.Item>
+                        <Menu.Item
+                          leftSection={<IconEye size={14} />}
+                          onClick={() => handleVisibilityChange(image.id, 'PUBLIC')}
+                          disabled={image.visibility === 'PUBLIC'}
+                        >
+                          Public
+                        </Menu.Item>
+                      </Menu.Dropdown>
+                    </Menu>
                     {image.viewCount > 0 && (
                       <Group gap={4}>
                         <IconEye size={12} />
@@ -237,11 +362,12 @@ export default function ImagesPage(): JSX.Element {
                     </Text>
                   )}
 
-                  {(image.exposureTime || image.exposureCount) && (
+                  {(image.exposureTimeSec || image.totalIntegrationMin || image.filter) && (
                     <Text size="xs" c="dimmed">
-                      {image.exposureCount && `${image.exposureCount}×`}
-                      {image.exposureTime && `${image.exposureTime}s`}
-                      {image.iso && ` • ISO ${image.iso}`}
+                      {image.exposureTimeSec && `${image.exposureTimeSec}s`}
+                      {image.totalIntegrationMin && ` • ${image.totalIntegrationMin.toFixed(1)} min total`}
+                      {image.filter && ` • ${image.filter}`}
+                      {image.isoGain && ` • ${image.isoGain}`}
                     </Text>
                   )}
 
@@ -273,6 +399,8 @@ export default function ImagesPage(): JSX.Element {
           onClose={() => {
             setEditModalOpen(false);
             setEditingImage(null);
+            setTargetSearch('');
+            setSelectedTargetId(null);
           }}
           title="Edit Image"
           size="lg"
@@ -300,6 +428,28 @@ export default function ImagesPage(): JSX.Element {
               }
             />
 
+            <Select
+              label="Target"
+              description="Change the associated astronomical target"
+              placeholder="Search for a target..."
+              searchable
+              data={
+                searchedTargets?.map((t) => ({
+                  value: t.id,
+                  label: `${t.catalogId || t.name} - ${t.type}`,
+                })) || []
+              }
+              value={selectedTargetId}
+              onChange={setSelectedTargetId}
+              onSearchChange={setTargetSearch}
+              searchValue={targetSearch}
+              nothingFoundMessage={
+                targetSearch.length < 2
+                  ? 'Type at least 2 characters to search'
+                  : 'No targets found'
+              }
+            />
+
             <TextInput
               label="Title"
               placeholder="Optional title"
@@ -315,76 +465,14 @@ export default function ImagesPage(): JSX.Element {
               minRows={3}
             />
 
-            <DateTimePicker
-              label="Capture Date"
-              placeholder="Optional"
-              value={editForm.captureDate}
-              onChange={(val) => setEditForm({ ...editForm, captureDate: val })}
-              clearable
-            />
-
-            <Grid>
-              <Grid.Col span={6}>
-                <NumberInput
-                  label="Exposure Time (s)"
-                  value={editForm.exposureTime}
-                  onChange={(val) =>
-                    setEditForm({ ...editForm, exposureTime: Number(val) })
-                  }
-                  min={0}
-                  step={0.1}
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <NumberInput
-                  label="Exposure Count"
-                  value={editForm.exposureCount}
-                  onChange={(val) =>
-                    setEditForm({ ...editForm, exposureCount: Number(val) })
-                  }
-                  min={0}
-                />
-              </Grid.Col>
-            </Grid>
-
-            <Grid>
-              <Grid.Col span={4}>
-                <NumberInput
-                  label="ISO"
-                  value={editForm.iso}
-                  onChange={(val) => setEditForm({ ...editForm, iso: Number(val) })}
-                  min={0}
-                />
-              </Grid.Col>
-              <Grid.Col span={4}>
-                <NumberInput
-                  label="Focal Length (mm)"
-                  value={editForm.focalLength}
-                  onChange={(val) =>
-                    setEditForm({ ...editForm, focalLength: Number(val) })
-                  }
-                  min={0}
-                />
-              </Grid.Col>
-              <Grid.Col span={4}>
-                <NumberInput
-                  label="Aperture (f/)"
-                  value={editForm.aperture}
-                  onChange={(val) =>
-                    setEditForm({ ...editForm, aperture: Number(val) })
-                  }
-                  min={0}
-                  step={0.1}
-                />
-              </Grid.Col>
-            </Grid>
-
             <Group justify="flex-end">
               <Button
                 variant="subtle"
                 onClick={() => {
                   setEditModalOpen(false);
                   setEditingImage(null);
+                  setTargetSearch('');
+                  setSelectedTargetId(null);
                 }}
               >
                 Cancel
@@ -394,6 +482,121 @@ export default function ImagesPage(): JSX.Element {
               </Button>
             </Group>
           </Stack>
+        </Modal>
+
+        {/* Lightbox Modal for full-size image viewing */}
+        <Modal
+          opened={!!lightboxImage}
+          onClose={() => setLightboxImage(null)}
+          size="100%"
+          fullScreen
+          withCloseButton={false}
+          padding={0}
+          styles={{
+            body: {
+              height: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: 'rgba(0, 0, 0, 0.95)',
+            },
+            content: {
+              backgroundColor: 'transparent',
+            },
+          }}
+        >
+          {lightboxImage && (
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              {/* Header with close button and image info */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '16px 24px',
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                }}
+              >
+                <div>
+                  <Text size="lg" fw={600} c="white">
+                    {lightboxImage.title || lightboxImage.target.name}
+                  </Text>
+                  <Text size="sm" c="dimmed">
+                    {lightboxImage.target.catalogId || lightboxImage.target.name}
+                    {lightboxImage.exposureTimeSec && ` • ${lightboxImage.exposureTimeSec}s`}
+                    {lightboxImage.totalIntegrationMin && ` • ${lightboxImage.totalIntegrationMin.toFixed(1)} min total`}
+                    {lightboxImage.filter && ` • ${lightboxImage.filter}`}
+                  </Text>
+                </div>
+                <Group gap="xs">
+                  <Button
+                    variant="filled"
+                    color="blue"
+                    size="sm"
+                    leftSection={<IconDownload size={16} />}
+                    onClick={() => handleDownload(lightboxImage)}
+                  >
+                    Download
+                  </Button>
+                  <ActionIcon
+                    variant="subtle"
+                    color="white"
+                    size="xl"
+                    onClick={() => setLightboxImage(null)}
+                    style={{ color: 'white' }}
+                  >
+                    <IconX size={28} />
+                  </ActionIcon>
+                </Group>
+              </div>
+
+              {/* Image container */}
+              <div
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '16px',
+                  overflow: 'auto',
+                }}
+                onClick={() => setLightboxImage(null)}
+              >
+                <img
+                  src={lightboxImage.url}
+                  alt={lightboxImage.title || lightboxImage.target.name}
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain',
+                    cursor: 'zoom-out',
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </div>
+
+              {/* Footer with description if available */}
+              {lightboxImage.description && (
+                <div
+                  style={{
+                    padding: '16px 24px',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  }}
+                >
+                  <Text size="sm" c="dimmed">
+                    {lightboxImage.description}
+                  </Text>
+                </div>
+              )}
+            </div>
+          )}
         </Modal>
       </Stack>
     </Container>

@@ -143,10 +143,10 @@ export function ImageDropzone({ onUploadComplete }: ImageDropzoneProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'image/fits': ['.fits', '.fit', '.fts'],
-      'application/xisf': ['.xisf'],
+      'image/png': ['.png'],
+      'image/jpeg': ['.jpg', '.jpeg'],
     },
-    maxSize: 500 * 1024 * 1024, // 500MB
+    maxSize: 50 * 1024 * 1024, // 50MB
   });
 
   const removeFile = (id: string) => {
@@ -192,23 +192,20 @@ export function ImageDropzone({ onUploadComplete }: ImageDropzoneProps) {
           <Text size="lg" fw={500}>
             {isDragActive
               ? 'Drop your files here'
-              : 'Drag & drop FITS/XISF files here'}
+              : 'Drag & drop your astrophotography images'}
           </Text>
           <Text size="sm" c="dimmed">
-            or click to browse (max 500MB per file)
+            or click to browse (max 50MB per file)
           </Text>
           <Group gap="xs" mt="xs">
             <Badge variant="outline" size="sm">
-              .fits
+              .png
             </Badge>
             <Badge variant="outline" size="sm">
-              .fit
+              .jpg
             </Badge>
             <Badge variant="outline" size="sm">
-              .fts
-            </Badge>
-            <Badge variant="outline" size="sm">
-              .xisf
+              .jpeg
             </Badge>
           </Group>
         </Stack>

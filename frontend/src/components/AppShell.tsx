@@ -31,15 +31,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   const isActive = (path: string) => pathname === path;
 
-  const navItems = session
-    ? [
-        { label: 'Dashboard', href: '/dashboard', icon: IconHome },
-        { label: 'Locations', href: '/dashboard/locations', icon: IconMapPin },
-        { label: 'Gear', href: '/dashboard/gear', icon: IconTelescope },
-      ]
-    : [
-        { label: 'Targets', href: '/targets', icon: IconStar },
-      ];
+  const navItems = [
+    { label: 'Dashboard', href: '/dashboard', icon: IconHome },
+    { label: 'Locations', href: '/dashboard/locations', icon: IconMapPin },
+    { label: 'Gear', href: '/dashboard/gear', icon: IconTelescope },
+  ];
 
   return (
     <AppShell
@@ -163,19 +159,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   </Link>
                 </Menu.Dropdown>
               </Menu>
-            )}
-
-            {/* Targets link for unauthenticated users */}
-            {!session && (
-              <Link href="/targets" style={{ textDecoration: 'none' }}>
-                <Button
-                  variant={isActive('/targets') ? 'filled' : 'subtle'}
-                  leftSection={<IconStar size={16} />}
-                  size="sm"
-                >
-                  Targets
-                </Button>
-              </Link>
             )}
 
             {/* Locations and Gear - only for authenticated users */}
@@ -395,24 +378,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 </Button>
               </Link>
             </>
-          )}
-
-          {/* Targets link for unauthenticated users */}
-          {!session && (
-            <Link
-              href="/targets"
-              style={{ textDecoration: 'none' }}
-              onClick={toggle}
-            >
-              <Button
-                variant={isActive('/targets') ? 'filled' : 'subtle'}
-                leftSection={<IconStar size={16} />}
-                fullWidth
-                mb="xs"
-              >
-                Targets
-              </Button>
-            </Link>
           )}
 
           {/* Locations and Gear - only for authenticated users */}
