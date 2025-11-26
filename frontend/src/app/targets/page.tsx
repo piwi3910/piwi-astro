@@ -2241,7 +2241,7 @@ export default function TargetsPage(): JSX.Element {
                 left: 0,
                 right: 0,
                 zIndex: 100,
-                backgroundColor: 'rgba(26, 27, 30, 0.95)'
+                backgroundColor: 'var(--mantine-color-dark-7)'
               }}
             >
               <Center>

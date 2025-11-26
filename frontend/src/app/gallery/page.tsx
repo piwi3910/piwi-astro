@@ -394,10 +394,11 @@ export default function GalleryPage(): JSX.Element {
           centered
           styles={{
             content: {
-              background: 'transparent',
+              background: '#000000',
               boxShadow: 'none',
               maxWidth: '95vw',
               maxHeight: '95vh',
+              borderRadius: '8px',
             },
             body: {
               padding: 0,

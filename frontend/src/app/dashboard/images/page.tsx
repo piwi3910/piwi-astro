@@ -497,10 +497,10 @@ export default function ImagesPage(): JSX.Element {
               height: '100vh',
               display: 'flex',
               flexDirection: 'column',
-              backgroundColor: 'rgba(0, 0, 0, 0.95)',
+              backgroundColor: '#000000',
             },
             content: {
-              backgroundColor: 'transparent',
+              backgroundColor: '#000000',
             },
           }}
         >
@@ -521,7 +521,7 @@ export default function ImagesPage(): JSX.Element {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   padding: '16px 24px',
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  backgroundColor: '#1a1b1e',
                 }}
               >
                 <div>
@@ -587,7 +587,7 @@ export default function ImagesPage(): JSX.Element {
                 <div
                   style={{
                     padding: '16px 24px',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    backgroundColor: '#1a1b1e',
                   }}
                 >
                   <Text size="sm" c="dimmed">
