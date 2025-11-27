@@ -264,7 +264,7 @@ function VisibilityChart({
     { latitude: location.latitude, longitude: location.longitude },
     startOfDay,
     24,
-    30
+    60  // 1-hour intervals
   );
 
   // Calculate moon position and angular separation over time (only if overlay is enabled)
@@ -339,8 +339,8 @@ function VisibilityChart({
 
   const maxAlt = Math.max(...points.map(p => p.altitude));
   const maxAltPoint = points.find(p => p.altitude === maxAlt);
-  const chartHeight = 100;
-  const chartWidth = 400; // Wider chart for card layout
+  const chartHeight = 140;
+  const chartWidth = 380; // Chart width for card layout
   const maxAltScale = 110; // Extend scale to 110° to give more headroom above 90°
 
   // Helper function to convert hour (0-24) to shifted position (0-1) with midnight centered
@@ -448,50 +448,43 @@ function VisibilityChart({
         onMouseLeave={handleMouseLeave}
       >
         {/* Twilight zones (colored background based on sun position) */}
-        {sunPoints.map((sunPoint, i) => {
-          if (i === 0) return null; // Skip first point
-
-          const prevSunPoint = sunPoints[i - 1];
-          // Calculate shifted position for twilight zones (midnight centered)
-          const actualProgress = (i - 1) / (sunPoints.length - 1); // 0-1 in actual time
-          const actualHour = actualProgress * 24;
-          const x = getShiftedPosition(actualHour) * chartWidth;
-          const width = chartWidth / (sunPoints.length - 1);
+        {/* Render 24 rectangles, one per hour */}
+        {Array.from({ length: 24 }, (_, i) => {
+          // sunPoints[i] corresponds to hour i (0-23), sunPoints[24] = hour 24
+          const sunAlt = sunPoints[i]?.altitude ?? -90;
 
           // Determine color based on sun altitude
           let color = null;
           let opacity = 0;
 
-          const sunAlt = (sunPoint.altitude + prevSunPoint.altitude) / 2; // Average of two points
-
           if (sunAlt > 0) {
-            // Daytime - sky blue overlay
-            color = '#38bdf8'; // Sky blue
+            color = '#38bdf8'; // Sky blue - daytime
             opacity = 0.3;
           } else if (sunAlt > -6) {
-            // Civil twilight - lighter blue transitioning to darker
-            color = '#0ea5e9';
+            color = '#0ea5e9'; // Civil twilight
             opacity = 0.2;
           } else if (sunAlt > -12) {
-            // Nautical twilight - deeper blue
-            color = '#0284c7';
+            color = '#0284c7'; // Nautical twilight
             opacity = 0.15;
           } else if (sunAlt > -18) {
-            // Astronomical twilight - dark blue (marginal for astrophotography)
-            color = '#0369a1';
+            color = '#0369a1'; // Astronomical twilight
             opacity = 0.1;
           } else {
-            // Astronomical night (below -18°) - off black/dark navy, perfect for astrophotography
-            color = '#0c1929';
+            color = '#0c1929'; // Astronomical night
             opacity = 0.5;
           }
+
+          // Each rectangle spans 1 hour width
+          const rectWidth = chartWidth / 24;
+          // Position based on shifted coordinates (midnight at center)
+          const x = getShiftedPosition(i) * chartWidth;
 
           return (
             <rect
               key={`twilight-${i}`}
               x={x}
               y={0}
-              width={width + 1} // Slight overlap to avoid gaps
+              width={rectWidth}
               height={chartHeight}
               fill={color}
               opacity={opacity}
@@ -522,9 +515,9 @@ function VisibilityChart({
           </g>
         ))}
 
-        {/* Time grid lines (vertical) - every half hour, centered on midnight */}
+        {/* Time grid lines (vertical) - every hour, centered on midnight */}
         {/* Note: Skip hour 24 since it maps to same position as hour 0 (both at center/midnight) */}
-        {Array.from({ length: 48 }, (_, i) => i * 0.5).map((hour) => (
+        {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
           <line
             key={`hour-${hour}`}
             x1={getShiftedPosition(hour) * chartWidth}
@@ -811,11 +804,11 @@ function VisibilityChart({
 }
 
 function MoonPhaseDisplay({ illumination, hasInterference }: { illumination: number; hasInterference?: boolean }) {
-  const size = 40;
+  const size = 36;
   const center = size / 2;
   const radius = size / 2 - 2;
 
-  // Calculate moon phase
+  // Calculate moon phase name
   const getMoonPhase = (illum: number): string => {
     if (illum < 0.03) return 'New Moon';
     if (illum < 0.25) return 'Waxing Crescent';
@@ -826,69 +819,70 @@ function MoonPhaseDisplay({ illumination, hasInterference }: { illumination: num
     return 'Waning Crescent';
   };
 
+  // Create moon phase path using arc
+  const createMoonPath = () => {
+    // For waxing moon (illumination 0-1), light comes from right
+    // illumination 0 = new moon (all dark)
+    // illumination 0.5 = first/last quarter (half lit)
+    // illumination 1 = full moon (all lit)
+
+    const illum = Math.max(0, Math.min(1, illumination));
+
+    // Calculate the terminator curve (the line between light and dark)
+    // At 0.5 illumination, it's a straight line through center
+    // Below 0.5, it curves inward (crescent)
+    // Above 0.5, it curves outward (gibbous)
+    const curveOffset = (illum - 0.5) * 2 * radius; // -radius to +radius
+
+    // Create path for the illuminated portion (right side for waxing)
+    // Start at top, arc to bottom on right side, then curve back on left
+    const startY = center - radius;
+    const endY = center + radius;
+
+    // Right arc (always the same - outer edge of moon)
+    const rightArc = `M ${center} ${startY} A ${radius} ${radius} 0 0 1 ${center} ${endY}`;
+
+    // Left curve (terminator - varies with illumination)
+    // Use a quadratic curve where the control point x position varies
+    const controlX = center + curveOffset;
+    const leftCurve = `Q ${controlX} ${center} ${center} ${startY}`;
+
+    return `${rightArc} ${leftCurve} Z`;
+  };
+
   return (
-    <Stack className="gap-2 items-center">
+    <Stack className="gap-0.5 items-center">
       <svg width={size} height={size}>
-        {/* Background circle (always dark) */}
+        {/* Background circle (dark side of moon) */}
         <circle
           cx={center}
           cy={center}
           r={radius}
-          fill="hsl(var(--card))"
-          stroke="hsl(var(--border))"
-          strokeWidth="2"
+          fill="#1a1a2e"
+          stroke="#3b3b3b"
+          strokeWidth="1"
         />
 
-        {/* Illuminated portion - clips the bright side */}
+        {/* Illuminated portion */}
         {illumination > 0.01 && (
-          <g>
-            {/* Full bright circle */}
-            <circle
-              cx={center}
-              cy={center}
-              r={radius}
-              fill="hsl(var(--warning))"
-              clipPath="url(#moonClip)"
-            />
-
-            {/* Clip path - defines visible crescent */}
-            <defs>
-              <clipPath id="moonClip">
-                {(() => {
-                  const ellipseWidth = radius * (illumination <= 0.5 ? illumination * 2 : (1 - illumination) * 2);
-                  // Position ellipse so it starts from the edge
-                  const ellipseCx = illumination <= 0.5
-                    ? center - radius + ellipseWidth  // Waxing: start from left edge
-                    : center + radius - ellipseWidth;  // Waning: start from right edge
-
-                  return (
-                    <ellipse
-                      cx={ellipseCx}
-                      cy={center}
-                      rx={ellipseWidth}
-                      ry={radius}
-                    />
-                  );
-                })()}
-              </clipPath>
-            </defs>
-          </g>
+          <path
+            d={createMoonPath()}
+            fill="#e4e4b5"
+          />
         )}
       </svg>
 
-      <Stack className="gap-0 items-center">
-        <Text className="text-[10px] font-medium">
-          {getMoonPhase(illumination)}
-        </Text>
-        <Text className="text-[9px] text-muted-foreground">
+      <Text className="text-[9px] font-medium whitespace-nowrap">
+        {getMoonPhase(illumination)}
+      </Text>
+      <Group className="gap-1 items-center">
+        <Text className="text-[8px] text-muted-foreground">
           {(illumination * 100).toFixed(0)}%
         </Text>
         {hasInterference && (
-          <Badge className="text-[9px] py-0 px-1" variant="outline">
-            ⚠️
-          </Badge>
+          <span className="text-[8px]">⚠️</span>
         )}
-      </Stack>
+      </Group>
     </Stack>
   );
 }
@@ -958,7 +952,7 @@ export default function TargetsPage() {
   const [selectedGear, setSelectedGear] = useState<Rig | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [search, setSearch] = useState('');
-  const [debouncedSearch] = useDebouncedValue(search, 300); // 300ms debounce for search query
+  const [debouncedSearch] = useDebouncedValue(search, 500); // 500ms debounce for search query
   const [debouncedSearchForHistory] = useDebouncedValue(search, 1500); // 1500ms debounce for saving to history
   const [types, setTypes] = useState<string[]>([]);
   const [constellation, setConstellation] = useState('');
@@ -1616,8 +1610,8 @@ export default function TargetsPage() {
                     if (loc) setSelectedLocation(loc);
                   }}
                 >
-                  <SelectTrigger className="w-[250px]">
-                    <SelectValue placeholder="Select your location" />
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select location" />
                   </SelectTrigger>
                   <SelectContent>
                     {locations?.map((loc) => (
@@ -1647,8 +1641,8 @@ export default function TargetsPage() {
                     setSelectedGear(rig || null);
                   }}
                 >
-                  <SelectTrigger className="w-[300px]">
-                    <SelectValue placeholder="Select gear for FOV filtering" />
+                  <SelectTrigger className="w-[200px]">
+                    <SelectValue placeholder="Select gear" />
                   </SelectTrigger>
                   <SelectContent>
                     {rigs?.map(r => (
@@ -1672,6 +1666,23 @@ export default function TargetsPage() {
                   onChange={(date) => setSelectedDate(date || new Date())}
                 />
               </div>
+
+              {/* Moon Phase Card - elevated appearance */}
+              {currentMoonPhase && (
+                <Card
+                  className="p-3 ml-auto shadow-lg border-2"
+                  style={{
+                    backgroundColor: 'hsl(var(--card))',
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.4), 0 4px 6px rgba(0, 0, 0, 0.3)',
+                    transform: 'translateY(-2px)',
+                  }}
+                >
+                  <MoonPhaseDisplay
+                    illumination={currentMoonPhase.illumination}
+                    hasInterference={currentMoonPhase.illumination > 0.3}
+                  />
+                </Card>
+              )}
             </Group>
           </Stack>
         </Card>
@@ -1711,7 +1722,7 @@ export default function TargetsPage() {
                     )}
                   </div>
                 </PopoverTrigger>
-              <PopoverContent className="p-2" align="start">
+              <PopoverContent className="p-2" align="start" onOpenAutoFocus={(e) => e.preventDefault()}>
                 <Stack className="gap-1">
                   <Text className="text-xs text-muted-foreground font-medium mb-1">
                     Recent searches
@@ -2157,7 +2168,7 @@ export default function TargetsPage() {
                       <Group className="items-start gap-3">
                         {/* Preview Image - Click to enlarge */}
                         <Box
-                          className="min-w-[130px] w-[130px] cursor-pointer"
+                          className="min-w-[160px] w-[160px] cursor-pointer"
                           onClick={() => handleImageClick(target)}
                         >
                           <img
@@ -2166,10 +2177,10 @@ export default function TargetsPage() {
                             loading="lazy"
                             onError={(e) => {
                               const img = e.target as HTMLImageElement;
-                              img.src = 'https://placehold.co/130x130/0d1117/white?text=No+Image';
+                              img.src = 'https://placehold.co/160x160/0d1117/white?text=No+Image';
                             }}
                             className="rounded-sm transition-transform hover:scale-105"
-                            style={{ width: 130, height: 130, objectFit: 'cover' }}
+                            style={{ width: 160, height: 160, objectFit: 'cover' }}
                           />
                         </Box>
 
@@ -2229,66 +2240,67 @@ export default function TargetsPage() {
                                 {target.constellation}
                               </Badge>
                             )}
-                            {session && (
-                              <>
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-6 w-6"
-                                        onClick={() => handleToggleWishlist(target.id)}
-                                        disabled={addMutation.isPending || removeMutation.isPending}
-                                      >
-                                        {isAdded ? <IconHeartFilled className="h-3.5 w-3.5 text-red-500" /> : <IconHeart className="h-3.5 w-3.5" />}
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      {isAdded ? 'Remove from wishlist' : 'Add to wishlist'}
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                                {!target.isDynamic && (
-                                  <TooltipProvider>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Button
-                                          variant="ghost"
-                                          size="icon"
-                                          className="h-6 w-6"
-                                          onClick={() => handleFindBestDate(target)}
-                                        >
-                                          <IconCalendarSearch className="h-3.5 w-3.5" />
-                                        </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        Find best observation date
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
-                                )}
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-6 w-6"
-                                        onClick={() => handleCreateSession(target.id, target.name)}
-                                        disabled={!selectedGear || !selectedLocation || createSessionMutation.isPending}
-                                      >
-                                        <IconPlus className="h-3.5 w-3.5" />
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      {selectedGear ? 'Create session with this target' : 'Select gear to create session'}
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              </>
-                            )}
                           </Group>
+
+                          {session && (
+                            <Group className="gap-1 mt-1">
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-6 w-6"
+                                      onClick={() => handleToggleWishlist(target.id)}
+                                      disabled={addMutation.isPending || removeMutation.isPending}
+                                    >
+                                      {isAdded ? <IconHeartFilled className="h-3.5 w-3.5 text-red-500" /> : <IconHeart className="h-3.5 w-3.5" />}
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    {isAdded ? 'Remove from wishlist' : 'Add to wishlist'}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                              {!target.isDynamic && (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6"
+                                        onClick={() => handleFindBestDate(target)}
+                                      >
+                                        <IconCalendarSearch className="h-3.5 w-3.5" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      Find best observation date
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              )}
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-6 w-6"
+                                      onClick={() => handleCreateSession(target.id, target.name)}
+                                      disabled={!selectedGear || !selectedLocation || createSessionMutation.isPending}
+                                    >
+                                      <IconPlus className="h-3.5 w-3.5" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    {selectedGear ? 'Create session with this target' : 'Select gear to create session'}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </Group>
+                          )}
                         </Stack>
 
                         {/* Visibility Chart */}
@@ -2302,21 +2314,6 @@ export default function TargetsPage() {
                               selectedDate={selectedDate}
                             />
                           )}
-
-                        {/* Direction Compass and Moon Phase */}
-                        {selectedLocation && target.currentAzimuth !== undefined && (
-                          <Stack className="gap-2 items-center">
-                            <DirectionCompass azimuth={target.currentAzimuth} />
-
-                            {/* Moon Phase Display */}
-                            {currentMoonPhase && showMoonOverlay && (
-                              <MoonPhaseDisplay
-                                illumination={currentMoonPhase.illumination}
-                                hasInterference={currentMoonPhase.illumination > 0.3}
-                              />
-                            )}
-                          </Stack>
-                        )}
                       </Group>
                     </Card>
                   );
