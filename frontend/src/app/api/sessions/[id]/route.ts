@@ -12,7 +12,7 @@ const updateSessionSchema = z.object({
 }).partial();
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { userId, error } = await getUserId();
@@ -68,10 +68,14 @@ export async function PUT(
       return NextResponse.json({ error: 'Session not found' }, { status: 404 });
     }
 
-    const updateData: Omit<typeof data, 'date'> & { date?: Date } = { ...data };
+    const updateData: Record<string, unknown> = {};
     if (data.date) {
       updateData.date = new Date(data.date);
     }
+    if (data.locationName !== undefined) updateData.locationName = data.locationName;
+    if (data.latitude !== undefined) updateData.latitude = data.latitude;
+    if (data.longitude !== undefined) updateData.longitude = data.longitude;
+    if (data.notes !== undefined) updateData.notes = data.notes;
 
     const updatedSession = await prisma.session.update({
       where: { id },
@@ -98,7 +102,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { userId, error } = await getUserId();

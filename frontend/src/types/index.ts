@@ -105,6 +105,12 @@ export interface FOV {
   pixelScaleArcsecPerPixel: number;
 }
 
+export type FOVCalculation = {
+  fovWidthArcmin: number;
+  fovHeightArcmin: number;
+  pixelScaleArcsecPerPixel: number;
+};
+
 export interface Rig {
   id: string;
   userId: string;
@@ -117,6 +123,9 @@ export interface Rig {
   telescope: Telescope;
   camera: Camera;
   fov: FOV;
+  fovWidthArcmin?: number;
+  fovHeightArcmin?: number;
+  pixelScale?: number;
 }
 
 export interface CreateTelescopeInput {

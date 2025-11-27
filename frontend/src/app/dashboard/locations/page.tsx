@@ -1,23 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Container } from '@/components/ui/container';
+import { Title } from '@/components/ui/title';
+import { Text } from '@/components/ui/text';
+import { Button } from '@/components/ui/button';
+import { Stack } from '@/components/ui/stack';
+import { Card } from '@/components/ui/card';
+import { Group } from '@/components/ui/group';
+import { Grid, GridCol } from '@/components/ui/grid';
+import { Box } from '@/components/ui/box';
 import {
-  Container,
-  Title,
-  Text,
-  Button,
-  Stack,
-  Card,
-  Group,
-  Badge,
-  ActionIcon,
-  Grid,
-  Paper,
-  Box,
-  Menu,
-} from '@mantine/core';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { notifications } from '@mantine/notifications';
+import { toast } from 'sonner';
 import {
   IconPlus,
   IconMapPin,
@@ -105,7 +106,7 @@ async function deleteLocation(id: string): Promise<void> {
 }
 
 // Small map preview component
-function LocationMapPreview({ latitude, longitude, name }: { latitude: number; longitude: number; name: string }) {
+function LocationMapPreview({ latitude, longitude }: { latitude: number; longitude: number; name: string }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -115,15 +116,7 @@ function LocationMapPreview({ latitude, longitude, name }: { latitude: number; l
   if (!mounted) {
     return (
       <Box
-        style={{
-          width: '100%',
-          height: 150,
-          borderRadius: 8,
-          backgroundColor: 'var(--mantine-color-dark-6)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className="w-full h-[150px] rounded-lg bg-input flex items-center justify-center"
       >
         <Text size="xs" c="dimmed">Loading map...</Text>
       </Box>
@@ -132,15 +125,7 @@ function LocationMapPreview({ latitude, longitude, name }: { latitude: number; l
 
   return (
     <Box
-      style={{
-        width: '100%',
-        height: 150,
-        borderRadius: 8,
-        overflow: 'hidden',
-        border: '1px solid var(--mantine-color-dark-4)',
-        position: 'relative',
-        zIndex: 0,
-      }}
+      className="w-full h-[150px] rounded-lg overflow-hidden border border-border relative z-0"
     >
       <MapContainer
         center={[latitude, longitude]}
@@ -162,7 +147,7 @@ function LocationMapPreview({ latitude, longitude, name }: { latitude: number; l
   );
 }
 
-export default function LocationsPage(): JSX.Element {
+export default function LocationsPage() {
   const [formOpened, setFormOpened] = useState(false);
   const [editingLocation, setEditingLocation] = useState<Location | null>(null);
   const [selectedCoords, setSelectedCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -184,17 +169,13 @@ export default function LocationsPage(): JSX.Element {
       queryClient.invalidateQueries({ queryKey: ['locations'] });
       setFormOpened(false);
       setSelectedCoords(null);
-      notifications.show({
-        title: 'Success',
-        message: 'Location created successfully',
-        color: 'green',
+      toast.success('Success', {
+        description: 'Location created successfully',
       });
     },
     onError: () => {
-      notifications.show({
-        title: 'Error',
-        message: 'Failed to create location',
-        color: 'red',
+      toast.error('Error', {
+        description: 'Failed to create location',
       });
     },
   });
@@ -206,17 +187,13 @@ export default function LocationsPage(): JSX.Element {
       queryClient.invalidateQueries({ queryKey: ['locations'] });
       setFormOpened(false);
       setEditingLocation(null);
-      notifications.show({
-        title: 'Success',
-        message: 'Location updated successfully',
-        color: 'green',
+      toast.success('Success', {
+        description: 'Location updated successfully',
       });
     },
     onError: () => {
-      notifications.show({
-        title: 'Error',
-        message: 'Failed to update location',
-        color: 'red',
+      toast.error('Error', {
+        description: 'Failed to update location',
       });
     },
   });
@@ -225,17 +202,13 @@ export default function LocationsPage(): JSX.Element {
     mutationFn: deleteLocation,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['locations'] });
-      notifications.show({
-        title: 'Success',
-        message: 'Location deleted successfully',
-        color: 'green',
+      toast.success('Success', {
+        description: 'Location deleted successfully',
       });
     },
     onError: () => {
-      notifications.show({
-        title: 'Error',
-        message: 'Failed to delete location',
-        color: 'red',
+      toast.error('Error', {
+        description: 'Failed to delete location',
       });
     },
   });
@@ -244,18 +217,15 @@ export default function LocationsPage(): JSX.Element {
     setSelectedCoords({ lat, lng });
 
     // Show loading notification
-    const loadingNotification = notifications.show({
-      title: 'Fetching location data',
-      message: 'Getting elevation and timezone data...',
-      loading: true,
-      autoClose: false,
+    const loadingNotification = toast.loading('Fetching location data', {
+      description: 'Getting elevation and timezone data...',
     });
 
     // Fetch location data
     try {
       const data = await fetchLocationData(lat, lng);
       setFetchedLocationData(data);
-      notifications.hide(loadingNotification);
+      toast.dismiss(loadingNotification);
     } catch (error) {
       console.error('Failed to fetch location data:', error);
       // Set default values if fetch fails
@@ -263,13 +233,9 @@ export default function LocationsPage(): JSX.Element {
         elevation: null,
         timezone: null,
       });
-      notifications.update({
-        id: loadingNotification,
-        title: 'Warning',
-        message: 'Could not auto-detect all location data. Using defaults.',
-        color: 'yellow',
-        loading: false,
-        autoClose: 3000,
+      toast.dismiss(loadingNotification);
+      toast.warning('Warning', {
+        description: 'Could not auto-detect all location data. Using defaults.',
       });
     }
   };
@@ -313,9 +279,9 @@ export default function LocationsPage(): JSX.Element {
   };
 
   return (
-    <Container size="xl" py="xl">
+    <Container size="xl" className="py-8">
       <Stack gap="lg">
-        <Group justify="space-between">
+        <Group justify="between">
           <div>
             <Title order={1}>My Locations</Title>
             <Text c="dimmed" size="lg">
@@ -323,9 +289,9 @@ export default function LocationsPage(): JSX.Element {
             </Text>
           </div>
           <Button
-            leftSection={<IconPlus size={16} />}
             onClick={handleAddLocationClick}
           >
+            <IconPlus size={16} />
             Add Location
           </Button>
         </Group>
@@ -335,13 +301,13 @@ export default function LocationsPage(): JSX.Element {
         ) : locations && locations.length > 0 ? (
           <Grid>
             {locations.map((location) => (
-              <Grid.Col key={location.id} span={{ base: 12, sm: 6, md: 4 }}>
-                <Card shadow="sm" padding="lg" withBorder>
+              <GridCol key={location.id} className="col-span-12 sm:col-span-6 md:col-span-4">
+                <Card className="shadow-sm p-6 border">
                   <Stack gap="xs">
-                    <Group justify="space-between" align="flex-start">
-                      <Box style={{ flex: 1 }}>
+                    <Group justify="between" align="start">
+                      <Box className="flex-1">
                         <Group gap="xs">
-                          <Text fw={600} size="lg">
+                          <Text fw="semibold" size="lg">
                             {location.name}
                           </Text>
                           {location.isFavorite && (
@@ -349,46 +315,40 @@ export default function LocationsPage(): JSX.Element {
                           )}
                         </Group>
                       </Box>
-                      <Menu position="bottom-end">
-                        <Menu.Target>
-                          <ActionIcon variant="subtle" color="gray">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
                             <IconDots size={16} />
-                          </ActionIcon>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                          <Menu.Item
-                            leftSection={<IconEdit size={14} />}
-                            onClick={() => handleEdit(location)}
-                          >
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleEdit(location)}>
+                            <IconEdit size={14} />
                             Edit
-                          </Menu.Item>
-                          <Menu.Item
-                            leftSection={
-                              location.isFavorite ? (
-                                <IconStar size={14} />
-                              ) : (
-                                <IconStarFilled size={14} />
-                              )
-                            }
-                            onClick={() => toggleFavorite(location)}
-                          >
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => toggleFavorite(location)}>
+                            {location.isFavorite ? (
+                              <IconStar size={14} />
+                            ) : (
+                              <IconStarFilled size={14} />
+                            )}
                             {location.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                          </Menu.Item>
-                          <Menu.Divider />
-                          <Menu.Item
-                            leftSection={<IconTrash size={14} />}
-                            color="red"
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            variant="destructive"
                             onClick={() => handleDelete(location.id)}
                           >
+                            <IconTrash size={14} />
                             Delete
-                          </Menu.Item>
-                        </Menu.Dropdown>
-                      </Menu>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </Group>
 
                     {/* Map preview */}
                     <Box
-                      style={{ cursor: 'pointer' }}
+                      className="cursor-pointer"
                       onClick={() => handleEdit(location)}
                     >
                       <LocationMapPreview
@@ -418,18 +378,18 @@ export default function LocationsPage(): JSX.Element {
                     )}
                   </Stack>
                 </Card>
-              </Grid.Col>
+              </GridCol>
             ))}
           </Grid>
         ) : (
-          <Paper p="xl" withBorder>
+          <Card p="xl" withBorder>
             <Stack align="center" gap="md">
               <IconMapPin size={48} stroke={1.5} color="gray" />
               <Text c="dimmed" ta="center">
                 No locations saved yet. Use the &quot;Add Location&quot; button to get started.
               </Text>
             </Stack>
-          </Paper>
+          </Card>
         )}
       </Stack>
 

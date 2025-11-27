@@ -3,7 +3,10 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { Container, Text, Loader, Stack } from '@mantine/core';
+import { Container } from '@/components/ui/container';
+import { Text } from '@/components/ui/text';
+import { Loader } from '@/components/ui/loader';
+import { Stack } from '@/components/ui/stack';
 
 /**
  * Client-side authentication guard component
@@ -11,7 +14,7 @@ import { Container, Text, Loader, Stack } from '@mantine/core';
  * while API routes handle the actual authentication enforcement
  */
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -22,7 +25,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (status === 'loading') {
     return (
-      <Container size="xl" py="xl">
+      <Container size="xl" className="py-8">
         <Stack align="center" gap="md">
           <Loader size="lg" />
           <Text>Loading...</Text>

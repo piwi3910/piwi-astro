@@ -1,6 +1,9 @@
 'use client';
 
-import { Box, Text, Stack, Tooltip } from '@mantine/core';
+import { Box } from '@/components/ui/box';
+import { Text } from '@/components/ui/text';
+import { Stack } from '@/components/ui/stack';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 interface PixelScaleGaugeProps {
   pixelScale: number;
@@ -89,104 +92,74 @@ const getMarkerPosition = (pixelScale: number): number => {
   return ((logScale - logMin) / (logMax - logMin)) * 100;
 };
 
-export function PixelScaleGauge({ pixelScale }: PixelScaleGaugeProps): JSX.Element {
+export function PixelScaleGauge({ pixelScale }: PixelScaleGaugeProps) {
   const currentZone = getZoneForPixelScale(pixelScale);
   const markerPosition = getMarkerPosition(pixelScale);
 
   return (
     <Box>
-      <Text size="xs" fw={500} mb={4} c="dimmed">
+      <Text size="xs" className="font-medium mb-1 text-muted-foreground">
         Pixel Scale Quality
       </Text>
 
-      <Tooltip
-        label={`${currentZone.label}: ${currentZone.description}`}
-        position="left"
-        withArrow
-      >
-        <Box style={{ position: 'relative', height: 120, width: 40 }}>
-          {/* Gradient bar */}
-          <Box
-            style={{
-              position: 'absolute',
-              left: 12,
-              width: 16,
-              height: '100%',
-              borderRadius: 8,
-              background: `linear-gradient(to bottom,
-                #fa5252 0%,
-                #fd7e14 7%,
-                #94d82d 15%,
-                #51cf66 30%,
-                #94d82d 50%,
-                #ffd43b 70%,
-                #fd7e14 85%,
-                #fa5252 100%
-              )`,
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-            }}
-          />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Box className="relative h-[120px] w-10">
+            {/* Gradient bar */}
+            <Box
+              className="absolute left-3 w-4 h-full rounded-lg border border-white/10"
+              style={{
+                background: `linear-gradient(to bottom,
+                  #fa5252 0%,
+                  #fd7e14 7%,
+                  #94d82d 15%,
+                  #51cf66 30%,
+                  #94d82d 50%,
+                  #ffd43b 70%,
+                  #fd7e14 85%,
+                  #fa5252 100%
+                )`,
+              }}
+            />
 
-          {/* Current value marker */}
-          <Box
-            style={{
-              position: 'absolute',
-              top: `${100 - markerPosition}%`,
-              left: 0,
-              transform: 'translateY(-50%)',
-              width: 40,
-              height: 3,
-              backgroundColor: 'white',
-              borderRadius: 2,
-              boxShadow: '0 0 4px rgba(0, 0, 0, 0.5)',
-              zIndex: 10,
-            }}
-          />
+            {/* Current value marker */}
+            <Box
+              className="absolute left-0 w-10 h-0.5 bg-white rounded-sm shadow-[0_0_4px_rgba(0,0,0,0.5)] z-10"
+              style={{
+                top: `${100 - markerPosition}%`,
+                transform: 'translateY(-50%)',
+              }}
+            />
 
-          {/* Scale labels */}
-          <Box
-            style={{
-              position: 'absolute',
-              right: -8,
-              top: 0,
-              fontSize: 9,
-              color: 'var(--mantine-color-dimmed)',
-            }}
-          >
-            0.3
+            {/* Scale labels */}
+            <Box
+              className="absolute -right-2 top-0 text-[9px] text-muted-foreground"
+            >
+              0.3
+            </Box>
+            <Box
+              className="absolute -right-2 top-1/2 -translate-y-1/2 text-[9px] text-muted-foreground"
+            >
+              1.5
+            </Box>
+            <Box
+              className="absolute -right-2 bottom-0 text-[9px] text-muted-foreground"
+            >
+              4.0
+            </Box>
           </Box>
-          <Box
-            style={{
-              position: 'absolute',
-              right: -8,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              fontSize: 9,
-              color: 'var(--mantine-color-dimmed)',
-            }}
-          >
-            1.5
-          </Box>
-          <Box
-            style={{
-              position: 'absolute',
-              right: -8,
-              bottom: 0,
-              fontSize: 9,
-              color: 'var(--mantine-color-dimmed)',
-            }}
-          >
-            4.0
-          </Box>
-        </Box>
+        </TooltipTrigger>
+        <TooltipContent side="left">
+          <Text size="xs">{currentZone.label}: {currentZone.description}</Text>
+        </TooltipContent>
       </Tooltip>
 
       {/* Current value display */}
-      <Stack gap={2} mt={8}>
-        <Text size="xs" ta="center" fw={700} c={currentZone.color}>
+      <Stack gap="xs" className="mt-2">
+        <Text size="xs" className="text-center font-bold" style={{ color: currentZone.color }}>
           {pixelScale.toFixed(2)}″/px
         </Text>
-        <Text size="xs" ta="center" c="dimmed" style={{ fontSize: 9 }}>
+        <Text size="xs" className="text-center text-muted-foreground text-[9px]">
           {currentZone.label}
         </Text>
       </Stack>

@@ -5,19 +5,31 @@ import {
   Stack,
   Group,
   Text,
-  Paper,
+  Card,
   Badge,
-  ActionIcon,
-  Tabs,
-  Loader,
-  Modal,
   Button,
-  Select,
-  TextInput,
+  Loader,
   Tooltip,
+  TooltipTrigger,
+  TooltipContent,
   Box,
-  Collapse,
-} from '@mantine/core';
+} from '@/components/ui';
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from '@/components/ui/tabs';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Autocomplete } from '@/components/ui/autocomplete';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   IconRefresh,
@@ -30,7 +42,7 @@ import {
   IconChevronRight,
   IconTarget,
 } from '@tabler/icons-react';
-import { notifications } from '@mantine/notifications';
+import { notifications } from '@/components/ui/notifications';
 
 interface ProcessingJob {
   id: string;
@@ -190,149 +202,138 @@ function ProcessingJobCard({
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <Paper p="sm" withBorder>
-      <Stack gap="xs">
-        <Group justify="space-between" wrap="nowrap">
-          <Group gap="sm" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
-            <ActionIcon
-              variant="subtle"
-              size="sm"
-              onClick={() => setExpanded(!expanded)}
-            >
-              {expanded ? (
-                <IconChevronDown size={14} />
-              ) : (
-                <IconChevronRight size={14} />
-              )}
-            </ActionIcon>
-            <Stack gap={2} style={{ flex: 1, minWidth: 0 }}>
-              <Text size="sm" fw={500} truncate>
-                {job.originalName}
-              </Text>
-              <Group gap="xs">
-                <Text size="xs" c="dimmed">
-                  {formatFileSize(job.fileSize)}
-                </Text>
-                <Badge
-                  size="xs"
-                  color={getStatusColor(job.status)}
-                  leftSection={getStatusIcon(job.status)}
-                >
-                  {job.status}
-                </Badge>
-                {job.targetName && (
-                  <Badge size="xs" variant="outline" color="violet">
-                    {job.targetName}
-                  </Badge>
-                )}
-              </Group>
-            </Stack>
-          </Group>
-
-          <Group gap="xs">
-            {(job.status === 'FAILED' || job.status === 'NEEDS_TARGET') && (
-              <>
-                <Tooltip label="Retry plate solving">
-                  <ActionIcon
-                    variant="subtle"
-                    color="blue"
-                    size="sm"
-                    onClick={() => onRetry(job.id)}
-                  >
-                    <IconRefresh size={14} />
-                  </ActionIcon>
-                </Tooltip>
-                <Tooltip label="Manually assign target">
-                  <ActionIcon
-                    variant="subtle"
-                    color="green"
-                    size="sm"
-                    onClick={() => onComplete(job.id)}
-                  >
-                    <IconTarget size={14} />
-                  </ActionIcon>
-                </Tooltip>
-              </>
+    <Card p="xs" withBorder>
+      <Group justify="between" wrap="nowrap" gap="xs">
+        <Group gap="xs" wrap="nowrap" className="flex-1 min-w-0">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setExpanded(!expanded)}
+            className="h-6 w-6"
+          >
+            {expanded ? (
+              <IconChevronDown size={12} />
+            ) : (
+              <IconChevronRight size={12} />
             )}
-            <Tooltip label="Delete">
-              <ActionIcon
-                variant="subtle"
-                color="red"
-                size="sm"
-                onClick={() => onDelete(job.id)}
-              >
-                <IconTrash size={14} />
-              </ActionIcon>
-            </Tooltip>
-          </Group>
+          </Button>
+          <Text size="xs" truncate className="flex-1 min-w-0">
+            {job.originalName}
+          </Text>
+          <Text size="xs" c="dimmed" className="shrink-0">
+            {formatFileSize(job.fileSize)}
+          </Text>
+          <Badge
+            size="xs"
+            className="gap-1 shrink-0"
+            variant={getStatusColor(job.status) === 'gray' ? 'outline' : 'default'}
+          >
+            {getStatusIcon(job.status)}
+            {job.status}
+          </Badge>
+          {job.targetName && (
+            <Badge size="xs" variant="outline" className="shrink-0">
+              {job.targetName}
+            </Badge>
+          )}
         </Group>
 
-        <Collapse in={expanded}>
-          <Box
-            p="sm"
-            style={{
-              backgroundColor: 'var(--mantine-color-dark-7)',
-              borderRadius: 'var(--mantine-radius-sm)',
-            }}
-          >
-            <Stack gap="xs">
-              <Group gap="xl">
-                <Stack gap={2}>
+        <Group gap="xs" className="shrink-0">
+          {(job.status === 'FAILED' || job.status === 'NEEDS_TARGET') && (
+            <>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onRetry(job.id)}
+                    className="h-6 w-6 text-blue-500"
+                  >
+                    <IconRefresh size={12} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Retry plate solving</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onComplete(job.id)}
+                    className="h-6 w-6 text-green-500"
+                  >
+                    <IconTarget size={12} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Manually assign target</TooltipContent>
+              </Tooltip>
+            </>
+          )}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onDelete(job.id)}
+                className="h-6 w-6 text-red-500"
+              >
+                <IconTrash size={12} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Delete</TooltipContent>
+          </Tooltip>
+        </Group>
+      </Group>
+
+      <div
+        className={`overflow-hidden transition-all duration-200 ${expanded ? 'max-h-96 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}
+      >
+        <Box className="p-2 bg-card/50 rounded-sm">
+          <Stack gap="xs">
+            <Group gap="xl">
+              <Stack gap="sm">
+                <Text size="xs" c="dimmed">
+                  Created
+                </Text>
+                <Text size="xs">{formatDate(job.createdAt)}</Text>
+              </Stack>
+              {job.completedAt && (
+                <Stack gap="sm">
                   <Text size="xs" c="dimmed">
-                    Created
+                    Completed
                   </Text>
-                  <Text size="sm">{formatDate(job.createdAt)}</Text>
-                </Stack>
-                {job.completedAt && (
-                  <Stack gap={2}>
-                    <Text size="xs" c="dimmed">
-                      Completed
-                    </Text>
-                    <Text size="sm">{formatDate(job.completedAt)}</Text>
-                  </Stack>
-                )}
-              </Group>
-
-              {/* Plate solve coordinates */}
-              {job.ra !== null && job.dec !== null && (
-                <Stack gap={2}>
-                  <Text size="xs" c="dimmed" fw={500}>
-                    Plate Solve Result
-                  </Text>
-                  <Text size="sm">
-                    RA: {job.ra.toFixed(4)}°, Dec: {job.dec.toFixed(4)}°
-                  </Text>
+                  <Text size="xs">{formatDate(job.completedAt)}</Text>
                 </Stack>
               )}
+            </Group>
 
-              {/* Target match */}
-              {job.target && (
-                <Stack gap={2}>
-                  <Text size="xs" c="dimmed" fw={500}>
-                    Matched Target ({job.targetMatch})
-                  </Text>
-                  <Text size="sm">
-                    {job.target.catalogId || job.target.name} - {job.target.type}
-                  </Text>
-                </Stack>
-              )}
+            {/* Plate solve coordinates */}
+            {job.ra !== null && job.dec !== null && (
+              <Stack gap="sm">
+                <Text size="xs" c="dimmed" fw="medium">
+                  Plate Solve Result
+                </Text>
+                <Text size="xs">
+                  RA: {job.ra.toFixed(4)}°, Dec: {job.dec.toFixed(4)}°
+                </Text>
+              </Stack>
+            )}
 
-              {/* Error message */}
-              {job.errorMessage && (
-                <Stack gap={2}>
-                  <Text size="xs" c="red" fw={500}>
-                    Error
-                  </Text>
-                  <Text size="sm" c="red">
-                    {job.errorMessage}
-                  </Text>
-                </Stack>
-              )}
-            </Stack>
-          </Box>
-        </Collapse>
-      </Stack>
-    </Paper>
+            {/* Target match */}
+            {job.target && (
+              <Stack gap="sm">
+                <Text size="xs" c="dimmed" fw="medium">
+                  Matched Target ({job.targetMatch})
+                </Text>
+                <Text size="xs">
+                  {job.target.catalogId || job.target.name} - {job.target.type}
+                </Text>
+              </Stack>
+            )}
+          </Stack>
+        </Box>
+      </div>
+    </Card>
   );
 }
 
@@ -466,147 +467,131 @@ export function ProcessingQueue({ refreshTrigger }: ProcessingQueueProps) {
   return (
     <>
       <Stack gap="md">
-        <Group justify="space-between">
-          <Text size="lg" fw={500}>
+        <Group justify="between">
+          <Text size="lg" fw="medium">
             Processing Queue
           </Text>
-          <ActionIcon variant="subtle" onClick={() => refetch()}>
+          <Button variant="ghost" size="icon" onClick={() => refetch()}>
             <IconRefresh size={18} />
-          </ActionIcon>
+          </Button>
         </Group>
 
-        <Tabs value={activeTab} onChange={(v) => setActiveTab(v || 'all')}>
-          <Tabs.List>
-            <Tabs.Tab
-              value="all"
-              rightSection={
-                data?.pagination.total ? (
-                  <Badge size="xs" variant="filled" color="gray">
-                    {data.pagination.total}
-                  </Badge>
-                ) : null
-              }
-            >
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v || 'all')}>
+          <TabsList>
+            <TabsTrigger value="all" className="gap-2">
               All
-            </Tabs.Tab>
-            <Tabs.Tab
-              value="processing"
-              rightSection={
-                processingCount > 0 ? (
-                  <Badge size="xs" variant="filled" color="blue">
-                    {processingCount}
-                  </Badge>
-                ) : null
-              }
-            >
+              {data?.pagination.total ? (
+                <Badge size="xs" variant="secondary">
+                  {data.pagination.total}
+                </Badge>
+              ) : null}
+            </TabsTrigger>
+            <TabsTrigger value="processing" className="gap-2">
               Processing
-            </Tabs.Tab>
-            <Tabs.Tab
-              value="completed"
-              rightSection={
-                counts.completed > 0 ? (
-                  <Badge size="xs" variant="filled" color="green">
-                    {counts.completed}
-                  </Badge>
-                ) : null
-              }
-            >
+              {processingCount > 0 ? (
+                <Badge size="xs" variant="secondary">
+                  {processingCount}
+                </Badge>
+              ) : null}
+            </TabsTrigger>
+            <TabsTrigger value="completed" className="gap-2">
               Completed
-            </Tabs.Tab>
-            <Tabs.Tab
-              value="failed"
-              rightSection={
-                counts.failed > 0 ? (
-                  <Badge size="xs" variant="filled" color="red">
-                    {counts.failed}
-                  </Badge>
-                ) : null
-              }
-            >
+              {counts.completed > 0 ? (
+                <Badge size="xs" variant="secondary">
+                  {counts.completed}
+                </Badge>
+              ) : null}
+            </TabsTrigger>
+            <TabsTrigger value="failed" className="gap-2">
               Failed
-            </Tabs.Tab>
-          </Tabs.List>
-        </Tabs>
+              {counts.failed > 0 ? (
+                <Badge size="xs" variant="secondary">
+                  {counts.failed}
+                </Badge>
+              ) : null}
+            </TabsTrigger>
+          </TabsList>
 
-        {isLoading ? (
-          <Group justify="center" p="xl">
-            <Loader size="sm" />
-            <Text size="sm" c="dimmed">
-              Loading...
-            </Text>
-          </Group>
-        ) : data?.jobs.length === 0 ? (
-          <Text c="dimmed" ta="center" py="xl">
-            No processing jobs found
-          </Text>
-        ) : (
-          <Stack gap="xs">
-            {data?.jobs.map((job) => (
-              <ProcessingJobCard
-                key={job.id}
-                job={job}
-                onDelete={(id) => deleteMutation.mutate(id)}
-                onRetry={(id) => retryMutation.mutate(id)}
-                onComplete={handleComplete}
-              />
-            ))}
-          </Stack>
-        )}
+          <TabsContent value={activeTab}>
+            {isLoading ? (
+              <Group justify="center" className="p-8">
+                <Loader size="sm" />
+                <Text size="sm" c="dimmed">
+                  Loading...
+                </Text>
+              </Group>
+            ) : data?.jobs.length === 0 ? (
+              <Text c="dimmed" className="text-center py-8">
+                No processing jobs found
+              </Text>
+            ) : (
+              <Stack gap="xs">
+                {data?.jobs.map((job) => (
+                  <ProcessingJobCard
+                    key={job.id}
+                    job={job}
+                    onDelete={(id) => deleteMutation.mutate(id)}
+                    onRetry={(id) => retryMutation.mutate(id)}
+                    onComplete={handleComplete}
+                  />
+                ))}
+              </Stack>
+            )}
+          </TabsContent>
+        </Tabs>
       </Stack>
 
       {/* Manual complete modal */}
-      <Modal
-        opened={completeModalOpen}
-        onClose={() => setCompleteModalOpen(false)}
-        title="Assign Target"
-      >
-        <Stack gap="md">
-          <Text size="sm" c="dimmed">
-            Select a target to associate with this image:
-          </Text>
+      <Dialog open={completeModalOpen} onOpenChange={setCompleteModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Assign Target</DialogTitle>
+          </DialogHeader>
+          <Stack gap="md">
+            <Text size="sm" c="dimmed">
+              Select a target to associate with this image:
+            </Text>
 
-          <Select
-            label="Search Target"
-            placeholder="Type to search..."
-            searchable
-            data={
-              searchedTargets?.map((t) => ({
-                value: t.id,
-                label: `${t.catalogId || t.name} - ${t.type}`,
-              })) || []
-            }
-            value={selectedTargetId}
-            onChange={setSelectedTargetId}
-            onSearchChange={setTargetSearch}
-            searchValue={targetSearch}
-            nothingFoundMessage={
-              targetSearch.length < 2
-                ? 'Type at least 2 characters'
-                : 'No targets found'
-            }
-          />
+            <Autocomplete
+              label="Search Target"
+              placeholder="Type to search..."
+              data={
+                searchedTargets?.map((t) => ({
+                  value: t.id,
+                  label: `${t.catalogId || t.name} - ${t.type}`,
+                })) || []
+              }
+              value={targetSearch}
+              onChange={setTargetSearch}
+              onOptionSubmit={(value) => {
+                setSelectedTargetId(value);
+              }}
+            />
 
-          <TextInput
-            label="Title (optional)"
-            placeholder="Image title"
-            value={targetTitle}
-            onChange={(e) => setTargetTitle(e.target.value)}
-          />
+            <div className="space-y-1.5">
+              <Label htmlFor="title">Title (optional)</Label>
+              <Input
+                id="title"
+                placeholder="Image title"
+                value={targetTitle}
+                onChange={(e) => setTargetTitle(e.target.value)}
+              />
+            </div>
 
-          <Group justify="flex-end">
-            <Button variant="subtle" onClick={() => setCompleteModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleCompleteSubmit}
-              loading={completeMutation.isPending}
-              disabled={!selectedTargetId}
-            >
-              Complete
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setCompleteModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleCompleteSubmit}
+                disabled={!selectedTargetId || completeMutation.isPending}
+              >
+                {completeMutation.isPending ? 'Completing...' : 'Complete'}
+              </Button>
+            </DialogFooter>
+          </Stack>
+        </DialogContent>
+      </Dialog>
 
       {/* CSS for rotating animation */}
       <style jsx global>{`

@@ -38,7 +38,6 @@ export interface TargetVisibility {
 }
 
 const MIN_ALTITUDE = 15; // Minimum altitude for practical observation (degrees)
-const TWILIGHT_ALTITUDE = -18; // Astronomical twilight (degrees)
 
 /**
  * Calculate altitude and azimuth for a target at a specific time and location
@@ -60,17 +59,8 @@ export function calculateAltitudeAzimuth(
   // We need to create an Equatorial object with hour angle
   const raHours = target.raDeg / 15; // Convert degrees to hours
 
-  // Calculate position at given date
-  // For fixed stars/deep sky objects, we use their J2000 coordinates
-  const equatorial: Astronomy.EquatorEpochDate = {
-    ra: raHours,
-    dec: target.decDeg,
-    epoch: date,
-    dist: 1e10, // Arbitrary large distance for deep sky objects
-  };
-
   // Convert to horizontal coordinates (altitude/azimuth)
-  const horizontal = Astronomy.Horizon(date, observer, equatorial.ra, equatorial.dec, 'normal');
+  const horizontal = Astronomy.Horizon(date, observer, raHours, target.decDeg, 'normal');
 
   return {
     altitude: horizontal.altitude,

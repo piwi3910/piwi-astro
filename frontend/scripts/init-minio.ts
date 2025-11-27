@@ -3,7 +3,7 @@
  * Initialize MinIO buckets and test connection
  */
 
-import { initializeMinIO, minioClient } from '../src/lib/minio';
+import { initializeMinIO } from '../src/lib/minio';
 import { cacheExternalImage } from '../src/lib/image-cache';
 
 async function testMinIO() {

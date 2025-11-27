@@ -1,34 +1,37 @@
 'use client';
 
-import { Container, Title, Tabs, Stack } from '@mantine/core';
+import { Container } from '@/components/ui/container';
+import { Title } from '@/components/ui/title';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Stack } from '@/components/ui/stack';
 import { TelescopesTab } from '@/components/gear/TelescopesTab';
 import { CamerasTab } from '@/components/gear/CamerasTab';
 import { RigsTab } from '@/components/gear/RigsTab';
 
-export default function GearPage(): JSX.Element {
+export default function GearPage() {
   return (
-    <Container size="xl" py="xl">
+    <Container size="xl" className="py-8">
       <Stack gap="lg">
         <Title order={1}>Gear Management</Title>
 
         <Tabs defaultValue="telescopes">
-          <Tabs.List>
-            <Tabs.Tab value="telescopes">Telescopes</Tabs.Tab>
-            <Tabs.Tab value="cameras">Cameras</Tabs.Tab>
-            <Tabs.Tab value="rigs">Rigs</Tabs.Tab>
-          </Tabs.List>
+          <TabsList>
+            <TabsTrigger value="telescopes">Telescopes</TabsTrigger>
+            <TabsTrigger value="cameras">Cameras</TabsTrigger>
+            <TabsTrigger value="rigs">Rigs</TabsTrigger>
+          </TabsList>
 
-          <Tabs.Panel value="telescopes" pt="md">
+          <TabsContent value="telescopes" className="pt-4">
             <TelescopesTab />
-          </Tabs.Panel>
+          </TabsContent>
 
-          <Tabs.Panel value="cameras" pt="md">
+          <TabsContent value="cameras" className="pt-4">
             <CamerasTab />
-          </Tabs.Panel>
+          </TabsContent>
 
-          <Tabs.Panel value="rigs" pt="md">
+          <TabsContent value="rigs" className="pt-4">
             <RigsTab />
-          </Tabs.Panel>
+          </TabsContent>
         </Tabs>
       </Stack>
     </Container>

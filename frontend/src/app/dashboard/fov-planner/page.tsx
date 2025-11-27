@@ -1,26 +1,6 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import {
-  Container,
-  Title,
-  Stack,
-  Group,
-  Select,
-  Card,
-  Text,
-  Grid,
-  Paper,
-  NumberInput,
-  Loader,
-  Center,
-  Button,
-  ActionIcon,
-  Badge,
-  Tooltip,
-  Divider,
-  ScrollArea,
-} from '@mantine/core';
 import { IconPlus, IconTrash, IconFocus2 } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -30,6 +10,20 @@ import {
   useCamerasByBrand,
 } from '@/hooks/useGear';
 import { calculateFOV } from '@/utils/fov';
+import { Container } from '@/components/ui/container';
+import { Stack } from '@/components/ui/stack';
+import { Group } from '@/components/ui/group';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Title } from '@/components/ui/title';
+import { Text } from '@/components/ui/text';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Loader } from '@/components/ui/loader';
+import { SelectField } from '@/components/ui/select-field';
+import { NumberInput } from '@/components/ui/number-input';
+import { Grid, GridCol } from '@/components/ui/grid';
 
 interface Telescope {
   id: string;
@@ -121,7 +115,7 @@ async function fetchUserTargets(): Promise<UserTarget[]> {
   return response.json();
 }
 
-export default function FOVPlannerPage(): JSX.Element {
+export default function FOVPlannerPage() {
   const [selectedRigId, setSelectedRigId] = useState<string>('');
   const [selectedTargetId, setSelectedTargetId] = useState<string>('');
   const [imageLoading, setImageLoading] = useState<boolean>(false);
@@ -446,27 +440,26 @@ export default function FOVPlannerPage(): JSX.Element {
   const hasFovOverlays = fovOverlays.length > 0;
 
   return (
-    <Container size="xl" py="xl">
+    <Container size="xl" className="py-8">
       <Stack gap="lg">
         <Title order={1}>Field of View Planner</Title>
 
-        <Text c="dimmed">
+        <Text className="text-muted-foreground">
           Compare different telescope and camera combinations. Add FOVs to comparison, select one to edit its mosaic settings.
         </Text>
 
-        <Grid>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+        <Grid gutter="md">
+          <GridCol span={{ base: 12, md: 6 }}>
+            <SelectField
               label="Select Rig"
               placeholder="Choose a rig or custom setup"
               data={rigSelectOptions}
               value={selectedRigId}
               onChange={(val) => setSelectedRigId(val || '')}
-              searchable
             />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+          </GridCol>
+          <GridCol span={{ base: 12, md: 6 }}>
+            <SelectField
               label="Select Target"
               placeholder="Choose a target"
               data={
@@ -477,142 +470,124 @@ export default function FOVPlannerPage(): JSX.Element {
               }
               value={selectedTargetId}
               onChange={(val) => setSelectedTargetId(val || '')}
-              searchable
             />
-          </Grid.Col>
+          </GridCol>
         </Grid>
 
         {/* Custom Telescope/Camera Selection from Catalog */}
         {isCustomMode && (
-          <Card shadow="sm" padding="sm" withBorder>
-            <Grid gutter="sm">
-              {/* Telescope Selection */}
-              <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-                <Select
-                  label="Telescope Brand"
-                  placeholder="Brand"
-                  size="xs"
-                  data={telescopeBrands}
-                  value={selectedTelescopeBrand}
-                  onChange={(value) => {
-                    setSelectedTelescopeBrand(value);
-                    setSelectedTelescopeModelId(null);
-                  }}
-                  searchable
-                  clearable
-                  maxDropdownHeight={300}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-                <Select
-                  label="Telescope Model"
-                  placeholder={selectedTelescopeBrand ? 'Model' : 'Select brand'}
-                  size="xs"
-                  data={telescopeModels.map((t) => ({
-                    value: t.id,
-                    label: `${t.model} (${t.apertureMm}mm f/${t.focalRatio.toFixed(1)})`,
-                  }))}
-                  value={selectedTelescopeModelId}
-                  onChange={setSelectedTelescopeModelId}
-                  searchable
-                  clearable
-                  disabled={!selectedTelescopeBrand}
-                  maxDropdownHeight={300}
-                />
-              </Grid.Col>
+          <Card className="border">
+            <CardContent className="pt-4">
+              <Grid gutter="sm">
+                {/* Telescope Selection */}
+                <GridCol span={{ base: 12, sm: 6, md: 3 }}>
+                  <SelectField
+                    label="Telescope Brand"
+                    placeholder="Brand"
+                    data={telescopeBrands.map((brand) => ({ value: brand, label: brand }))}
+                    value={selectedTelescopeBrand || ''}
+                    onChange={(value) => {
+                      setSelectedTelescopeBrand(value || null);
+                      setSelectedTelescopeModelId(null);
+                    }}
+                  />
+                </GridCol>
+                <GridCol span={{ base: 12, sm: 6, md: 3 }}>
+                  <SelectField
+                    label="Telescope Model"
+                    placeholder={selectedTelescopeBrand ? 'Model' : 'Select brand'}
+                    data={telescopeModels.map((t) => ({
+                      value: t.id,
+                      label: `${t.model} (${t.apertureMm}mm f/${t.focalRatio.toFixed(1)})`,
+                    }))}
+                    value={selectedTelescopeModelId || ''}
+                    onChange={(val) => setSelectedTelescopeModelId(val || null)}
+                    disabled={!selectedTelescopeBrand}
+                  />
+                </GridCol>
 
-              {/* Camera Selection */}
-              <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-                <Select
-                  label="Camera Brand"
-                  placeholder="Brand"
-                  size="xs"
-                  data={cameraBrands}
-                  value={selectedCameraBrand}
-                  onChange={(value) => {
-                    setSelectedCameraBrand(value);
-                    setSelectedCameraModelId(null);
-                  }}
-                  searchable
-                  clearable
-                  maxDropdownHeight={300}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-                <Select
-                  label="Camera Model"
-                  placeholder={selectedCameraBrand ? 'Model' : 'Select brand'}
-                  size="xs"
-                  data={cameraModels.map((c) => ({
-                    value: c.id,
-                    label: `${c.model} (${c.pixelSizeUm}µm)`,
-                  }))}
-                  value={selectedCameraModelId}
-                  onChange={setSelectedCameraModelId}
-                  searchable
-                  clearable
-                  disabled={!selectedCameraBrand}
-                  maxDropdownHeight={300}
-                />
-              </Grid.Col>
+                {/* Camera Selection */}
+                <GridCol span={{ base: 12, sm: 6, md: 3 }}>
+                  <SelectField
+                    label="Camera Brand"
+                    placeholder="Brand"
+                    data={cameraBrands.map((brand) => ({ value: brand, label: brand }))}
+                    value={selectedCameraBrand || ''}
+                    onChange={(value) => {
+                      setSelectedCameraBrand(value || null);
+                      setSelectedCameraModelId(null);
+                    }}
+                  />
+                </GridCol>
+                <GridCol span={{ base: 12, sm: 6, md: 3 }}>
+                  <SelectField
+                    label="Camera Model"
+                    placeholder={selectedCameraBrand ? 'Model' : 'Select brand'}
+                    data={cameraModels.map((c) => ({
+                      value: c.id,
+                      label: `${c.model} (${c.pixelSizeUm}µm)`,
+                    }))}
+                    value={selectedCameraModelId || ''}
+                    onChange={(val) => setSelectedCameraModelId(val || null)}
+                    disabled={!selectedCameraBrand}
+                  />
+                </GridCol>
 
-              {/* Reducer/Barlow Options */}
-              <Grid.Col span={{ base: 6, sm: 3, md: 1.5 }}>
-                <NumberInput
-                  label="Reducer"
-                  size="xs"
-                  value={customReducer}
-                  onChange={(val) => setCustomReducer(Number(val) || 1.0)}
-                  min={0.1}
-                  max={1.0}
-                  step={0.05}
-                  decimalScale={2}
-                  suffix="x"
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 6, sm: 3, md: 1.5 }}>
-                <NumberInput
-                  label="Barlow"
-                  size="xs"
-                  value={customBarlow}
-                  onChange={(val) => setCustomBarlow(Number(val) || 1.0)}
-                  min={1.0}
-                  max={5.0}
-                  step={0.5}
-                  decimalScale={1}
-                  suffix="x"
-                />
-              </Grid.Col>
+                {/* Reducer/Barlow Options */}
+                <GridCol span={{ base: 6, sm: 3, md: 2 }}>
+                  <NumberInput
+                    label="Reducer"
+                    value={customReducer}
+                    onChange={(val) => setCustomReducer(val || 1.0)}
+                    min={0.1}
+                    max={1.0}
+                    step={0.05}
+                    precision={2}
+                  />
+                </GridCol>
+                <GridCol span={{ base: 6, sm: 3, md: 2 }}>
+                  <NumberInput
+                    label="Barlow"
+                    value={customBarlow}
+                    onChange={(val) => setCustomBarlow(val || 1.0)}
+                    min={1.0}
+                    max={5.0}
+                    step={0.5}
+                    precision={1}
+                  />
+                </GridCol>
 
-              {/* Calculated FOV inline */}
-              <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-                {customFOV ? (
-                  <Paper p="xs" withBorder bg="dark.6" h="100%" style={{ display: 'flex', alignItems: 'center' }}>
-                    <Text size="xs">
-                      <Text span fw={600} c="dimmed">FOV: </Text>
-                      {customFOV.fovWidthArcmin.toFixed(1)}′ × {customFOV.fovHeightArcmin.toFixed(1)}′
-                      <Text span c="dimmed"> | </Text>
-                      {customFOV.pixelScaleArcsecPerPixel.toFixed(2)}″/px
-                    </Text>
-                  </Paper>
-                ) : (
-                  <Paper p="xs" withBorder bg="dark.7" h="100%" style={{ display: 'flex', alignItems: 'center' }}>
-                    <Text size="xs" c="dimmed">Select telescope & camera</Text>
-                  </Paper>
-                )}
-              </Grid.Col>
-            </Grid>
+                {/* Calculated FOV inline */}
+                <GridCol span={{ base: 12, sm: 6, md: 2 }}>
+                  {customFOV ? (
+                    <Card className="p-3 border bg-input h-full flex items-center">
+                      <Text size="xs">
+                        <span className="font-semibold text-muted-foreground">FOV: </span>
+                        {customFOV.fovWidthArcmin.toFixed(1)}′ × {customFOV.fovHeightArcmin.toFixed(1)}′
+                        <span className="text-muted-foreground"> | </span>
+                        {customFOV.pixelScaleArcsecPerPixel.toFixed(2)}″/px
+                      </Text>
+                    </Card>
+                  ) : (
+                    <Card className="p-3 border bg-card h-full flex items-center">
+                      <Text size="xs" className="text-muted-foreground">Select telescope & camera</Text>
+                    </Card>
+                  )}
+                </GridCol>
+              </Grid>
+            </CardContent>
           </Card>
         )}
 
         {/* Add FOV Button */}
         {hasValidSelection && (
           <Group>
-            <Button leftSection={<IconPlus size={16} />} onClick={handleAddFOV} variant="light">
+            <Button onClick={handleAddFOV} variant="default">
+              <IconPlus size={16} className="mr-2" />
               Add FOV to Comparison
             </Button>
             {currentFOVData && (
-              <Text size="sm" c="dimmed">
+              <Text size="sm" className="text-muted-foreground">
                 {currentFOVData.fovWidthArcmin.toFixed(1)}′ × {currentFOVData.fovHeightArcmin.toFixed(1)}′
                 ({currentFOVData.name})
               </Text>
@@ -622,354 +597,363 @@ export default function FOVPlannerPage(): JSX.Element {
 
         {/* Main Visualization Area with Sidebars */}
         {hasFovOverlays && (
-          <Grid>
+          <Grid gutter="md">
             {/* Left Sidebar - Mosaic Controls for Active FOV */}
-            <Grid.Col span={{ base: 12, lg: 2 }}>
-              <Card shadow="sm" padding="md" withBorder h="100%">
-                <Text fw={600} size="md" mb="md">
-                  Mosaic Settings
-                </Text>
-                {activeFovOverlay ? (
-                  <Stack gap="md">
-                    <Paper p="xs" withBorder style={{ borderColor: activeFovOverlay.color, borderWidth: 2 }}>
-                      <Group gap="xs" mb="xs">
-                        <div
-                          style={{
-                            width: 12,
-                            height: 12,
-                            borderRadius: 3,
-                            backgroundColor: activeFovOverlay.color,
-                          }}
-                        />
-                        <Text size="xs" fw={600} truncate style={{ flex: 1 }}>
-                          {activeFovOverlay.name.length > 15
-                            ? activeFovOverlay.name.substring(0, 15) + '...'
-                            : activeFovOverlay.name}
-                        </Text>
-                      </Group>
-                      <Text size="xs" c="dimmed">
-                        {activeFovOverlay.fovWidthArcmin.toFixed(1)}′ × {activeFovOverlay.fovHeightArcmin.toFixed(1)}′
-                      </Text>
-                    </Paper>
-
-                    <NumberInput
-                      label="Horizontal"
-                      size="xs"
-                      value={activeFovOverlay.horizontalPanels}
-                      onChange={(val) => updateActiveFovMosaic('horizontalPanels', Number(val) || 1)}
-                      min={1}
-                      max={10}
-                      step={1}
-                    />
-                    <NumberInput
-                      label="Vertical"
-                      size="xs"
-                      value={activeFovOverlay.verticalPanels}
-                      onChange={(val) => updateActiveFovMosaic('verticalPanels', Number(val) || 1)}
-                      min={1}
-                      max={10}
-                      step={1}
-                    />
-                    <NumberInput
-                      label="Overlap %"
-                      size="xs"
-                      value={activeFovOverlay.overlapPercent}
-                      onChange={(val) => updateActiveFovMosaic('overlapPercent', Number(val) || 20)}
-                      min={10}
-                      max={50}
-                      step={5}
-                      suffix="%"
-                    />
-
-                    {activeFovOverlay.horizontalPanels * activeFovOverlay.verticalPanels > 1 && (
-                      <Paper p="xs" withBorder bg="dark.6">
-                        <Text size="xs" c="dimmed">Total Coverage:</Text>
-                        <Text size="xs">
-                          {(() => {
-                            const m = getMosaicDataForOverlay(activeFovOverlay);
-                            return `${m.totalWidth.toFixed(1)}′ × ${m.totalHeight.toFixed(1)}′`;
-                          })()}
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          {activeFovOverlay.horizontalPanels * activeFovOverlay.verticalPanels} panels
-                        </Text>
-                      </Paper>
-                    )}
-                  </Stack>
-                ) : (
-                  <Text size="sm" c="dimmed" ta="center">
-                    Select a FOV from the list to edit its mosaic settings
+            <GridCol span={{ base: 12, lg: 2 }}>
+              <Card className="border h-full">
+                <CardHeader>
+                  <Text className="font-semibold text-base">
+                    Mosaic Settings
                   </Text>
-                )}
+                </CardHeader>
+                <CardContent>
+                  {activeFovOverlay ? (
+                    <Stack gap="md">
+                      <Card className="p-2 border-2" style={{ borderColor: activeFovOverlay.color }}>
+                        <Group gap="xs" className="mb-2">
+                          <div
+                            style={{
+                              width: 12,
+                              height: 12,
+                              borderRadius: 3,
+                              backgroundColor: activeFovOverlay.color,
+                            }}
+                          />
+                          <Text size="xs" className="font-semibold truncate flex-1">
+                            {activeFovOverlay.name.length > 15
+                              ? activeFovOverlay.name.substring(0, 15) + '...'
+                              : activeFovOverlay.name}
+                          </Text>
+                        </Group>
+                        <Text size="xs" className="text-muted-foreground">
+                          {activeFovOverlay.fovWidthArcmin.toFixed(1)}′ × {activeFovOverlay.fovHeightArcmin.toFixed(1)}′
+                        </Text>
+                      </Card>
+
+                      <NumberInput
+                        label="Horizontal"
+                        value={activeFovOverlay.horizontalPanels}
+                        onChange={(val) => updateActiveFovMosaic('horizontalPanels', val || 1)}
+                        min={1}
+                        max={10}
+                        step={1}
+                      />
+                      <NumberInput
+                        label="Vertical"
+                        value={activeFovOverlay.verticalPanels}
+                        onChange={(val) => updateActiveFovMosaic('verticalPanels', val || 1)}
+                        min={1}
+                        max={10}
+                        step={1}
+                      />
+                      <NumberInput
+                        label="Overlap %"
+                        value={activeFovOverlay.overlapPercent}
+                        onChange={(val) => updateActiveFovMosaic('overlapPercent', val || 20)}
+                        min={10}
+                        max={50}
+                        step={5}
+                      />
+
+                      {activeFovOverlay.horizontalPanels * activeFovOverlay.verticalPanels > 1 && (
+                        <Card className="p-2 border bg-input">
+                          <Text size="xs" className="text-muted-foreground">Total Coverage:</Text>
+                          <Text size="xs">
+                            {(() => {
+                              const m = getMosaicDataForOverlay(activeFovOverlay);
+                              return `${m.totalWidth.toFixed(1)}′ × ${m.totalHeight.toFixed(1)}′`;
+                            })()}
+                          </Text>
+                          <Text size="xs" className="text-muted-foreground">
+                            {activeFovOverlay.horizontalPanels * activeFovOverlay.verticalPanels} panels
+                          </Text>
+                        </Card>
+                      )}
+                    </Stack>
+                  ) : (
+                    <Text size="sm" className="text-muted-foreground text-center">
+                      Select a FOV from the list to edit its mosaic settings
+                    </Text>
+                  )}
+                </CardContent>
               </Card>
-            </Grid.Col>
+            </GridCol>
 
             {/* Center - Visualization */}
-            <Grid.Col span={{ base: 12, lg: 7 }}>
-              <Card shadow="sm" padding="lg" withBorder h="100%">
-                <Text fw={600} size="lg" mb="md">
-                  Field of View Visualization
-                </Text>
-
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <svg
-                    width={vizData?.canvasWidth || 700}
-                    height={vizData?.canvasHeight || 500}
-                    style={{
-                      border: '1px solid var(--mantine-color-gray-3)',
-                      overflow: 'hidden',
-                      maxWidth: '100%',
-                    }}
-                    viewBox={`0 0 ${vizData?.canvasWidth || 700} ${vizData?.canvasHeight || 500}`}
-                  >
-                    {/* Background */}
-                    {dssImageUrl ? (
-                      <>
-                        <image
-                          href={dssImageUrl}
-                          width={vizData?.canvasWidth || 700}
-                          height={vizData?.canvasHeight || 500}
-                          preserveAspectRatio="xMidYMid slice"
-                          onLoad={() => {
-                            setImageLoading(false);
-                            setImageError(false);
-                          }}
-                          onError={() => {
-                            setImageLoading(false);
-                            setImageError(true);
-                          }}
-                          style={{ display: imageLoading || imageError ? 'none' : 'block' }}
-                        />
-                        {!imageLoading && !imageError && (
-                          <rect
+            <GridCol span={{ base: 12, lg: 7 }}>
+              <Card className="border h-full">
+                <CardHeader>
+                  <Text className="font-semibold text-lg">
+                    Field of View Visualization
+                  </Text>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex justify-center">
+                    <svg
+                      width={vizData?.canvasWidth || 700}
+                      height={vizData?.canvasHeight || 500}
+                      style={{
+                        border: '1px solid hsl(var(--border))',
+                        overflow: 'hidden',
+                        maxWidth: '100%',
+                      }}
+                      viewBox={`0 0 ${vizData?.canvasWidth || 700} ${vizData?.canvasHeight || 500}`}
+                    >
+                      {/* Background */}
+                      {dssImageUrl ? (
+                        <>
+                          <image
+                            href={dssImageUrl}
                             width={vizData?.canvasWidth || 700}
                             height={vizData?.canvasHeight || 500}
-                            fill="black"
-                            opacity="0.2"
+                            preserveAspectRatio="xMidYMid slice"
+                            onLoad={() => {
+                              setImageLoading(false);
+                              setImageError(false);
+                            }}
+                            onError={() => {
+                              setImageLoading(false);
+                              setImageError(true);
+                            }}
+                            style={{ display: imageLoading || imageError ? 'none' : 'block' }}
                           />
-                        )}
-                        {imageLoading && (
-                          <>
-                            <rect width={vizData?.canvasWidth || 700} height={vizData?.canvasHeight || 500} fill="#0a0e27" />
-                            <foreignObject
-                              x={(vizData?.canvasWidth || 700) / 2 - 50}
-                              y={(vizData?.canvasHeight || 500) / 2 - 50}
-                              width={100}
-                              height={100}
-                            >
-                              <Center style={{ width: '100%', height: '100%' }}>
-                                <Loader color="blue" size="lg" />
-                              </Center>
-                            </foreignObject>
-                          </>
-                        )}
-                        {imageError && (
-                          <>
-                            <rect width={vizData?.canvasWidth || 700} height={vizData?.canvasHeight || 500} fill="#0a0e27" />
-                            {[...Array(50)].map((_, i) => (
-                              <circle
-                                key={i}
-                                cx={Math.random() * (vizData?.canvasWidth || 700)}
-                                cy={Math.random() * (vizData?.canvasHeight || 500)}
-                                r={Math.random() * 1.5 + 0.5}
-                                fill="white"
-                                opacity={Math.random() * 0.7 + 0.3}
-                              />
-                            ))}
-                          </>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        <rect width={vizData?.canvasWidth || 700} height={vizData?.canvasHeight || 500} fill="#0a0e27" />
-                        {[...Array(50)].map((_, i) => (
-                          <circle
-                            key={i}
-                            cx={Math.random() * (vizData?.canvasWidth || 700)}
-                            cy={Math.random() * (vizData?.canvasHeight || 500)}
-                            r={Math.random() * 1.5 + 0.5}
-                            fill="white"
-                            opacity={Math.random() * 0.7 + 0.3}
-                          />
-                        ))}
-                      </>
-                    )}
-
-                    {/* Render all FOV overlays with their mosaics */}
-                    {vizData?.overlaysWithMosaics.map((overlay) => {
-                      const isActive = overlay.id === activeFovId;
-                      const strokeWidth = isActive ? 2 : 1;
-                      const opacity = isActive ? 1 : 0.6;
-
-                      return (
-                        <g key={overlay.id}>
-                          {/* Render all panels for this overlay */}
-                          {overlay.panelsPx.map((panel, index) => (
+                          {!imageLoading && !imageError && (
                             <rect
-                              key={`${overlay.id}-panel-${index}`}
-                              x={panel.x - overlay.fovWidthPx / 2}
-                              y={panel.y - overlay.fovHeightPx / 2}
-                              width={overlay.fovWidthPx}
-                              height={overlay.fovHeightPx}
-                              fill="none"
-                              stroke={overlay.color}
-                              strokeWidth={strokeWidth}
-                              strokeDasharray={isActive ? 'none' : '8,4'}
-                              opacity={opacity}
+                              width={vizData?.canvasWidth || 700}
+                              height={vizData?.canvasHeight || 500}
+                              fill="black"
+                              opacity="0.2"
+                            />
+                          )}
+                          {imageLoading && (
+                            <>
+                              <rect width={vizData?.canvasWidth || 700} height={vizData?.canvasHeight || 500} fill="#0a0e27" />
+                              <foreignObject
+                                x={(vizData?.canvasWidth || 700) / 2 - 50}
+                                y={(vizData?.canvasHeight || 500) / 2 - 50}
+                                width={100}
+                                height={100}
+                              >
+                                <div className="flex items-center justify-center w-full h-full">
+                                  <Loader color="primary" size="lg" />
+                                </div>
+                              </foreignObject>
+                            </>
+                          )}
+                          {imageError && (
+                            <>
+                              <rect width={vizData?.canvasWidth || 700} height={vizData?.canvasHeight || 500} fill="#0a0e27" />
+                              {[...Array(50)].map((_, i) => (
+                                <circle
+                                  key={i}
+                                  cx={Math.random() * (vizData?.canvasWidth || 700)}
+                                  cy={Math.random() * (vizData?.canvasHeight || 500)}
+                                  r={Math.random() * 1.5 + 0.5}
+                                  fill="white"
+                                  opacity={Math.random() * 0.7 + 0.3}
+                                />
+                              ))}
+                            </>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <rect width={vizData?.canvasWidth || 700} height={vizData?.canvasHeight || 500} fill="#0a0e27" />
+                          {[...Array(50)].map((_, i) => (
+                            <circle
+                              key={i}
+                              cx={Math.random() * (vizData?.canvasWidth || 700)}
+                              cy={Math.random() * (vizData?.canvasHeight || 500)}
+                              r={Math.random() * 1.5 + 0.5}
+                              fill="white"
+                              opacity={Math.random() * 0.7 + 0.3}
                             />
                           ))}
-                        </g>
-                      );
-                    })}
+                        </>
+                      )}
 
-                    {/* Target ellipse (only show if no DSS image) */}
-                    {selectedTarget && !dssImageUrl && vizData && vizData.targetWidthPx > 0 && (
-                      <>
-                        <ellipse
-                          cx={vizData.centerX}
-                          cy={vizData.centerY}
-                          rx={vizData.targetWidthPx / 2}
-                          ry={vizData.targetHeightPx / 2}
-                          fill="#f03e3e"
-                          opacity="0.3"
-                          stroke="#f03e3e"
-                          strokeWidth="2"
-                        />
+                      {/* Render all FOV overlays with their mosaics */}
+                      {vizData?.overlaysWithMosaics.map((overlay) => {
+                        const isActive = overlay.id === activeFovId;
+                        const strokeWidth = isActive ? 2 : 1;
+                        const opacity = isActive ? 1 : 0.6;
+
+                        return (
+                          <g key={overlay.id}>
+                            {/* Render all panels for this overlay */}
+                            {overlay.panelsPx.map((panel, index) => (
+                              <rect
+                                key={`${overlay.id}-panel-${index}`}
+                                x={panel.x - overlay.fovWidthPx / 2}
+                                y={panel.y - overlay.fovHeightPx / 2}
+                                width={overlay.fovWidthPx}
+                                height={overlay.fovHeightPx}
+                                fill="none"
+                                stroke={overlay.color}
+                                strokeWidth={strokeWidth}
+                                strokeDasharray={isActive ? 'none' : '8,4'}
+                                opacity={opacity}
+                              />
+                            ))}
+                          </g>
+                        );
+                      })}
+
+                      {/* Target ellipse (only show if no DSS image) */}
+                      {selectedTarget && !dssImageUrl && vizData && vizData.targetWidthPx > 0 && (
+                        <>
+                          <ellipse
+                            cx={vizData.centerX}
+                            cy={vizData.centerY}
+                            rx={vizData.targetWidthPx / 2}
+                            ry={vizData.targetHeightPx / 2}
+                            fill="#f03e3e"
+                            opacity="0.3"
+                            stroke="#f03e3e"
+                            strokeWidth="2"
+                          />
+                          <text
+                            x={vizData.centerX}
+                            y={vizData.centerY - vizData.targetHeightPx / 2 - 10}
+                            textAnchor="middle"
+                            fill="#f03e3e"
+                            fontSize="14"
+                            fontWeight="bold"
+                          >
+                            {selectedTarget.name}
+                          </text>
+                        </>
+                      )}
+
+                      {/* Target Name Label (show on DSS image) */}
+                      {selectedTarget && dssImageUrl && vizData && (
                         <text
                           x={vizData.centerX}
-                          y={vizData.centerY - vizData.targetHeightPx / 2 - 10}
+                          y={vizData.canvasHeight - 15}
                           textAnchor="middle"
-                          fill="#f03e3e"
+                          fill="#ffffff"
                           fontSize="14"
                           fontWeight="bold"
+                          style={{ textShadow: '0 0 4px black, 0 0 8px black' }}
                         >
                           {selectedTarget.name}
+                          {selectedTarget.catalogId && ` (${selectedTarget.catalogId})`}
                         </text>
-                      </>
-                    )}
+                      )}
+                    </svg>
+                  </div>
 
-                    {/* Target Name Label (show on DSS image) */}
-                    {selectedTarget && dssImageUrl && vizData && (
-                      <text
-                        x={vizData.centerX}
-                        y={vizData.canvasHeight - 15}
-                        textAnchor="middle"
-                        fill="#ffffff"
-                        fontSize="14"
-                        fontWeight="bold"
-                        style={{ textShadow: '0 0 4px black, 0 0 8px black' }}
-                      >
-                        {selectedTarget.name}
-                        {selectedTarget.catalogId && ` (${selectedTarget.catalogId})`}
-                      </text>
-                    )}
-                  </svg>
-                </div>
-
-                <Text size="sm" c="dimmed" ta="center" mt="md">
-                  Click on a FOV in the right panel to select it • Solid line = active • Dashed = inactive
-                </Text>
+                  <Text size="sm" className="text-muted-foreground text-center mt-4">
+                    Click on a FOV in the right panel to select it • Solid line = active • Dashed = inactive
+                  </Text>
+                </CardContent>
               </Card>
-            </Grid.Col>
+            </GridCol>
 
             {/* Right Sidebar - FOV Comparison List */}
-            <Grid.Col span={{ base: 12, lg: 3 }}>
-              <Card shadow="sm" padding="md" withBorder h="100%">
-                <Text fw={600} size="md" mb="md">
-                  FOV Comparison ({fovOverlays.length})
-                </Text>
-                <ScrollArea h={450} offsetScrollbars>
-                  <Stack gap="xs">
-                    {fovOverlays.map((overlay) => {
-                      const isActive = overlay.id === activeFovId;
-                      const mosaicData = getMosaicDataForOverlay(overlay);
+            <GridCol span={{ base: 12, lg: 3 }}>
+              <Card className="border h-full">
+                <CardHeader>
+                  <Text className="font-semibold text-base">
+                    FOV Comparison ({fovOverlays.length})
+                  </Text>
+                </CardHeader>
+                <CardContent>
+                  <ScrollArea className="h-[450px]">
+                    <Stack gap="xs">
+                      {fovOverlays.map((overlay) => {
+                        const isActive = overlay.id === activeFovId;
+                        const mosaicData = getMosaicDataForOverlay(overlay);
 
-                      return (
-                        <Paper
-                          key={overlay.id}
-                          p="xs"
-                          withBorder
-                          style={{
-                            borderColor: isActive ? overlay.color : undefined,
-                            borderWidth: isActive ? 2 : 1,
-                            cursor: 'pointer',
-                            backgroundColor: isActive ? 'var(--mantine-color-dark-6)' : undefined,
-                          }}
-                          onClick={() => setActiveFovId(overlay.id)}
-                        >
-                          <Group justify="space-between" wrap="nowrap" gap="xs">
-                            <Group gap="xs" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
-                              <div
-                                style={{
-                                  width: 16,
-                                  height: 16,
-                                  borderRadius: 4,
-                                  backgroundColor: overlay.color,
-                                  flexShrink: 0,
-                                }}
-                              />
-                              <Tooltip
-                                label={`${overlay.telescopeName} + ${overlay.cameraName}`}
-                                position="top"
-                                multiline
-                                w={200}
-                              >
-                                <Stack gap={2} style={{ minWidth: 0 }}>
-                                  <Text size="xs" fw={isActive ? 600 : 500} truncate>
-                                    {overlay.name}
-                                  </Text>
-                                  <Text size="xs" c="dimmed">
-                                    {overlay.fovWidthArcmin.toFixed(1)}′ × {overlay.fovHeightArcmin.toFixed(1)}′
-                                  </Text>
-                                  {mosaicData.panelCount > 1 && (
-                                    <Text size="xs" c="dimmed">
-                                      {mosaicData.panelCount} panels ({mosaicData.totalWidth.toFixed(0)}′×{mosaicData.totalHeight.toFixed(0)}′)
-                                    </Text>
-                                  )}
-                                </Stack>
-                              </Tooltip>
+                        return (
+                          <Card
+                            key={overlay.id}
+                            className="p-2 border cursor-pointer"
+                            style={{
+                              borderColor: isActive ? overlay.color : undefined,
+                              borderWidth: isActive ? 2 : 1,
+                              backgroundColor: isActive ? 'hsl(var(--card))' : undefined,
+                            }}
+                            onClick={() => setActiveFovId(overlay.id)}
+                          >
+                            <Group className="justify-between flex-nowrap gap-2">
+                              <Group gap="xs" className="flex-nowrap flex-1 min-w-0">
+                                <div
+                                  style={{
+                                    width: 16,
+                                    height: 16,
+                                    borderRadius: 4,
+                                    backgroundColor: overlay.color,
+                                    flexShrink: 0,
+                                  }}
+                                />
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Stack gap="xs" className="min-w-0">
+                                        <Text size="xs" className={isActive ? 'font-semibold' : 'font-medium'} truncate>
+                                          {overlay.name}
+                                        </Text>
+                                        <Text size="xs" className="text-muted-foreground">
+                                          {overlay.fovWidthArcmin.toFixed(1)}′ × {overlay.fovHeightArcmin.toFixed(1)}′
+                                        </Text>
+                                        {mosaicData.panelCount > 1 && (
+                                          <Text size="xs" className="text-muted-foreground">
+                                            {mosaicData.panelCount} panels ({mosaicData.totalWidth.toFixed(0)}′×{mosaicData.totalHeight.toFixed(0)}′)
+                                          </Text>
+                                        )}
+                                      </Stack>
+                                    </TooltipTrigger>
+                                    <TooltipContent className="w-48">
+                                      <p>{overlay.telescopeName} + {overlay.cameraName}</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </Group>
+                              <Group gap="xs">
+                                {isActive && (
+                                  <Badge size="sm" variant="default">
+                                    <IconFocus2 size={10} />
+                                  </Badge>
+                                )}
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-7 w-7 text-destructive hover:text-destructive"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleRemoveFOV(overlay.id);
+                                  }}
+                                >
+                                  <IconTrash size={14} />
+                                </Button>
+                              </Group>
                             </Group>
-                            <Group gap={4}>
-                              {isActive && (
-                                <Badge size="xs" color="blue" variant="filled">
-                                  <IconFocus2 size={10} />
-                                </Badge>
-                              )}
-                              <ActionIcon
-                                color="red"
-                                variant="subtle"
-                                size="sm"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleRemoveFOV(overlay.id);
-                                }}
-                              >
-                                <IconTrash size={14} />
-                              </ActionIcon>
-                            </Group>
-                          </Group>
-                          {overlay.isCustom && (
-                            <Badge size="xs" variant="light" mt="xs">
-                              Custom
-                            </Badge>
-                          )}
-                        </Paper>
-                      );
-                    })}
-                  </Stack>
-                </ScrollArea>
+                            {overlay.isCustom && (
+                              <Badge size="sm" variant="secondary" className="mt-2">
+                                Custom
+                              </Badge>
+                            )}
+                          </Card>
+                        );
+                      })}
+                    </Stack>
+                  </ScrollArea>
+                </CardContent>
               </Card>
-            </Grid.Col>
+            </GridCol>
           </Grid>
         )}
 
         {!hasFovOverlays && (
-          <Card shadow="sm" padding="xl" withBorder>
-            <Text c="dimmed" ta="center">
-              {hasValidSelection
-                ? 'Click "Add FOV to Comparison" to start comparing equipment'
-                : 'Select a rig or custom telescope/camera combination, then add it to comparison'}
-            </Text>
+          <Card className="border">
+            <CardContent className="py-12">
+              <Text className="text-muted-foreground text-center">
+                {hasValidSelection
+                  ? 'Click "Add FOV to Comparison" to start comparing equipment'
+                  : 'Select a rig or custom telescope/camera combination, then add it to comparison'}
+              </Text>
+            </CardContent>
           </Card>
         )}
       </Stack>

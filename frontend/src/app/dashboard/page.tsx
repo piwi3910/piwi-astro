@@ -7,14 +7,13 @@ import {
   Group,
   Text,
   Card,
+  CardContent,
   Grid,
+  GridCol,
   Badge,
-  Image,
-  SimpleGrid,
-  Paper,
   ThemeIcon,
   Progress,
-} from '@mantine/core';
+} from '@/components/ui';
 import { useQuery } from '@tanstack/react-query';
 import {
   IconTelescope,
@@ -27,6 +26,7 @@ import {
   IconTrendingUp,
 } from '@tabler/icons-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface DashboardStats {
   telescopes: number;
@@ -85,7 +85,7 @@ async function fetchUpcomingSessions(): Promise<UpcomingSession[]> {
     .slice(0, 3);
 }
 
-export default function DashboardPage(): JSX.Element {
+export default function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['dashboard-stats'],
     queryFn: fetchDashboardStats,
@@ -103,7 +103,7 @@ export default function DashboardPage(): JSX.Element {
 
   if (statsLoading || !stats) {
     return (
-      <Container size="xl" py="xl">
+      <Container size="xl" className="py-8">
         <Text>Loading dashboard...</Text>
       </Container>
     );
@@ -114,319 +114,204 @@ export default function DashboardPage(): JSX.Element {
     : 0;
 
   return (
-    <Container size="xl" py="xl">
-      <Stack gap="lg">
+    <Container size="xl" className="py-4">
+      <Stack gap="sm">
         <div>
           <Title order={1}>Dashboard</Title>
-          <Text c="dimmed" size="lg">
+          <Text className="text-muted-foreground text-lg">
             Welcome back to piwi-astro
           </Text>
         </div>
 
         {/* Quick Actions */}
-        <Card shadow="sm" padding="lg" withBorder>
-          <Stack gap="md">
-            <Text fw={600} size="lg">
-              Quick Actions
-            </Text>
-
-            <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
+        <Card className="shadow-sm">
+          <CardContent className="px-4 py-1">
+            <Text className="font-semibold text-lg mb-1">Quick Actions</Text>
+            <div className="grid grid-cols-4 gap-2">
               <Link href="/dashboard/gear" style={{ textDecoration: 'none' }}>
-                <Paper p="md" withBorder style={{ cursor: 'pointer' }}>
-                  <Stack align="center" gap="xs">
-                    <ThemeIcon size="xl" variant="light" color="blue">
-                      <IconSettings size={24} />
+                <Card className="px-2 py-1.5 border cursor-pointer hover:bg-accent transition-colors">
+                  <Group gap="xs" justify="center">
+                    <ThemeIcon size="sm" variant="light" color="blue">
+                      <IconSettings size={16} />
                     </ThemeIcon>
-                    <Text size="sm" fw={500} ta="center">
-                      Manage Gear
-                    </Text>
-                  </Stack>
-                </Paper>
+                    <Text className="text-sm font-medium">Manage Gear</Text>
+                  </Group>
+                </Card>
               </Link>
-
               <Link href="/targets" style={{ textDecoration: 'none' }}>
-                <Paper p="md" withBorder style={{ cursor: 'pointer' }}>
-                  <Stack align="center" gap="xs">
-                    <ThemeIcon size="xl" variant="light" color="grape">
-                      <IconStar size={24} />
+                <Card className="px-2 py-1.5 border cursor-pointer hover:bg-accent transition-colors">
+                  <Group gap="xs" justify="center">
+                    <ThemeIcon size="sm" variant="light" color="grape">
+                      <IconStar size={16} />
                     </ThemeIcon>
-                    <Text size="sm" fw={500} ta="center">
-                      Browse Targets
-                    </Text>
-                  </Stack>
-                </Paper>
+                    <Text className="text-sm font-medium">Browse Targets</Text>
+                  </Group>
+                </Card>
               </Link>
-
               <Link href="/dashboard/sessions" style={{ textDecoration: 'none' }}>
-                <Paper p="md" withBorder style={{ cursor: 'pointer' }}>
-                  <Stack align="center" gap="xs">
-                    <ThemeIcon size="xl" variant="light" color="cyan">
-                      <IconCalendar size={24} />
+                <Card className="px-2 py-1.5 border cursor-pointer hover:bg-accent transition-colors">
+                  <Group gap="xs" justify="center">
+                    <ThemeIcon size="sm" variant="light" color="cyan">
+                      <IconCalendar size={16} />
                     </ThemeIcon>
-                    <Text size="sm" fw={500} ta="center">
-                      Plan Session
-                    </Text>
-                  </Stack>
-                </Paper>
+                    <Text className="text-sm font-medium">Plan Session</Text>
+                  </Group>
+                </Card>
               </Link>
-
               <Link href="/dashboard/fov-planner" style={{ textDecoration: 'none' }}>
-                <Paper p="md" withBorder style={{ cursor: 'pointer' }}>
-                  <Stack align="center" gap="xs">
-                    <ThemeIcon size="xl" variant="light" color="green">
-                      <IconCamera size={24} />
+                <Card className="px-2 py-1.5 border cursor-pointer hover:bg-accent transition-colors">
+                  <Group gap="xs" justify="center">
+                    <ThemeIcon size="sm" variant="light" color="green">
+                      <IconCamera size={16} />
                     </ThemeIcon>
-                    <Text size="sm" fw={500} ta="center">
-                      FOV Planner
-                    </Text>
-                  </Stack>
-                </Paper>
+                    <Text className="text-sm font-medium">FOV Planner</Text>
+                  </Group>
+                </Card>
               </Link>
-            </SimpleGrid>
-          </Stack>
+            </div>
+          </CardContent>
         </Card>
 
-        <Grid>
+        <Grid cols={{ base: 1, md: 2 }} gap="sm">
           {/* Target Progress */}
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Card shadow="sm" padding="lg" withBorder h="100%">
-              <Stack gap="md" h="100%" justify="space-between">
-                <div>
-                  <Group justify="space-between" mb="md">
-                    <Text fw={600} size="lg">
-                      Target Progress
-                    </Text>
-                    <ThemeIcon variant="light" color="green">
-                      <IconTrendingUp size={20} />
-                    </ThemeIcon>
-                  </Group>
-
+          <GridCol>
+            <Card className="shadow-sm h-full">
+              <CardContent className="px-4 py-1">
+                <Group justify="between" className="mb-0.5">
+                  <Text className="font-semibold text-lg">Target Progress</Text>
+                  <ThemeIcon variant="light" color="green" size="sm">
+                    <IconTrendingUp size={16} />
+                  </ThemeIcon>
+                </Group>
+                <Group justify="between" className="mb-0.5">
+                  <Text className="text-sm text-muted-foreground">Completion Rate</Text>
+                  <Text className="text-sm font-semibold">{targetProgress.toFixed(0)}%</Text>
+                </Group>
+                <Progress value={targetProgress} className="h-2 mb-1" />
+                <div className="grid grid-cols-3 gap-2 mb-1">
                   <div>
-                    <Group justify="space-between" mb="xs">
-                      <Text size="sm" c="dimmed">
-                        Completion Rate
-                      </Text>
-                      <Text size="sm" fw={600}>
-                        {targetProgress.toFixed(0)}%
-                      </Text>
-                    </Group>
-                    <Progress value={targetProgress} size="lg" radius="xl" />
+                    <Text className="text-lg font-bold text-blue-500">{stats.targetsWishlist}</Text>
+                    <Text className="text-xs text-muted-foreground">Wishlist</Text>
                   </div>
-
-                  <SimpleGrid cols={3} mt="md">
-                    <div>
-                      <Text size="xl" fw={700} c="blue">
-                        {stats.targetsWishlist}
-                      </Text>
-                      <Text size="xs" c="dimmed">
-                        Wishlist
-                      </Text>
-                    </div>
-                    <div>
-                      <Text size="xl" fw={700} c="cyan">
-                        {stats.targetsShot}
-                      </Text>
-                      <Text size="xs" c="dimmed">
-                        Shot
-                      </Text>
-                    </div>
-                    <div>
-                      <Text size="xl" fw={700} c="green">
-                        {stats.targetsProcessed}
-                      </Text>
-                      <Text size="xs" c="dimmed">
-                        Processed
-                      </Text>
-                    </div>
-                  </SimpleGrid>
+                  <div>
+                    <Text className="text-lg font-bold text-cyan-500">{stats.targetsShot}</Text>
+                    <Text className="text-xs text-muted-foreground">Shot</Text>
+                  </div>
+                  <div>
+                    <Text className="text-lg font-bold text-green-500">{stats.targetsProcessed}</Text>
+                    <Text className="text-xs text-muted-foreground">Processed</Text>
+                  </div>
                 </div>
-
                 <Link href="/dashboard/wishlist" style={{ textDecoration: 'none' }}>
-                  <Text size="sm" c="blue" style={{ cursor: 'pointer' }}>
-                    View all targets →
-                  </Text>
+                  <Text className="text-sm text-blue-500 cursor-pointer hover:underline">View all targets →</Text>
                 </Link>
-              </Stack>
+              </CardContent>
             </Card>
-          </Grid.Col>
+          </GridCol>
 
           {/* Upcoming Sessions */}
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Card shadow="sm" padding="lg" withBorder h="100%">
-              <Stack gap="md" h="100%" justify="space-between">
-                <div>
-                  <Group justify="space-between" mb="md">
-                    <Text fw={600} size="lg">
-                      Upcoming Sessions
-                    </Text>
-                    <ThemeIcon variant="light" color="cyan">
-                      <IconCalendar size={20} />
-                    </ThemeIcon>
-                  </Group>
-
-                  {upcomingSessions && upcomingSessions.length > 0 ? (
-                    <Stack gap="sm">
-                      {upcomingSessions.map((session) => (
-                        <Paper key={session.id} p="sm" withBorder>
-                          <Group justify="space-between">
-                            <div>
-                              <Text size="sm" fw={600}>
-                                {new Date(session.date).toLocaleDateString('en-US', {
-                                  weekday: 'short',
-                                  month: 'short',
-                                  day: 'numeric',
-                                })}
-                              </Text>
-                              <Text size="xs" c="dimmed">
-                                {session.location}
-                              </Text>
-                            </div>
-                            <Badge size="sm" variant="light">
-                              {session.sessionTargets.length} targets
-                            </Badge>
-                          </Group>
-                        </Paper>
-                      ))}
-                    </Stack>
-                  ) : (
-                    <Text size="sm" c="dimmed" ta="center" py="md">
-                      No upcoming sessions planned
-                    </Text>
-                  )}
-                </div>
-
+          <GridCol>
+            <Card className="shadow-sm h-full">
+              <CardContent className="px-4 py-1">
+                <Group justify="between" className="mb-0.5">
+                  <Text className="font-semibold text-lg">Upcoming Sessions</Text>
+                  <ThemeIcon variant="light" color="cyan" size="sm">
+                    <IconCalendar size={16} />
+                  </ThemeIcon>
+                </Group>
+                {upcomingSessions && upcomingSessions.length > 0 ? (
+                  <div className="space-y-1 mb-1">
+                    {upcomingSessions.map((session) => (
+                      <Card key={session.id} className="px-2 py-1.5 border">
+                        <Group justify="between">
+                          <div>
+                            <Text className="text-sm font-semibold">
+                              {new Date(session.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                            </Text>
+                            <Text className="text-xs text-muted-foreground">{session.location}</Text>
+                          </div>
+                          <Badge variant="secondary" className="text-xs">{session.sessionTargets.length} targets</Badge>
+                        </Group>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <Text className="text-sm text-muted-foreground text-center py-1">No upcoming sessions planned</Text>
+                )}
                 <Link href="/dashboard/sessions" style={{ textDecoration: 'none' }}>
-                  <Text size="sm" c="blue" style={{ cursor: 'pointer' }}>
-                    View all sessions →
-                  </Text>
+                  <Text className="text-sm text-blue-500 cursor-pointer hover:underline">View all sessions →</Text>
                 </Link>
-              </Stack>
+              </CardContent>
             </Card>
-          </Grid.Col>
+          </GridCol>
         </Grid>
 
         {/* Recent Images */}
-        <Card shadow="sm" padding="lg" withBorder>
-          <Stack gap="md">
-            <Group justify="space-between">
-              <Text fw={600} size="lg">
-                Recent Images
-              </Text>
-              <ThemeIcon variant="light" color="orange">
-                <IconPhoto size={20} />
-              </ThemeIcon>
-            </Group>
-
+        <Card className="shadow-sm">
+          <CardContent className="px-4 py-1">
+            <Text className="font-semibold text-lg mb-1">Recent Images</Text>
             {recentImages && recentImages.length > 0 ? (
-              <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
+              <div className="grid grid-cols-4 gap-2 mb-1">
                 {recentImages.map((image) => (
-                  <Card key={image.id} shadow="xs" padding="xs" withBorder>
-                    <Card.Section>
-                      <Image
-                        src={image.url}
-                        height={120}
-                        alt={image.title || image.target.name}
-                        fit="cover"
-                      />
-                    </Card.Section>
-                    <Text size="xs" mt="xs" lineClamp={1}>
-                      {image.title || image.target.name}
-                    </Text>
+                  <Card key={image.id} className="shadow-sm overflow-hidden">
+                    <div className="relative w-full h-[200px]">
+                      <Image src={image.url} alt={image.title || image.target.name} fill className="object-cover" />
+                    </div>
+                    <CardContent className="p-1">
+                      <Text className="text-xs truncate">{image.title || image.target.name}</Text>
+                    </CardContent>
                   </Card>
                 ))}
-              </SimpleGrid>
+              </div>
             ) : (
-              <Text size="sm" c="dimmed" ta="center" py="md">
-                No images uploaded yet
-              </Text>
+              <Text className="text-sm text-muted-foreground text-center py-1">No images uploaded yet</Text>
             )}
-
             <Link href="/dashboard/images" style={{ textDecoration: 'none' }}>
-              <Text size="sm" c="blue" style={{ cursor: 'pointer' }}>
-                View all images →
-              </Text>
+              <Text className="text-sm text-blue-500 cursor-pointer hover:underline">View all images →</Text>
             </Link>
-          </Stack>
+          </CardContent>
         </Card>
 
         {/* Quick Stats */}
-        <SimpleGrid cols={{ base: 2, sm: 3, md: 4 }} spacing="md">
-          <Paper p="md" withBorder>
-            <Group justify="space-between">
-              <div>
-                <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-                  Gear
-                </Text>
-                <Text size="xl" fw={700}>
-                  {stats.telescopes + stats.cameras}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {stats.rigs} rigs configured
-                </Text>
-              </div>
-              <ThemeIcon size="xl" variant="light" color="blue">
-                <IconTelescope size={24} />
-              </ThemeIcon>
-            </Group>
-          </Paper>
-
-          <Paper p="md" withBorder>
-            <Group justify="space-between">
-              <div>
-                <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-                  Targets
-                </Text>
-                <Text size="xl" fw={700}>
-                  {stats.targets}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {stats.targetsWishlist} in wishlist
-                </Text>
-              </div>
-              <ThemeIcon size="xl" variant="light" color="grape">
-                <IconTarget size={24} />
-              </ThemeIcon>
-            </Group>
-          </Paper>
-
-          <Paper p="md" withBorder>
-            <Group justify="space-between">
-              <div>
-                <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-                  Sessions
-                </Text>
-                <Text size="xl" fw={700}>
-                  {stats.sessions}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {stats.sessionsUpcoming} upcoming
-                </Text>
-              </div>
-              <ThemeIcon size="xl" variant="light" color="cyan">
-                <IconCalendar size={24} />
-              </ThemeIcon>
-            </Group>
-          </Paper>
-
-          <Paper p="md" withBorder>
-            <Group justify="space-between">
-              <div>
-                <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-                  Images
-                </Text>
-                <Text size="xl" fw={700}>
-                  {stats.images}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {stats.imagesPublic} public
-                </Text>
-              </div>
-              <ThemeIcon size="xl" variant="light" color="orange">
-                <IconPhoto size={24} />
-              </ThemeIcon>
-            </Group>
-          </Paper>
-        </SimpleGrid>
+        <Card className="shadow-sm">
+          <CardContent className="px-4 py-1">
+            <Text className="font-semibold text-lg mb-1">Quick Stats</Text>
+            <div className="grid grid-cols-4 gap-2">
+              <Card className="px-2 py-1.5 border">
+                <Group gap="xs" justify="center">
+                  <ThemeIcon size="sm" variant="light" color="blue">
+                    <IconTelescope size={16} />
+                  </ThemeIcon>
+                  <Text className="text-sm font-medium">{stats.telescopes + stats.cameras} Gear</Text>
+                </Group>
+              </Card>
+              <Card className="px-2 py-1.5 border">
+                <Group gap="xs" justify="center">
+                  <ThemeIcon size="sm" variant="light" color="grape">
+                    <IconTarget size={16} />
+                  </ThemeIcon>
+                  <Text className="text-sm font-medium">{stats.targets} Targets</Text>
+                </Group>
+              </Card>
+              <Card className="px-2 py-1.5 border">
+                <Group gap="xs" justify="center">
+                  <ThemeIcon size="sm" variant="light" color="cyan">
+                    <IconCalendar size={16} />
+                  </ThemeIcon>
+                  <Text className="text-sm font-medium">{stats.sessions} Sessions</Text>
+                </Group>
+              </Card>
+              <Card className="px-2 py-1.5 border">
+                <Group gap="xs" justify="center">
+                  <ThemeIcon size="sm" variant="light" color="orange">
+                    <IconPhoto size={16} />
+                  </ThemeIcon>
+                  <Text className="text-sm font-medium">{stats.images} Images</Text>
+                </Group>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
       </Stack>
     </Container>
   );

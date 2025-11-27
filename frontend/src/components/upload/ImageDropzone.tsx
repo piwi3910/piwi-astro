@@ -8,11 +8,11 @@ import {
   Group,
   Stack,
   Progress,
-  Paper,
+  Card,
   ThemeIcon,
-  ActionIcon,
   Badge,
-} from '@mantine/core';
+  Button,
+} from '@/components/ui';
 import {
   IconUpload,
   IconPhoto,
@@ -167,16 +167,10 @@ export function ImageDropzone({ onUploadComplete }: ImageDropzoneProps) {
     <Stack gap="md">
       <Box
         {...getRootProps()}
+        className="border-2 border-dashed rounded-md p-8 cursor-pointer transition-all duration-200 ease-in-out"
         style={{
-          border: '2px dashed',
-          borderColor: isDragActive ? 'var(--mantine-color-blue-5)' : 'var(--mantine-color-dark-4)',
-          borderRadius: 'var(--mantine-radius-md)',
-          padding: 'var(--mantine-spacing-xl)',
-          cursor: 'pointer',
-          backgroundColor: isDragActive
-            ? 'var(--mantine-color-dark-6)'
-            : 'transparent',
-          transition: 'all 0.2s ease',
+          borderColor: isDragActive ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+          backgroundColor: isDragActive ? 'hsl(var(--accent))' : 'transparent',
         }}
       >
         <input {...getInputProps()} />
@@ -189,7 +183,7 @@ export function ImageDropzone({ onUploadComplete }: ImageDropzoneProps) {
           >
             <IconUpload size={30} />
           </ThemeIcon>
-          <Text size="lg" fw={500}>
+          <Text size="lg" fw="medium">
             {isDragActive
               ? 'Drop your files here'
               : 'Drag & drop your astrophotography images'}
@@ -197,7 +191,7 @@ export function ImageDropzone({ onUploadComplete }: ImageDropzoneProps) {
           <Text size="sm" c="dimmed">
             or click to browse (max 50MB per file)
           </Text>
-          <Group gap="xs" mt="xs">
+          <Group gap="xs" className="mt-1">
             <Badge variant="outline" size="sm">
               .png
             </Badge>
@@ -214,15 +208,15 @@ export function ImageDropzone({ onUploadComplete }: ImageDropzoneProps) {
       {/* Upload progress */}
       {uploadingFiles.length > 0 && (
         <Stack gap="xs">
-          <Group justify="space-between">
-            <Text size="sm" fw={500}>
+          <Group justify="between">
+            <Text size="sm" fw="medium">
               Uploads
             </Text>
             {uploadingFiles.some((f) => f.status === 'queued') && (
               <Text
                 size="xs"
                 c="dimmed"
-                style={{ cursor: 'pointer' }}
+                className="cursor-pointer"
                 onClick={clearCompleted}
               >
                 Clear completed
@@ -231,15 +225,15 @@ export function ImageDropzone({ onUploadComplete }: ImageDropzoneProps) {
           </Group>
 
           {uploadingFiles.map((file) => (
-            <Paper key={file.id} p="sm" withBorder>
-              <Group justify="space-between" wrap="nowrap">
-                <Group gap="sm" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
+            <Card key={file.id} p="sm" withBorder>
+              <Group justify="between" wrap="nowrap">
+                <Group gap="sm" wrap="nowrap" className="flex-1 min-w-0">
                   <ThemeIcon
                     size="sm"
                     variant="light"
                     color={
                       file.status === 'error'
-                        ? 'red'
+                        ? 'destructive'
                         : file.status === 'queued'
                           ? 'green'
                           : 'blue'
@@ -253,7 +247,7 @@ export function ImageDropzone({ onUploadComplete }: ImageDropzoneProps) {
                       <IconPhoto size={14} />
                     )}
                   </ThemeIcon>
-                  <Stack gap={2} style={{ flex: 1, minWidth: 0 }}>
+                  <Stack gap="sm" className="flex-1 min-w-0">
                     <Text size="sm" truncate>
                       {file.file.name}
                     </Text>
@@ -262,12 +256,12 @@ export function ImageDropzone({ onUploadComplete }: ImageDropzoneProps) {
                         {formatFileSize(file.file.size)}
                       </Text>
                       {file.status === 'queued' && (
-                        <Badge size="xs" color="green" variant="light">
+                        <Badge size="xs" variant="secondary" className="bg-green-500/10 text-green-500 border-green-500/20">
                           Queued for processing
                         </Badge>
                       )}
                       {file.status === 'error' && (
-                        <Text size="xs" c="red">
+                        <Text size="xs" c="destructive">
                           {file.error}
                         </Text>
                       )}
@@ -275,23 +269,21 @@ export function ImageDropzone({ onUploadComplete }: ImageDropzoneProps) {
                     {file.status === 'uploading' && (
                       <Progress
                         value={file.progress}
-                        size="xs"
-                        animated
-                        mt={4}
+                        className="mt-1 h-1"
                       />
                     )}
                   </Stack>
                 </Group>
-                <ActionIcon
-                  variant="subtle"
-                  color="gray"
-                  size="sm"
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={() => removeFile(file.id)}
+                  className="h-8 w-8"
                 >
                   <IconX size={14} />
-                </ActionIcon>
+                </Button>
               </Group>
-            </Paper>
+            </Card>
           ))}
         </Stack>
       )}

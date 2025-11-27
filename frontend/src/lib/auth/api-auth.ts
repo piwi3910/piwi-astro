@@ -25,11 +25,16 @@ export async function requireAuth() {
   };
 }
 
-export async function getUserId(): Promise<{ userId: string | null; error: NextResponse | null }> {
+// Discriminated union for proper type narrowing
+type GetUserIdResult =
+  | { userId: string; error: null }
+  | { userId: null; error: NextResponse };
+
+export async function getUserId(): Promise<GetUserIdResult> {
   const { authenticated, session, error } = await requireAuth();
 
   if (!authenticated || !session) {
-    return { userId: null, error };
+    return { userId: null, error: error! };
   }
 
   // Extract userId from session

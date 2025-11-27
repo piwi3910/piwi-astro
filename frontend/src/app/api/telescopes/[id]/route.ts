@@ -14,7 +14,7 @@ const telescopeSchema = z.object({
 }).partial();
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { userId, error } = await getUserId();
@@ -76,7 +76,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { userId, error } = await getUserId();

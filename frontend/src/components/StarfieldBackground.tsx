@@ -218,7 +218,7 @@ export function StarfieldBackground({
 }: StarfieldBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const starsRef = useRef<Star[]>([]);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -228,6 +228,8 @@ export function StarfieldBackground({
     if (!ctx) return;
 
     const resizeCanvas = () => {
+      // Use window.innerWidth (full viewport including scrollbar area)
+      // Combined with scrollbar-gutter: stable on html, this prevents jumps
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       generateStars();
@@ -390,8 +392,8 @@ export function StarfieldBackground({
         position: 'fixed',
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
+        width: '100vw',
+        height: '100vh',
         pointerEvents: 'none',
         zIndex: -1,
         opacity,

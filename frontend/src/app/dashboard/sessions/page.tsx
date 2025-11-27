@@ -1,27 +1,29 @@
 'use client';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
+import { Container } from '@/components/ui/container';
+import { Title } from '@/components/ui/title';
+import { Button } from '@/components/ui/button';
+import { Stack } from '@/components/ui/stack';
+import { Group } from '@/components/ui/group';
+import { Card, CardContent } from '@/components/ui/card';
+import { Text } from '@/components/ui/text';
+import { Badge } from '@/components/ui/badge';
 import {
-  Container,
-  Title,
-  Button,
-  Stack,
-  Group,
-  Card,
-  Text,
-  Badge,
-  ActionIcon,
-  Modal,
-  TextInput,
-  Textarea,
-  Select,
-  Tabs,
-  Paper,
-  SimpleGrid,
-  Box,
-  Tooltip,
-} from '@mantine/core';
-import { DateTimePicker } from '@mantine/dates';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { TextInput } from '@/components/ui/text-input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Grid, GridCol } from '@/components/ui/grid';
+import { Box } from '@/components/ui/box';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   IconEdit,
@@ -111,7 +113,7 @@ async function deleteSession(id: string): Promise<void> {
   if (!response.ok) throw new Error('Failed to delete session');
 }
 
-export default function SessionsPage(): JSX.Element {
+export default function SessionsPage() {
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [editingSession, setEditingSession] = useState<Session | null>(null);
@@ -265,7 +267,7 @@ export default function SessionsPage(): JSX.Element {
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         // Add a brief highlight effect
-        element.style.boxShadow = '0 0 0 3px var(--mantine-color-blue-5)';
+        element.style.boxShadow = '0 0 0 3px #228be6';
         setTimeout(() => {
           element.style.boxShadow = '';
         }, 2000);
@@ -351,152 +353,157 @@ export default function SessionsPage(): JSX.Element {
   }
 
   return (
-    <Container size="xl" py="xl">
+    <Container size="xl" className="py-8">
       <Stack gap="lg">
-        <Group justify="space-between">
+        <Group justify="between">
           <Title order={1}>Imaging Sessions</Title>
         </Group>
 
-        <Tabs value={viewMode} onChange={(val) => setViewMode(val as 'list' | 'calendar')}>
-          <Tabs.List>
-            <Tabs.Tab value="list" leftSection={<IconList size={16} />}>
+        <Tabs value={viewMode} onValueChange={(val) => setViewMode(val as 'list' | 'calendar')}>
+          <TabsList>
+            <TabsTrigger value="list" className="flex items-center gap-2">
+              <IconList size={16} />
               List View
-            </Tabs.Tab>
-            <Tabs.Tab value="calendar" leftSection={<IconCalendar size={16} />}>
+            </TabsTrigger>
+            <TabsTrigger value="calendar" className="flex items-center gap-2">
+              <IconCalendar size={16} />
               Calendar View
-            </Tabs.Tab>
-          </Tabs.List>
+            </TabsTrigger>
+          </TabsList>
 
-          <Tabs.Panel value="list" pt="md">
+          <TabsContent value="list" className="mt-4">
             {sessions && sessions.length > 0 ? (
               <Stack gap="md">
                 {sessions.map((session) => (
                   <Card
                     key={session.id}
-                    shadow="sm"
-                    padding="lg"
-                    withBorder
+                    className="shadow-sm border transition-shadow duration-300"
+                    style={{ backgroundColor: '#1a1b1e' }}
                     ref={(el) => {
                       sessionRefs.current[session.id] = el;
                     }}
-                    style={{ transition: 'box-shadow 0.3s ease', backgroundColor: '#1a1b1e' }}
                   >
-                    <Stack gap="sm">
-                      <Group justify="space-between">
-                        <div>
-                          <Text fw={600} size="lg">
-                            {session.name}
-                          </Text>
-                          <Text size="sm" c="dimmed">
-                            {new Date(session.date).toLocaleDateString('en-US', {
-                              weekday: 'long',
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric',
-                            })}
-                          </Text>
-                        </div>
-                        <Group gap="xs">
-                          <ActionIcon
-                            variant="subtle"
-                            onClick={() => handleEditSession(session)}
-                          >
-                            <IconEdit size={16} />
-                          </ActionIcon>
-                          <ActionIcon
-                            variant="subtle"
-                            color="red"
-                            onClick={() => deleteMutation.mutate(session.id)}
-                          >
-                            <IconTrash size={16} />
-                          </ActionIcon>
+                    <CardContent className="p-6">
+                      <Stack gap="sm">
+                        <Group justify="between">
+                          <div>
+                            <Text className="font-semibold text-lg">
+                              {session.name}
+                            </Text>
+                            <Text className="text-sm text-muted-foreground">
+                              {new Date(session.date).toLocaleDateString('en-US', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                              })}
+                            </Text>
+                          </div>
+                          <Group gap="xs">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleEditSession(session)}
+                            >
+                              <IconEdit size={16} />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => deleteMutation.mutate(session.id)}
+                              className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                            >
+                              <IconTrash size={16} />
+                            </Button>
+                          </Group>
                         </Group>
-                      </Group>
 
-                      <Group gap="lg">
-                        {session.locationName && (
-                          <Text size="sm">
-                            <strong>Location:</strong> {session.locationName}
-                          </Text>
-                        )}
-                      </Group>
-
-                      {session.notes && (
-                        <Text size="sm" c="dimmed">
-                          {session.notes}
-                        </Text>
-                      )}
-
-                      {session.sessionTargets.length > 0 && session.sessionTargets[0] && (
-                        <Group gap="sm">
-                          <Text size="sm" fw={500}>Target:</Text>
-                          <Text size="sm">{session.sessionTargets[0].target.name}</Text>
-                          {session.sessionTargets[0].target.catalogId && (
-                            <Text size="sm" c="dimmed">
-                              ({session.sessionTargets[0].target.catalogId})
+                        <Group gap="lg">
+                          {session.locationName && (
+                            <Text className="text-sm">
+                              <strong>Location:</strong> {session.locationName}
                             </Text>
                           )}
-                          <Badge size="sm" variant="light">
-                            {session.sessionTargets[0].target.type}
-                          </Badge>
                         </Group>
-                      )}
-                    </Stack>
+
+                        {session.notes && (
+                          <Text className="text-sm text-muted-foreground">
+                            {session.notes}
+                          </Text>
+                        )}
+
+                        {session.sessionTargets.length > 0 && session.sessionTargets[0] && (
+                          <Group gap="sm">
+                            <Text className="text-sm font-medium">Target:</Text>
+                            <Text className="text-sm">{session.sessionTargets[0].target.name}</Text>
+                            {session.sessionTargets[0].target.catalogId && (
+                              <Text className="text-sm text-muted-foreground">
+                                ({session.sessionTargets[0].target.catalogId})
+                              </Text>
+                            )}
+                            <Badge variant="secondary" className="text-xs">
+                              {session.sessionTargets[0].target.type}
+                            </Badge>
+                          </Group>
+                        )}
+                      </Stack>
+                    </CardContent>
                   </Card>
                 ))}
               </Stack>
             ) : (
-              <Text c="dimmed" ta="center" py="xl">
+              <Text className="text-muted-foreground text-center py-12">
                 No sessions planned yet. Create your first imaging session!
               </Text>
             )}
-          </Tabs.Panel>
+          </TabsContent>
 
-          <Tabs.Panel value="calendar" pt="md">
-            <Paper withBorder p="md" style={{ backgroundColor: '#1a1b1e' }}>
+          <TabsContent value="calendar" className="mt-4">
+            <Card withBorder className="p-4" style={{ backgroundColor: '#1a1b1e' }}>
               {/* Calendar Header */}
-              <Group justify="space-between" mb="md">
+              <Group justify="between" className="mb-4">
                 <Group gap="xs">
-                  <ActionIcon variant="subtle" onClick={() => navigateMonth('prev')}>
+                  <Button variant="ghost" size="icon" onClick={() => navigateMonth('prev')}>
                     <IconChevronLeft size={20} />
-                  </ActionIcon>
-                  <ActionIcon variant="subtle" onClick={() => navigateMonth('next')}>
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => navigateMonth('next')}>
                     <IconChevronRight size={20} />
-                  </ActionIcon>
-                  <Title order={3} ml="sm">
+                  </Button>
+                  <Title order={3} className="ml-2">
                     {monthNames[calendarData.month]} {calendarData.year}
                   </Title>
                 </Group>
-                <Button variant="subtle" size="sm" onClick={goToToday}>
+                <Button variant="ghost" size="sm" onClick={goToToday}>
                   Today
                 </Button>
               </Group>
 
               {/* Day Headers */}
-              <SimpleGrid cols={7} spacing={0}>
+              <Grid cols={7} gap="none">
                 {dayNames.map((day) => (
-                  <Box
+                  <GridCol
                     key={day}
-                    p="xs"
+                    span={1}
+                    className="p-2 text-center border-b"
                     style={{
-                      borderBottom: '1px solid #373a40',
-                      textAlign: 'center',
+                      borderColor: '#373a40',
                       backgroundColor: '#1a1b1e',
                     }}
                   >
-                    <Text size="sm" fw={600} c="dimmed">
+                    <Text className="text-sm font-semibold text-muted-foreground">
                       {day}
                     </Text>
-                  </Box>
+                  </GridCol>
                 ))}
-              </SimpleGrid>
+              </Grid>
 
               {/* Calendar Grid */}
-              <SimpleGrid cols={7} spacing={0}>
+              <Grid cols={7} gap="none">
                 {calendarData.days.map((day, index) => (
-                  <Box
+                  <GridCol
                     key={index}
-                    p="xs"
+                    span={1}
+                    className="p-2"
                     style={{
                       minHeight: 100,
                       borderBottom: '1px solid #373a40',
@@ -509,115 +516,124 @@ export default function SessionsPage(): JSX.Element {
                     }}
                   >
                     <Text
-                      size="sm"
-                      fw={isToday(day.date) ? 700 : 400}
-                      c={day.isCurrentMonth ? (isToday(day.date) ? 'blue.3' : 'inherit') : 'dark.3'}
-                      mb="xs"
+                      className={`text-sm mb-2 ${isToday(day.date) ? 'font-bold' : ''}`}
+                      style={{
+                        color: day.isCurrentMonth ? (isToday(day.date) ? '#74c0fc' : 'inherit') : '#5c5f66',
+                      }}
                     >
                       {day.date.getDate()}
                     </Text>
-                    <Stack gap={4}>
+                    <Stack gap="xs">
                       {day.sessions.map((session) => (
-                        <Tooltip
-                          key={session.id}
-                          label={
-                            <Stack gap={2}>
-                              <Text size="xs" fw={500}>{session.name}</Text>
-                              {session.locationName && (
-                                <Text size="xs" c="dimmed">{session.locationName}</Text>
-                              )}
-                              {session.sessionTargets[0]?.target && (
-                                <Text size="xs">Target: {session.sessionTargets[0].target.name}</Text>
-                              )}
-                            </Stack>
-                          }
-                          withArrow
-                          multiline
-                          w={200}
-                        >
-                          <Box
-                            onClick={() => handleCalendarSessionClick(session)}
-                            style={{
-                              backgroundColor: 'var(--mantine-color-blue-6)',
-                              color: 'white',
-                              padding: '2px 6px',
-                              borderRadius: 4,
-                              cursor: 'pointer',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              fontSize: 11,
-                            }}
-                          >
-                            {session.name}
-                          </Box>
-                        </Tooltip>
+                        <TooltipProvider key={session.id}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Box
+                                onClick={() => handleCalendarSessionClick(session)}
+                                style={{
+                                  backgroundColor: '#228be6',
+                                  color: 'white',
+                                  padding: '2px 6px',
+                                  borderRadius: 4,
+                                  cursor: 'pointer',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap',
+                                  fontSize: 11,
+                                }}
+                              >
+                                {session.name}
+                              </Box>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-[200px]">
+                              <Stack gap="none">
+                                <Text className="text-xs font-medium">{session.name}</Text>
+                                {session.locationName && (
+                                  <Text className="text-xs text-muted-foreground">{session.locationName}</Text>
+                                )}
+                                {session.sessionTargets[0]?.target && (
+                                  <Text className="text-xs">Target: {session.sessionTargets[0].target.name}</Text>
+                                )}
+                              </Stack>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       ))}
                     </Stack>
-                  </Box>
+                  </GridCol>
                 ))}
-              </SimpleGrid>
-            </Paper>
-          </Tabs.Panel>
+              </Grid>
+            </Card>
+          </TabsContent>
         </Tabs>
 
         {/* Session Modal */}
-        <Modal
-          opened={sessionModalOpen}
-          onClose={() => {
-            setSessionModalOpen(false);
-            setEditingSession(null);
-            resetSessionForm();
+        <Dialog
+          open={sessionModalOpen}
+          onOpenChange={(open) => {
+            setSessionModalOpen(open);
+            if (!open) {
+              setEditingSession(null);
+              resetSessionForm();
+            }
           }}
-          title={editingSession ? 'Edit Session' : 'New Session'}
-          size="md"
         >
-          <Stack gap="md">
-            <TextInput
-              label="Session Name"
-              placeholder="e.g., M31 Imaging Session"
-              value={sessionForm.name}
-              onChange={(e) =>
-                setSessionForm({ ...sessionForm, name: e.target.value })
-              }
-              required
-            />
-            <DateTimePicker
-              label="Date"
-              value={sessionForm.date}
-              onChange={(val) =>
-                val && setSessionForm({ ...sessionForm, date: val })
-              }
-              required
-            />
-            <Select
-              label="Location"
-              placeholder="Select a location"
-              data={
-                locations?.map((l) => ({
-                  value: l.id,
-                  label: l.name,
-                })) || []
-              }
-              value={sessionForm.locationId}
-              onChange={(val) =>
-                setSessionForm({ ...sessionForm, locationId: val || '' })
-              }
-              searchable
-              required
-            />
-            <Textarea
-              label="Notes"
-              placeholder="Session notes..."
-              value={sessionForm.notes}
-              onChange={(e) =>
-                setSessionForm({ ...sessionForm, notes: e.target.value })
-              }
-              minRows={3}
-            />
-            <Group justify="flex-end">
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>{editingSession ? 'Edit Session' : 'New Session'}</DialogTitle>
+            </DialogHeader>
+            <Stack gap="md">
+              <TextInput
+                label="Session Name"
+                placeholder="e.g., M31 Imaging Session"
+                value={sessionForm.name}
+                onChange={(e) =>
+                  setSessionForm({ ...sessionForm, name: e.target.value })
+                }
+                required
+              />
+              <DateTimePicker
+                label="Date"
+                value={sessionForm.date}
+                onChange={(val) =>
+                  val && setSessionForm({ ...sessionForm, date: val })
+                }
+              />
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Location</label>
+                <Select
+                  value={sessionForm.locationId}
+                  onValueChange={(val) =>
+                    setSessionForm({ ...sessionForm, locationId: val })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {locations?.map((l) => (
+                      <SelectItem key={l.id} value={l.id}>
+                        {l.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Notes</label>
+                <Textarea
+                  placeholder="Session notes..."
+                  value={sessionForm.notes}
+                  onChange={(e) =>
+                    setSessionForm({ ...sessionForm, notes: e.target.value })
+                  }
+                  rows={3}
+                />
+              </div>
+            </Stack>
+            <DialogFooter>
               <Button
-                variant="subtle"
+                variant="ghost"
                 onClick={() => {
                   setSessionModalOpen(false);
                   setEditingSession(null);
@@ -628,36 +644,31 @@ export default function SessionsPage(): JSX.Element {
               </Button>
               <Button
                 onClick={editingSession ? handleUpdateSession : handleCreateSession}
-                loading={createMutation.isPending || updateMutation.isPending}
-                disabled={!sessionForm.name || !sessionForm.locationId}
+                disabled={createMutation.isPending || updateMutation.isPending || !sessionForm.name || !sessionForm.locationId}
               >
-                {editingSession ? 'Save' : 'Create'}
+                {createMutation.isPending || updateMutation.isPending ? 'Saving...' : (editingSession ? 'Save' : 'Create')}
               </Button>
-            </Group>
-          </Stack>
-        </Modal>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Scroll to top button */}
-        <ActionIcon
-          variant="filled"
-          color="blue"
-          size="xl"
-          radius="xl"
+        <Button
+          variant="default"
+          size="icon"
+          className="rounded-full fixed bottom-6 right-6 z-1000 shadow-lg transition-opacity"
           onClick={scrollToTop}
           style={{
-            position: 'fixed',
-            bottom: 24,
-            right: 24,
             opacity: showScrollTop ? 1 : 0,
             visibility: showScrollTop ? 'visible' : 'hidden',
             transition: 'opacity 0.3s, visibility 0.3s',
-            zIndex: 1000,
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+            width: '48px',
+            height: '48px',
           }}
           aria-label="Scroll to top"
         >
           <IconArrowUp size={24} />
-        </ActionIcon>
+        </Button>
       </Stack>
     </Container>
   );

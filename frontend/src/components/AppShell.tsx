@@ -1,7 +1,18 @@
 'use client';
 
-import { AppShell, Group, Button, Menu, Avatar, Text, Burger } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Text } from '@/components/ui/text';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useDisclosure } from '@/hooks/use-disclosure';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -22,11 +33,12 @@ import {
   IconTool,
   IconRuler2,
   IconWorld,
+  IconMenu2,
 } from '@tabler/icons-react';
 import { StarfieldBackground } from './StarfieldBackground';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
   const { data: session, status } = useSession();
   const pathname = usePathname();
 
@@ -38,425 +50,377 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     { label: 'Gear', href: '/dashboard/gear', icon: IconTelescope },
   ];
 
+  // Mobile Navigation Content
+  const MobileNavContent = () => (
+    <div className="flex flex-col gap-4 p-6">
+      {/* Dashboard - only for authenticated users */}
+      {session && (
+        <Link href="/dashboard" onClick={close}>
+          <Button
+            variant={isActive('/dashboard') ? 'default' : 'ghost'}
+            className="w-full justify-start"
+          >
+            <IconHome size={16} className="mr-2" />
+            Dashboard
+          </Button>
+        </Link>
+      )}
+
+      {/* Gallery section - for all users */}
+      <Text className="text-xs text-muted-foreground font-medium mt-4 mb-2 px-2">
+        Gallery
+      </Text>
+      <Link href="/gallery" onClick={close}>
+        <Button
+          variant={isActive('/gallery') ? 'default' : 'ghost'}
+          className="w-full justify-start"
+        >
+          <IconWorld size={16} className="mr-2" />
+          Public
+        </Button>
+      </Link>
+      {session && (
+        <Link href="/dashboard/images" onClick={close}>
+          <Button
+            variant={isActive('/dashboard/images') ? 'default' : 'ghost'}
+            className="w-full justify-start"
+          >
+            <IconPhoto size={16} className="mr-2" />
+            My Images
+          </Button>
+        </Link>
+      )}
+
+      {/* Targets section - only for authenticated users */}
+      {session && (
+        <>
+          <Text className="text-xs text-muted-foreground font-medium mt-4 mb-2 px-2">
+            Targets
+          </Text>
+          <Link href="/targets" onClick={close}>
+            <Button
+              variant={isActive('/targets') ? 'default' : 'ghost'}
+              className="w-full justify-start"
+            >
+              <IconBook size={16} className="mr-2" />
+              Catalog
+            </Button>
+          </Link>
+          <Link href="/dashboard/wishlist" onClick={close}>
+            <Button
+              variant={isActive('/dashboard/wishlist') ? 'default' : 'ghost'}
+              className="w-full justify-start"
+            >
+              <IconHeart size={16} className="mr-2" />
+              My Wishlist
+            </Button>
+          </Link>
+          <Link href="/dashboard/sessions" onClick={close}>
+            <Button
+              variant={isActive('/dashboard/sessions') ? 'default' : 'ghost'}
+              className="w-full justify-start"
+            >
+              <IconCalendar size={16} className="mr-2" />
+              Sessions
+            </Button>
+          </Link>
+        </>
+      )}
+
+      {/* Locations and Gear - only for authenticated users */}
+      {session &&
+        navItems.slice(1).map((item) => (
+          <Link key={item.href} href={item.href} onClick={close}>
+            <Button
+              variant={isActive(item.href) ? 'default' : 'ghost'}
+              className="w-full justify-start"
+            >
+              <item.icon size={16} className="mr-2" />
+              {item.label}
+            </Button>
+          </Link>
+        ))}
+
+      {session && (
+        <>
+          <Text className="text-xs text-muted-foreground font-medium mt-4 mb-2 px-2">
+            Tools
+          </Text>
+          <Link href="/dashboard/fov-planner" onClick={close}>
+            <Button
+              variant={isActive('/dashboard/fov-planner') ? 'default' : 'ghost'}
+              className="w-full justify-start"
+            >
+              <IconCamera size={16} className="mr-2" />
+              FOV Planner
+            </Button>
+          </Link>
+          <Link href="/dashboard/pixel-scale" onClick={close}>
+            <Button
+              variant={isActive('/dashboard/pixel-scale') ? 'default' : 'ghost'}
+              className="w-full justify-start"
+            >
+              <IconRuler2 size={16} className="mr-2" />
+              Pixel Scale
+            </Button>
+          </Link>
+        </>
+      )}
+    </div>
+  );
+
   return (
     <>
       <StarfieldBackground starCount={180} opacity={0.8} animated={true} showConstellations={true} />
-      <AppShell
-        header={{ height: 60 }}
-        navbar={{
-          width: 250,
-          breakpoint: 'sm',
-          collapsed: { mobile: !opened },
-        }}
-        padding="md"
-        styles={{
-          main: {
-            background: 'transparent',
-          },
-          header: {
+      <div className="flex flex-col min-h-screen">
+        {/* Header */}
+        <header
+          className="sticky top-0 z-50 w-full h-[60px] border-b border-white/8"
+          style={{
             background: 'rgba(13, 17, 23, 0.92)',
             backdropFilter: 'blur(4px)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          },
-          navbar: {
-            background: 'rgba(13, 17, 23, 0.94)',
-            backdropFilter: 'blur(4px)',
-            borderRight: '1px solid rgba(255, 255, 255, 0.08)',
-          },
-        }}
-      >
-        <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
-          <Group>
-            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Group gap="xs">
+          }}
+        >
+          <div className="flex items-center justify-between h-full px-4">
+            <div className="flex items-center gap-2">
+              {/* Mobile Menu Trigger */}
+              <Sheet open={opened} onOpenChange={(open) => (open ? toggle() : close())}>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="sm:hidden"
+                  >
+                    <IconMenu2 size={20} />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent
+                  side="left"
+                  className="w-[250px] p-0"
+                  style={{
+                    background: 'rgba(13, 17, 23, 0.94)',
+                    backdropFilter: 'blur(4px)',
+                    borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+                  }}
+                >
+                  <MobileNavContent />
+                </SheetContent>
+              </Sheet>
+
+              <Link href="/" className="flex items-center gap-2 no-underline">
                 <IconTelescope size={28} />
-                <Text size="xl" fw={700}>
-                  piwi-astro
-                </Text>
-              </Group>
-            </Link>
-          </Group>
-
-          <Group visibleFrom="sm">
-            {/* Dashboard link - only for authenticated users */}
-            {session && (
-              <Link href="/dashboard" style={{ textDecoration: 'none' }}>
-                <Button
-                  variant={isActive('/dashboard') ? 'filled' : 'subtle'}
-                  leftSection={<IconHome size={16} />}
-                  size="sm"
-                >
-                  Dashboard
-                </Button>
+                <Text className="text-xl font-bold">piwi-astro</Text>
               </Link>
-            )}
+            </div>
 
-            {/* Gallery dropdown - for all users */}
-            <Menu shadow="md" width={180}>
-              <Menu.Target>
-                <Button
-                  variant={
-                    isActive('/gallery') || isActive('/dashboard/images')
-                      ? 'filled'
-                      : 'subtle'
-                  }
-                  leftSection={<IconPhoto size={16} />}
-                  rightSection={<IconChevronDown size={14} />}
-                  size="sm"
-                >
-                  Gallery
-                </Button>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Link
-                  href="/gallery"
-                  style={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                  <Menu.Item leftSection={<IconWorld size={14} />}>
-                    Public
-                  </Menu.Item>
-                </Link>
-                {session && (
-                  <Link
-                    href="/dashboard/images"
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <Menu.Item leftSection={<IconPhoto size={14} />}>
-                      My Images
-                    </Menu.Item>
-                  </Link>
-                )}
-              </Menu.Dropdown>
-            </Menu>
-
-            {/* Targets dropdown - only for authenticated users */}
-            {session && (
-              <Menu shadow="md" width={180}>
-                <Menu.Target>
+            {/* Desktop Navigation */}
+            <div className="hidden sm:flex items-center gap-2">
+              {/* Dashboard link - only for authenticated users */}
+              {session && (
+                <Link href="/dashboard">
                   <Button
-                    variant={
-                      isActive('/targets') ||
-                      isActive('/dashboard/wishlist') ||
-                      isActive('/dashboard/sessions')
-                        ? 'filled'
-                        : 'subtle'
-                    }
-                    leftSection={<IconStar size={16} />}
-                    rightSection={<IconChevronDown size={14} />}
+                    variant={isActive('/dashboard') ? 'default' : 'ghost'}
                     size="sm"
                   >
-                    Targets
+                    <IconHome size={16} className="mr-2" />
+                    Dashboard
                   </Button>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Link
-                    href="/targets"
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <Menu.Item leftSection={<IconBook size={14} />}>
-                      Catalog
-                    </Menu.Item>
-                  </Link>
-                  <Link
-                    href="/dashboard/wishlist"
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <Menu.Item leftSection={<IconHeart size={14} />}>
-                      My Wishlist
-                    </Menu.Item>
-                  </Link>
-                  <Link
-                    href="/dashboard/sessions"
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <Menu.Item leftSection={<IconCalendar size={14} />}>
-                      Sessions
-                    </Menu.Item>
-                  </Link>
-                </Menu.Dropdown>
-              </Menu>
-            )}
+                </Link>
+              )}
 
-            {/* Locations and Gear - only for authenticated users */}
-            {session && navItems.slice(1).map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                style={{ textDecoration: 'none' }}
-              >
-                <Button
-                  variant={isActive(item.href) ? 'filled' : 'subtle'}
-                  leftSection={<item.icon size={16} />}
-                  size="sm"
-                >
-                  {item.label}
-                </Button>
-              </Link>
-            ))}
-
-            {session && (
-              <Menu shadow="md" width={180}>
-                <Menu.Target>
+              {/* Gallery dropdown - for all users */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                   <Button
                     variant={
-                      isActive('/dashboard/fov-planner') || isActive('/dashboard/pixel-scale')
-                        ? 'filled'
-                        : 'subtle'
+                      isActive('/gallery') || isActive('/dashboard/images')
+                        ? 'default'
+                        : 'ghost'
                     }
-                    leftSection={<IconTool size={16} />}
-                    rightSection={<IconChevronDown size={14} />}
                     size="sm"
                   >
-                    Tools
+                    <IconPhoto size={16} className="mr-2" />
+                    Gallery
+                    <IconChevronDown size={14} className="ml-1" />
                   </Button>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Link
-                    href="/dashboard/fov-planner"
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <Menu.Item leftSection={<IconCamera size={14} />}>
-                      FOV Planner
-                    </Menu.Item>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-[180px]">
+                  <Link href="/gallery">
+                    <DropdownMenuItem>
+                      <IconWorld size={14} className="mr-2" />
+                      Public
+                    </DropdownMenuItem>
                   </Link>
-                  <Link
-                    href="/dashboard/pixel-scale"
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <Menu.Item leftSection={<IconRuler2 size={14} />}>
-                      Pixel Scale
-                    </Menu.Item>
+                  {session && (
+                    <Link href="/dashboard/images">
+                      <DropdownMenuItem>
+                        <IconPhoto size={14} className="mr-2" />
+                        My Images
+                      </DropdownMenuItem>
+                    </Link>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Targets dropdown - only for authenticated users */}
+              {session && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant={
+                        isActive('/targets') ||
+                        isActive('/dashboard/wishlist') ||
+                        isActive('/dashboard/sessions')
+                          ? 'default'
+                          : 'ghost'
+                      }
+                      size="sm"
+                    >
+                      <IconStar size={16} className="mr-2" />
+                      Targets
+                      <IconChevronDown size={14} className="ml-1" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[180px]">
+                    <Link href="/targets">
+                      <DropdownMenuItem>
+                        <IconBook size={14} className="mr-2" />
+                        Catalog
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link href="/dashboard/wishlist">
+                      <DropdownMenuItem>
+                        <IconHeart size={14} className="mr-2" />
+                        My Wishlist
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link href="/dashboard/sessions">
+                      <DropdownMenuItem>
+                        <IconCalendar size={14} className="mr-2" />
+                        Sessions
+                      </DropdownMenuItem>
+                    </Link>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+
+              {/* Locations and Gear - only for authenticated users */}
+              {session &&
+                navItems.slice(1).map((item) => (
+                  <Link key={item.href} href={item.href}>
+                    <Button
+                      variant={isActive(item.href) ? 'default' : 'ghost'}
+                      size="sm"
+                    >
+                      <item.icon size={16} className="mr-2" />
+                      {item.label}
+                    </Button>
                   </Link>
-                </Menu.Dropdown>
-              </Menu>
-            )}
-          </Group>
+                ))}
 
-          <Group>
-            {status === 'loading' ? (
-              <Text size="sm">Loading...</Text>
-            ) : session ? (
-              <Menu shadow="md" width={200}>
-                <Menu.Target>
-                  <Button variant="subtle" size="sm">
-                    <Group gap="xs">
-                      <Avatar size="sm" radius="xl" />
-                      <Text size="sm">{session.user?.name || 'User'}</Text>
-                    </Group>
-                  </Button>
-                </Menu.Target>
+              {/* Tools dropdown - only for authenticated users */}
+              {session && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant={
+                        isActive('/dashboard/fov-planner') ||
+                        isActive('/dashboard/pixel-scale')
+                          ? 'default'
+                          : 'ghost'
+                      }
+                      size="sm"
+                    >
+                      <IconTool size={16} className="mr-2" />
+                      Tools
+                      <IconChevronDown size={14} className="ml-1" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[180px]">
+                    <Link href="/dashboard/fov-planner">
+                      <DropdownMenuItem>
+                        <IconCamera size={14} className="mr-2" />
+                        FOV Planner
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link href="/dashboard/pixel-scale">
+                      <DropdownMenuItem>
+                        <IconRuler2 size={14} className="mr-2" />
+                        Pixel Scale
+                      </DropdownMenuItem>
+                    </Link>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
 
-                <Menu.Dropdown>
-                  <Menu.Label>Account</Menu.Label>
-                  <Link
-                    href="/dashboard/profile"
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <Menu.Item leftSection={<IconUser size={14} />}>Profile</Menu.Item>
+            {/* User Menu / Auth Buttons */}
+            <div className="flex items-center gap-2">
+              {status === 'loading' ? (
+                <Text className="text-sm">Loading...</Text>
+              ) : session ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage src={session.user?.image || undefined} />
+                          <AvatarFallback>
+                            {session.user?.name?.charAt(0) || 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <Text className="text-sm">{session.user?.name || 'User'}</Text>
+                      </div>
+                    </Button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="end" className="w-[200px]">
+                    <DropdownMenuLabel>Account</DropdownMenuLabel>
+                    <Link href="/dashboard/profile">
+                      <DropdownMenuItem>
+                        <IconUser size={14} className="mr-2" />
+                        Profile
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link href="/dashboard/settings">
+                      <DropdownMenuItem>
+                        <IconSettings size={14} className="mr-2" />
+                        Settings
+                      </DropdownMenuItem>
+                    </Link>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem
+                      className="text-red-600 focus:text-red-600"
+                      onClick={() => signOut({ callbackUrl: '/' })}
+                    >
+                      <IconLogout size={14} className="mr-2" />
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Link href="/login">
+                    <Button variant="ghost" size="sm">
+                      Login
+                    </Button>
                   </Link>
-                  <Link
-                    href="/dashboard/settings"
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <Menu.Item leftSection={<IconSettings size={14} />}>
-                      Settings
-                    </Menu.Item>
+                  <Link href="/register">
+                    <Button size="sm">Sign Up</Button>
                   </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        </header>
 
-                  <Menu.Divider />
-
-                  <Menu.Item
-                    color="red"
-                    leftSection={<IconLogout size={14} />}
-                    onClick={() => signOut({ callbackUrl: '/' })}
-                  >
-                    Logout
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-            ) : (
-              <Group>
-                <Link href="/login" style={{ textDecoration: 'none' }}>
-                  <Button variant="subtle" size="sm">
-                    Login
-                  </Button>
-                </Link>
-                <Link href="/register" style={{ textDecoration: 'none' }}>
-                  <Button size="sm">Sign Up</Button>
-                </Link>
-              </Group>
-            )}
-          </Group>
-        </Group>
-      </AppShell.Header>
-
-      <AppShell.Navbar p="md" hiddenFrom="sm">
-        <AppShell.Section grow>
-          {/* Dashboard - only for authenticated users */}
-          {session && (
-            <Link
-              href="/dashboard"
-              style={{ textDecoration: 'none' }}
-              onClick={toggle}
-            >
-              <Button
-                variant={isActive('/dashboard') ? 'filled' : 'subtle'}
-                leftSection={<IconHome size={16} />}
-                fullWidth
-                mb="xs"
-              >
-                Dashboard
-              </Button>
-            </Link>
-          )}
-
-          {/* Gallery section - for all users */}
-          <Text size="xs" c="dimmed" fw={500} mt="md" mb="xs" pl="xs">
-            Gallery
-          </Text>
-          <Link
-            href="/gallery"
-            style={{ textDecoration: 'none' }}
-            onClick={toggle}
-          >
-            <Button
-              variant={isActive('/gallery') ? 'filled' : 'subtle'}
-              leftSection={<IconWorld size={16} />}
-              fullWidth
-              mb="xs"
-            >
-              Public
-            </Button>
-          </Link>
-          {session && (
-            <Link
-              href="/dashboard/images"
-              style={{ textDecoration: 'none' }}
-              onClick={toggle}
-            >
-              <Button
-                variant={isActive('/dashboard/images') ? 'filled' : 'subtle'}
-                leftSection={<IconPhoto size={16} />}
-                fullWidth
-                mb="xs"
-              >
-                My Images
-              </Button>
-            </Link>
-          )}
-
-          {/* Targets section - only for authenticated users */}
-          {session && (
-            <>
-              <Text size="xs" c="dimmed" fw={500} mt="md" mb="xs" pl="xs">
-                Targets
-              </Text>
-              <Link
-                href="/targets"
-                style={{ textDecoration: 'none' }}
-                onClick={toggle}
-              >
-                <Button
-                  variant={isActive('/targets') ? 'filled' : 'subtle'}
-                  leftSection={<IconBook size={16} />}
-                  fullWidth
-                  mb="xs"
-                >
-                  Catalog
-                </Button>
-              </Link>
-              <Link
-                href="/dashboard/wishlist"
-                style={{ textDecoration: 'none' }}
-                onClick={toggle}
-              >
-                <Button
-                  variant={isActive('/dashboard/wishlist') ? 'filled' : 'subtle'}
-                  leftSection={<IconHeart size={16} />}
-                  fullWidth
-                  mb="xs"
-                >
-                  My Wishlist
-                </Button>
-              </Link>
-              <Link
-                href="/dashboard/sessions"
-                style={{ textDecoration: 'none' }}
-                onClick={toggle}
-              >
-                <Button
-                  variant={isActive('/dashboard/sessions') ? 'filled' : 'subtle'}
-                  leftSection={<IconCalendar size={16} />}
-                  fullWidth
-                  mb="xs"
-                >
-                  Sessions
-                </Button>
-              </Link>
-            </>
-          )}
-
-          {/* Locations and Gear - only for authenticated users */}
-          {session && navItems.slice(1).map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              style={{ textDecoration: 'none' }}
-              onClick={toggle}
-            >
-              <Button
-                variant={isActive(item.href) ? 'filled' : 'subtle'}
-                leftSection={<item.icon size={16} />}
-                fullWidth
-                mb="xs"
-              >
-                {item.label}
-              </Button>
-            </Link>
-          ))}
-
-          {session && (
-            <>
-              <Text size="xs" c="dimmed" fw={500} mt="md" mb="xs" pl="xs">
-                Tools
-              </Text>
-              <Link
-                href="/dashboard/fov-planner"
-                style={{ textDecoration: 'none' }}
-                onClick={toggle}
-              >
-                <Button
-                  variant={isActive('/dashboard/fov-planner') ? 'filled' : 'subtle'}
-                  leftSection={<IconCamera size={16} />}
-                  fullWidth
-                  mb="xs"
-                >
-                  FOV Planner
-                </Button>
-              </Link>
-              <Link
-                href="/dashboard/pixel-scale"
-                style={{ textDecoration: 'none' }}
-                onClick={toggle}
-              >
-                <Button
-                  variant={isActive('/dashboard/pixel-scale') ? 'filled' : 'subtle'}
-                  leftSection={<IconRuler2 size={16} />}
-                  fullWidth
-                  mb="xs"
-                >
-                  Pixel Scale
-                </Button>
-              </Link>
-            </>
-          )}
-        </AppShell.Section>
-      </AppShell.Navbar>
-
-        <AppShell.Main>{children}</AppShell.Main>
-      </AppShell>
+        {/* Main Content */}
+        <main className="flex-1" style={{ background: 'transparent' }}>
+          {children}
+        </main>
+      </div>
     </>
   );
 }

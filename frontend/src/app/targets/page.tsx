@@ -1,41 +1,52 @@
 'use client';
 
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { useDebouncedValue } from '@mantine/hooks';
+import { useDebouncedValue } from '@/hooks';
 import {
   Container,
   Title,
   TextInput,
   Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Stack,
   Group,
   Text,
   Badge,
-  ActionIcon,
-  Tooltip,
-  Paper,
-  Image,
-  RangeSlider,
-  Collapse,
   Button,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  Card,
+  Slider,
   Box,
-  Divider,
-  Modal,
+  Separator,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
   Loader,
-  Center,
   Checkbox,
-  Menu,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
   Popover,
-  CloseButton,
-} from '@mantine/core';
-import { DatePickerInput } from '@mantine/dates';
+  PopoverContent,
+  PopoverTrigger,
+  DatePicker,
+} from '@/components/ui';
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Virtuoso } from 'react-virtuoso';
 import { useSession } from 'next-auth/react';
 import {
   IconSearch,
   IconPlus,
-  IconCheck,
   IconChevronDown,
   IconChevronUp,
   IconFilter,
@@ -48,6 +59,7 @@ import {
   IconHeartFilled,
   IconCalendarSearch,
   IconArrowUp,
+  IconX,
 } from '@tabler/icons-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -327,9 +339,9 @@ function VisibilityChart({
 
   const maxAlt = Math.max(...points.map(p => p.altitude));
   const maxAltPoint = points.find(p => p.altitude === maxAlt);
-  const chartHeight = 160;
-  const chartWidth = 500; // Wider chart
-  const maxAltScale = 100; // Extend scale to 100° to give headroom above 90°
+  const chartHeight = 100;
+  const chartWidth = 400; // Wider chart for card layout
+  const maxAltScale = 110; // Extend scale to 110° to give more headroom above 90°
 
   // Helper function to convert hour (0-24) to shifted position (0-1) with midnight centered
   // Display: 12h (noon) at left → 00h (midnight) at center → 12h (noon) at right
@@ -348,16 +360,6 @@ function VisibilityChart({
   const targetEverVisible = maxAlt > 0;
 
   // Moon phase helper functions
-  const getMoonPhase = (illum: number): string => {
-    if (illum < 0.05) return 'New Moon';
-    if (illum < 0.25) return 'Waxing Crescent';
-    if (illum < 0.35) return 'First Quarter';
-    if (illum < 0.65) return 'Waxing Gibbous';
-    if (illum < 0.75) return 'Full Moon';
-    if (illum < 0.95) return 'Waning Gibbous';
-    return 'Waning Crescent';
-  };
-
   const getMoonEmoji = (illum: number): string => {
     if (illum < 0.05) return '🌑'; // New Moon
     if (illum < 0.25) return '🌒'; // Waxing Crescent
@@ -433,14 +435,15 @@ function VisibilityChart({
   const hoverInfo = hoverX !== null ? getHoverInfo(hoverX) : null;
 
   return (
-    <Box style={{ position: 'relative', width: chartWidth, height: chartHeight + 35 }}>
-      <Text size="xs" fw={600} mb={1}>
+    <Box className="relative" style={{ width: chartWidth, height: chartHeight + 30 }}>
+      <Text className="text-[10px] font-semibold mb-0.5">
         Alt/°
       </Text>
       <svg
         width={chartWidth}
         height={chartHeight}
-        style={{ display: 'block', backgroundColor: 'var(--mantine-color-dark-8)', borderRadius: 4, cursor: 'crosshair' }}
+        className="block rounded cursor-crosshair"
+        style={{ backgroundColor: 'hsl(var(--card))' }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
@@ -462,25 +465,26 @@ function VisibilityChart({
           const sunAlt = (sunPoint.altitude + prevSunPoint.altitude) / 2; // Average of two points
 
           if (sunAlt > 0) {
-            // Daytime - light blue overlay
-            color = 'var(--mantine-color-blue-3)';
-            opacity = 0.15;
+            // Daytime - sky blue overlay
+            color = '#38bdf8'; // Sky blue
+            opacity = 0.3;
           } else if (sunAlt > -6) {
-            // Civil twilight - lighter overlay
-            color = 'var(--mantine-color-blue-4)';
-            opacity = 0.10;
+            // Civil twilight - lighter blue transitioning to darker
+            color = '#0ea5e9';
+            opacity = 0.2;
           } else if (sunAlt > -12) {
-            // Nautical twilight - medium overlay
-            color = 'var(--mantine-color-blue-5)';
-            opacity = 0.07;
+            // Nautical twilight - deeper blue
+            color = '#0284c7';
+            opacity = 0.15;
           } else if (sunAlt > -18) {
-            // Astronomical twilight - darker overlay (marginal for astrophotography)
-            color = 'var(--mantine-color-blue-6)';
-            opacity = 0.04;
+            // Astronomical twilight - dark blue (marginal for astrophotography)
+            color = '#0369a1';
+            opacity = 0.1;
+          } else {
+            // Astronomical night (below -18°) - off black/dark navy, perfect for astrophotography
+            color = '#0c1929';
+            opacity = 0.5;
           }
-          // Below -18° (astronomical night) - no overlay, perfect for astrophotography
-
-          if (!color) return null;
 
           return (
             <rect
@@ -503,14 +507,14 @@ function VisibilityChart({
               y1={chartHeight - (alt / maxAltScale) * chartHeight}
               x2={chartWidth}
               y2={chartHeight - (alt / maxAltScale) * chartHeight}
-              stroke="var(--mantine-color-dark-5)"
+              stroke="hsl(var(--muted))"
               strokeWidth="1"
               opacity="0.3"
             />
             <text
               x="5"
               y={chartHeight - (alt / maxAltScale) * chartHeight - 3}
-              fill="var(--mantine-color-dimmed)"
+              fill="white"
               fontSize="10"
             >
               {alt}
@@ -518,17 +522,18 @@ function VisibilityChart({
           </g>
         ))}
 
-        {/* Time grid lines (vertical) - every 4 hours, centered on midnight */}
-        {[12, 16, 20, 0, 4, 8, 12].map((hour, idx) => (
+        {/* Time grid lines (vertical) - every half hour, centered on midnight */}
+        {/* Note: Skip hour 24 since it maps to same position as hour 0 (both at center/midnight) */}
+        {Array.from({ length: 48 }, (_, i) => i * 0.5).map((hour) => (
           <line
-            key={`${hour}-${idx}`}
-            x1={getShiftedPosition(hour === 12 && idx === 6 ? 24 : hour) * chartWidth}
+            key={`hour-${hour}`}
+            x1={getShiftedPosition(hour) * chartWidth}
             y1={0}
-            x2={getShiftedPosition(hour === 12 && idx === 6 ? 24 : hour) * chartWidth}
+            x2={getShiftedPosition(hour) * chartWidth}
             y2={chartHeight}
-            stroke="var(--mantine-color-dark-5)"
+            stroke="#6b7280"
             strokeWidth="1"
-            opacity="0.3"
+            opacity="0.5"
           />
         ))}
 
@@ -548,7 +553,7 @@ function VisibilityChart({
                 y={0}
                 width={Math.abs(endX - startX)}
                 height={chartHeight}
-                fill="var(--mantine-color-yellow-5)"
+                fill="hsl(var(--warning))"
                 opacity={opacity}
               />
             );
@@ -582,13 +587,13 @@ function VisibilityChart({
               <polyline
                 points={firstSegment}
                 fill="none"
-                stroke="var(--mantine-color-blue-4)"
+                stroke="#3b82f6"
                 strokeWidth="2"
               />
               <polyline
                 points={secondSegment}
                 fill="none"
-                stroke="var(--mantine-color-blue-4)"
+                stroke="#3b82f6"
                 strokeWidth="2"
               />
             </>
@@ -627,17 +632,17 @@ function VisibilityChart({
                     points={firstSegment}
                     fill="none"
                     stroke="white"
-                    strokeWidth="2"
-                    strokeDasharray="4,4"
-                    opacity="0.7"
+                    strokeWidth="1.5"
+                    strokeDasharray="6,4"
+                    opacity="0.8"
                   />
                   <polyline
                     points={secondSegment}
                     fill="none"
                     stroke="white"
-                    strokeWidth="2"
-                    strokeDasharray="4,4"
-                    opacity="0.7"
+                    strokeWidth="1.5"
+                    strokeDasharray="6,4"
+                    opacity="0.8"
                   />
                 </>
               );
@@ -664,45 +669,43 @@ function VisibilityChart({
           y1={chartHeight}
           x2={chartWidth}
           y2={chartHeight}
-          stroke="var(--mantine-color-orange-7)"
+          stroke="hsl(var(--destructive))"
           strokeWidth="2"
         />
 
-        {/* Current time marker - small red striped line (only show if viewing today) */}
+        {/* Current time marker - red line (only show if viewing today) */}
         {isToday && (
           <line
             x1={currentTimePosition * chartWidth}
             y1="0"
             x2={currentTimePosition * chartWidth}
             y2={chartHeight}
-            stroke="var(--mantine-color-red-6)"
+            stroke="#ef4444"
             strokeWidth="2"
-            strokeDasharray="3,3"
           />
         )}
 
-        {/* Meridian crossing (transit) - dotted line */}
+        {/* Meridian crossing (transit) - white line from horizon to target curve */}
         {maxAltPoint && maxAlt > 0 && (
           <>
             <line
               x1={getShiftedPosition((points.indexOf(maxAltPoint) / (points.length - 1)) * 24) * chartWidth}
-              y1="-15"
+              y1={chartHeight}
               x2={getShiftedPosition((points.indexOf(maxAltPoint) / (points.length - 1)) * 24) * chartWidth}
-              y2={chartHeight + 5}
-              stroke="var(--mantine-color-orange-5)"
+              y2={chartHeight - (Math.max(0, maxAlt) / maxAltScale) * chartHeight}
+              stroke="white"
               strokeWidth="2"
-              strokeDasharray="5,5"
             />
             <circle
               cx={getShiftedPosition((points.indexOf(maxAltPoint) / (points.length - 1)) * 24) * chartWidth}
               cy={chartHeight - (Math.max(0, maxAlt) / maxAltScale) * chartHeight}
               r="3"
-              fill="var(--mantine-color-orange-5)"
+              fill="white"
             />
             <text
               x={getShiftedPosition((points.indexOf(maxAltPoint) / (points.length - 1)) * 24) * chartWidth}
-              y="10"
-              fill="var(--mantine-color-orange-5)"
+              y={chartHeight - (Math.max(0, maxAlt) / maxAltScale) * chartHeight - 8}
+              fill="white"
               fontSize="11"
               fontWeight="600"
               textAnchor="middle"
@@ -716,13 +719,13 @@ function VisibilityChart({
         {/* Hover crosshair */}
         {hoverX !== null && hoverInfo && (
           <>
-            {/* Vertical line following mouse */}
+            {/* Vertical line following mouse - orange */}
             <line
               x1={hoverX}
               y1="0"
               x2={hoverX}
               y2={chartHeight}
-              stroke="var(--mantine-color-cyan-4)"
+              stroke="#f97316"
               strokeWidth="1"
               strokeDasharray="2,2"
               opacity="0.8"
@@ -733,7 +736,7 @@ function VisibilityChart({
               cx={hoverX}
               cy={chartHeight - (Math.max(0, hoverInfo.altitude) / maxAltScale) * chartHeight}
               r="4"
-              fill="var(--mantine-color-cyan-4)"
+              fill="#f97316"
               stroke="white"
               strokeWidth="1"
             />
@@ -744,8 +747,8 @@ function VisibilityChart({
               y={20}
               width={100}
               height={hoverInfo.moonInterference ? 58 : 40}
-              fill="var(--mantine-color-dark-6)"
-              stroke="var(--mantine-color-cyan-4)"
+              fill="hsl(var(--card))"
+              stroke="#f97316"
               strokeWidth="1"
               rx="4"
               opacity="0.95"
@@ -768,7 +771,7 @@ function VisibilityChart({
             <text
               x={hoverX > chartWidth / 2 ? hoverX - 60 : hoverX + 60}
               y={52}
-              fill="var(--mantine-color-cyan-4)"
+              fill="#f97316"
               fontSize="11"
               textAnchor="middle"
               fontWeight="600"
@@ -781,7 +784,7 @@ function VisibilityChart({
               <text
                 x={hoverX > chartWidth / 2 ? hoverX - 60 : hoverX + 60}
                 y={68}
-                fill="var(--mantine-color-yellow-5)"
+                fill="hsl(var(--warning))"
                 fontSize="10"
                 textAnchor="middle"
                 fontWeight="600"
@@ -794,10 +797,10 @@ function VisibilityChart({
       </svg>
 
       {/* Time labels and moon phase info - centered on midnight */}
-      <Box style={{ position: 'relative', width: chartWidth, height: 40 }}>
-        <Group justify="space-between" mt={4} style={{ width: chartWidth }}>
+      <Box className="relative mt-0.5" style={{ width: chartWidth, height: 20 }}>
+        <Group className="justify-between" style={{ width: chartWidth }}>
           {[12, 18, 0, 6, 12].map((hour, idx) => (
-            <Text key={`${hour}-${idx}`} size="xs" c="dimmed">
+            <Text key={`${hour}-${idx}`} className="text-[10px] text-muted-foreground">
               {hour.toString().padStart(2, '0')}h
             </Text>
           ))}
@@ -808,9 +811,9 @@ function VisibilityChart({
 }
 
 function MoonPhaseDisplay({ illumination, hasInterference }: { illumination: number; hasInterference?: boolean }) {
-  const size = 60;
+  const size = 40;
   const center = size / 2;
-  const radius = size / 2 - 3;
+  const radius = size / 2 - 2;
 
   // Calculate moon phase
   const getMoonPhase = (illum: number): string => {
@@ -824,15 +827,15 @@ function MoonPhaseDisplay({ illumination, hasInterference }: { illumination: num
   };
 
   return (
-    <Stack gap="xs" align="center">
+    <Stack className="gap-2 items-center">
       <svg width={size} height={size}>
         {/* Background circle (always dark) */}
         <circle
           cx={center}
           cy={center}
           r={radius}
-          fill="var(--mantine-color-dark-6)"
-          stroke="var(--mantine-color-dark-4)"
+          fill="hsl(var(--card))"
+          stroke="hsl(var(--border))"
           strokeWidth="2"
         />
 
@@ -844,7 +847,7 @@ function MoonPhaseDisplay({ illumination, hasInterference }: { illumination: num
               cx={center}
               cy={center}
               r={radius}
-              fill="var(--mantine-color-yellow-3)"
+              fill="hsl(var(--warning))"
               clipPath="url(#moonClip)"
             />
 
@@ -873,16 +876,16 @@ function MoonPhaseDisplay({ illumination, hasInterference }: { illumination: num
         )}
       </svg>
 
-      <Stack gap={2} align="center">
-        <Text size="xs" fw={500}>
+      <Stack className="gap-0 items-center">
+        <Text className="text-[10px] font-medium">
           {getMoonPhase(illumination)}
         </Text>
-        <Text size="xs" c="dimmed" style={{ fontSize: '10px' }}>
-          {(illumination * 100).toFixed(1)}%
+        <Text className="text-[9px] text-muted-foreground">
+          {(illumination * 100).toFixed(0)}%
         </Text>
         {hasInterference && (
-          <Badge size="xs" color="yellow" variant="light">
-            ⚠️ Interference
+          <Badge className="text-[9px] py-0 px-1" variant="outline">
+            ⚠️
           </Badge>
         )}
       </Stack>
@@ -891,9 +894,9 @@ function MoonPhaseDisplay({ illumination, hasInterference }: { illumination: num
 }
 
 function DirectionCompass({ azimuth }: { azimuth: number }) {
-  const size = 80;
+  const size = 50;
   const center = size / 2;
-  const radius = size / 2 - 10;
+  const radius = size / 2 - 6;
 
   // Calculate arrow endpoint
   const angle = (azimuth - 90) * (Math.PI / 180); // -90 to start from North
@@ -909,15 +912,15 @@ function DirectionCompass({ azimuth }: { azimuth: number }) {
           cy={center}
           r={radius}
           fill="none"
-          stroke="var(--mantine-color-dark-4)"
+          stroke="hsl(var(--border))"
           strokeWidth="2"
         />
 
         {/* Cardinal directions */}
-        <text x={center} y={15} fill="var(--mantine-color-gray-5)" fontSize="12" textAnchor="middle" fontWeight="bold">N</text>
-        <text x={size - 10} y={center + 5} fill="var(--mantine-color-gray-6)" fontSize="10" textAnchor="middle">E</text>
-        <text x={center} y={size - 5} fill="var(--mantine-color-gray-6)" fontSize="10" textAnchor="middle">S</text>
-        <text x={10} y={center + 5} fill="var(--mantine-color-gray-6)" fontSize="10" textAnchor="middle">W</text>
+        <text x={center} y={8} fill="hsl(var(--muted-foreground))" fontSize="9" textAnchor="middle" fontWeight="bold">N</text>
+        <text x={size - 4} y={center + 3} fill="hsl(var(--muted-foreground))" fontSize="8" textAnchor="middle">E</text>
+        <text x={center} y={size - 2} fill="hsl(var(--muted-foreground))" fontSize="8" textAnchor="middle">S</text>
+        <text x={4} y={center + 3} fill="hsl(var(--muted-foreground))" fontSize="8" textAnchor="middle">W</text>
 
         {/* Direction arrow */}
         <line
@@ -925,32 +928,32 @@ function DirectionCompass({ azimuth }: { azimuth: number }) {
           y1={center}
           x2={arrowX}
           y2={arrowY}
-          stroke="var(--mantine-color-blue-5)"
-          strokeWidth="3"
+          stroke="hsl(var(--primary))"
+          strokeWidth="2"
           markerEnd="url(#arrowhead)"
         />
 
         <defs>
           <marker
             id="arrowhead"
-            markerWidth="10"
-            markerHeight="10"
-            refX="5"
-            refY="3"
+            markerWidth="6"
+            markerHeight="6"
+            refX="3"
+            refY="2"
             orient="auto"
           >
-            <polygon points="0 0, 10 3, 0 6" fill="var(--mantine-color-blue-5)" />
+            <polygon points="0 0, 6 2, 0 4" fill="hsl(var(--primary))" />
           </marker>
         </defs>
       </svg>
-      <Text size="xs" ta="center" c="dimmed" mt={-4}>
+      <Text className="text-[10px] text-center text-muted-foreground">
         {azimuth.toFixed(0)}° {getDirectionFromAzimuth(azimuth)}
       </Text>
     </Box>
   );
 }
 
-export default function TargetsPage(): JSX.Element {
+export default function TargetsPage() {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [selectedGear, setSelectedGear] = useState<Rig | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -966,7 +969,6 @@ export default function TargetsPage(): JSX.Element {
   const [enableFOVFilter, setEnableFOVFilter] = useState(true);
   const [fovCoverageRange, setFovCoverageRange] = useState<[number, number]>([10, 200]);
   const [showFilters, setShowFilters] = useState(false);
-  const [showSort, setShowSort] = useState(false);
   const [applyAdvancedFilters, setApplyAdvancedFilters] = useState(false); // Toggle for advanced visibility filtering
   const showMoonOverlay = true; // Always show moon overlay
   const [sortBy, setSortBy] = useState<'magnitude' | 'size' | 'tonights-best'>('tonights-best');
@@ -1320,20 +1322,6 @@ export default function TargetsPage(): JSX.Element {
     createSessionMutation.mutate({ targetId, targetName });
   };
 
-  const getTypeColor = (type: string): string => {
-    const colors: Record<string, string> = {
-      Galaxy: 'blue',
-      'Emission Nebula': 'red',
-      'Planetary Nebula': 'grape',
-      'Supernova Remnant': 'orange',
-      'Open Cluster': 'cyan',
-      'Globular Cluster': 'yellow',
-      Nebula: 'pink',
-      Star: 'gray',
-    };
-    return colors[type] || 'gray';
-  };
-
   const handleToggleWishlist = (targetId: string): void => {
     if (!session) {
       router.push('/login');
@@ -1561,7 +1549,7 @@ export default function TargetsPage(): JSX.Element {
 
   if (locationsLoading) {
     return (
-      <Container size="xl" py="xl">
+      <Container className="py-8">
         <Text>Loading locations...</Text>
       </Container>
     );
@@ -1569,19 +1557,22 @@ export default function TargetsPage(): JSX.Element {
 
   if (!locations || locations.length === 0) {
     return (
-      <Container size="xl" py="xl">
-        <Paper p="xl" withBorder>
-          <Stack align="center" gap="md">
-            <IconMapPin size={48} stroke={1.5} color="gray" />
-            <Title order={3}>No Locations Found</Title>
-            <Text c="dimmed" ta="center">
+      <Container className="py-8">
+        <Card className="p-8">
+          <Stack className="items-center gap-4">
+            <IconMapPin size={48} stroke={1.5} className="text-muted-foreground" />
+            <Title className="text-xl">No Locations Found</Title>
+            <Text className="text-muted-foreground text-center">
               You need to add at least one observing location before viewing targets.
             </Text>
-            <Button component="a" href="/dashboard/locations" leftSection={<IconPlus size={16} />}>
-              Add Location
+            <Button asChild>
+              <a href="/dashboard/locations">
+                <IconPlus className="mr-2 h-4 w-4" />
+                Add Location
+              </a>
             </Button>
           </Stack>
-        </Paper>
+        </Card>
       </Container>
     );
   }
@@ -1589,226 +1580,195 @@ export default function TargetsPage(): JSX.Element {
   // Show loading while checking auth status
   if (status === 'loading' || status === 'unauthenticated') {
     return (
-      <Container size="xl" py="xl">
-        <Center style={{ height: '50vh' }}>
-          <Stack align="center" gap="md">
+      <Container className="py-8">
+        <div className="flex items-center justify-center" style={{ height: '50vh' }}>
+          <Stack className="items-center gap-4">
             <Loader size="lg" />
-            <Text c="dimmed">Loading...</Text>
+            <Text className="text-muted-foreground">Loading...</Text>
           </Stack>
-        </Center>
+        </div>
       </Container>
     );
   }
 
   return (
-    <Container size="xl" py="xl">
-      <Stack gap="sm">
-        <Group justify="space-between">
+    <Container className="py-8">
+      <Stack className="gap-4">
+        <Group className="justify-between">
           <div>
-            <Title order={1}>Target Catalog</Title>
-            <Text c="dimmed" size="lg">
+            <Title className="text-4xl">Target Catalog</Title>
+            <Text className="text-lg text-muted-foreground">
               Browse 13,000+ deep sky objects with real-time visibility
             </Text>
           </div>
         </Group>
 
         {/* Location, Gear, and Date Selectors */}
-        <Paper p="md" withBorder>
-          <Stack gap="md">
-            <Group gap="md" align="flex-start">
+        <Card className="p-4">
+          <Stack className="gap-4">
+            <Group className="gap-4 items-start">
               <div>
-                <Text size="sm" fw={500} mb={8}>Observing Location</Text>
+                <Text className="text-sm font-medium mb-2">Observing Location</Text>
                 <Select
-                  placeholder="Select your location"
-                  data={
-                    locations?.map((loc) => ({
-                      value: loc.id,
-                      label: `${loc.name}${loc.isFavorite ? ' ⭐' : ''}`,
-                    })) || []
-                  }
                   value={selectedLocation?.id || ''}
-                  onChange={(value) => {
+                  onValueChange={(value) => {
                     const loc = locations?.find((l) => l.id === value);
                     if (loc) setSelectedLocation(loc);
                   }}
-                  style={{ minWidth: 250 }}
-                />
+                >
+                  <SelectTrigger className="w-[250px]">
+                    <SelectValue placeholder="Select your location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {locations?.map((loc) => (
+                      <SelectItem key={loc.id} value={loc.id}>
+                        {loc.name}{loc.isFavorite ? ' ⭐' : ''}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 {selectedLocation && (
-                  <Text size="xs" c="dimmed" mt={4}>
+                  <Text className="text-xs text-muted-foreground mt-1">
                     {selectedLocation.latitude.toFixed(2)}°, {selectedLocation.longitude.toFixed(2)}°
                   </Text>
                 )}
               </div>
 
               <div>
-                <Text size="sm" fw={500} mb={8}>Gear (Optional)</Text>
+                <Text className="text-sm font-medium mb-2">Gear (Optional)</Text>
                 <Select
-                  placeholder="Select gear for FOV filtering"
-                  data={rigs?.map(r => ({
-                    value: r.id,
-                    label: `${r.name} (${r.fovWidthArcmin.toFixed(1)}' × ${r.fovHeightArcmin.toFixed(1)}')`
-                  })) || []}
-                  value={selectedGear?.id || null}
-                  onChange={(value) => {
+                  value={selectedGear?.id || ''}
+                  onValueChange={(value) => {
+                    if (!value) {
+                      setSelectedGear(null);
+                      return;
+                    }
                     const rig = rigs?.find(r => r.id === value);
                     setSelectedGear(rig || null);
                   }}
-                  clearable
-                  style={{ minWidth: 300 }}
-                />
+                >
+                  <SelectTrigger className="w-[300px]">
+                    <SelectValue placeholder="Select gear for FOV filtering" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {rigs?.map(r => (
+                      <SelectItem key={r.id} value={r.id}>
+                        {r.name} ({r.fovWidthArcmin.toFixed(1)}' × {r.fovHeightArcmin.toFixed(1)}')
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 {selectedGear && (
-                  <Text size="xs" c="dimmed" mt={4}>
+                  <Text className="text-xs text-muted-foreground mt-1">
                     FOV: {selectedGear.fovWidthArcmin.toFixed(1)}' × {selectedGear.fovHeightArcmin.toFixed(1)}'
                   </Text>
                 )}
               </div>
 
               <div>
-                <Text size="sm" fw={500} mb={8}>Date</Text>
-                <DatePickerInput
+                <Text className="text-sm font-medium mb-2">Date</Text>
+                <DatePicker
                   value={selectedDate}
                   onChange={(date) => setSelectedDate(date || new Date())}
-                  placeholder="Pick date"
-                  style={{ minWidth: 200 }}
-                  getDayProps={(date) => {
-                    const today = new Date();
-                    const isToday =
-                      date.getDate() === today.getDate() &&
-                      date.getMonth() === today.getMonth() &&
-                      date.getFullYear() === today.getFullYear();
-
-                    return {
-                      style: isToday ? {
-                        backgroundColor: 'var(--mantine-color-blue-6)',
-                        color: 'white',
-                        fontWeight: 'bold',
-                        border: '2px solid var(--mantine-color-blue-4)',
-                      } : undefined
-                    };
-                  }}
                 />
               </div>
             </Group>
           </Stack>
-        </Paper>
+        </Card>
 
         {/* Search and Basic Filters */}
-        <Stack gap="md">
-          <Group grow>
-            <Popover
-              opened={searchHistoryOpen && searchHistory.length > 0 && session?.user !== undefined}
-              onClose={() => setSearchHistoryOpen(false)}
-              position="bottom-start"
-              width="target"
-              shadow="md"
-            >
-              <Popover.Target>
-                <TextInput
-                  ref={searchInputRef}
-                  placeholder="Search by name or catalog ID (M31, NGC224, etc.)"
-                  leftSection={<IconSearch size={16} />}
-                  rightSection={
-                    searchHistory.length > 0 && session?.user ? (
-                      <ActionIcon
-                        variant="subtle"
-                        size="sm"
+        <Card className="p-4 relative">
+          <Stack className="gap-4">
+            <Group className="gap-4 flex-grow">
+              <Popover open={searchHistoryOpen && searchHistory.length > 0 && session?.user !== undefined} onOpenChange={setSearchHistoryOpen}>
+                <PopoverTrigger asChild>
+                  <div className="relative flex-1">
+                    <TextInput
+                      ref={searchInputRef}
+                      placeholder="Search by name or catalog ID (M31, NGC224, etc.)"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      onFocus={() => {
+                        if (searchHistory.length > 0) {
+                          setSearchHistoryOpen(true);
+                        }
+                      }}
+                      leftSection={<IconSearch className="h-4 w-4" />}
+                      className="pr-20"
+                    />
+                    {searchHistory.length > 0 && session?.user && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute inset-y-0 right-0 h-full top-0"
                         onClick={(e) => {
                           e.stopPropagation();
                           setSearchHistoryOpen(!searchHistoryOpen);
                         }}
                       >
-                        <IconHistory size={16} />
-                      </ActionIcon>
-                    ) : null
-                  }
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                  }}
-                  onFocus={() => {
-                    if (searchHistory.length > 0) {
-                      setSearchHistoryOpen(true);
-                    }
-                  }}
-                />
-              </Popover.Target>
-              <Popover.Dropdown p="xs">
-                <Stack gap={4}>
-                  <Text size="xs" c="dimmed" fw={500} mb={4}>
+                        <IconHistory className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                </PopoverTrigger>
+              <PopoverContent className="p-2" align="start">
+                <Stack className="gap-1">
+                  <Text className="text-xs text-muted-foreground font-medium mb-1">
                     Recent searches
                   </Text>
-                  {searchHistory.map((term, index) => (
-                    <Group key={index} justify="space-between" wrap="nowrap">
+                  {searchHistory.map((term, _index) => (
+                    <Group key={_index} className="justify-between gap-2">
                       <Button
-                        variant="subtle"
-                        size="xs"
-                        justify="flex-start"
-                        fullWidth
-                        leftSection={<IconHistory size={14} />}
+                        variant="ghost"
+                        size="sm"
+                        className="flex-1 justify-start font-normal"
                         onClick={() => handleSearchHistoryClick(term)}
-                        styles={{
-                          root: { fontWeight: 'normal' },
-                          inner: { justifyContent: 'flex-start' },
-                        }}
                       >
+                        <IconHistory className="mr-2 h-3.5 w-3.5" />
                         {term}
                       </Button>
-                      <CloseButton
-                        size="xs"
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
                         onClick={(e) => {
                           e.stopPropagation();
                           deleteSearchHistoryItem(term);
                         }}
-                      />
+                      >
+                        <IconX className="h-3 w-3" />
+                      </Button>
                     </Group>
                   ))}
                 </Stack>
-              </Popover.Dropdown>
+              </PopoverContent>
             </Popover>
-            <Menu closeOnItemClick={false} width={250}>
-              <Menu.Target>
-                <Button
-                  variant="default"
-                  rightSection={<IconSelector size={16} style={{ color: 'var(--mantine-color-dark-3)' }} />}
-                  fullWidth
-                  styles={{
-                    root: {
-                      height: '36px',
-                      fontWeight: 400,
-                    },
-                    label: {
-                      width: '100%',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    },
-                    section: {
-                      marginLeft: 0,
-                    },
-                  }}
-                >
-                  <Text size="sm" c={types.length === 0 ? 'dimmed' : undefined}>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="min-w-[200px] justify-between">
+                  <Text className={`text-sm ${types.length === 0 ? 'text-muted-foreground' : ''}`}>
                     {types.length === 0 ? 'All types' : `${types.length} type${types.length > 1 ? 's' : ''} selected`}
                   </Text>
+                  <IconSelector className="ml-2 h-4 w-4 text-muted-foreground" />
                 </Button>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Label>
-                  <Group justify="space-between">
-                    <Text size="sm">Object Type</Text>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[250px]">
+                <DropdownMenuLabel>
+                  <Group className="justify-between">
+                    <Text className="text-sm">Object Type</Text>
                     {types.length > 0 && (
                       <Button
-                        size="xs"
-                        variant="subtle"
-                        onClick={() => {
-                          setTypes([]);
-                        }}
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setTypes([])}
                       >
                         Clear
                       </Button>
                     )}
                   </Group>
-                </Menu.Label>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
                 {[
                   'Planet',
                   'Natural Satellite',
@@ -1821,7 +1781,7 @@ export default function TargetsPage(): JSX.Element {
                   'Globular Cluster',
                   'Nebula',
                 ].map((typeOption) => (
-                  <Menu.Item
+                  <DropdownMenuItem
                     key={typeOption}
                     onClick={() => {
                       if (types.includes(typeOption)) {
@@ -1830,448 +1790,352 @@ export default function TargetsPage(): JSX.Element {
                         setTypes([...types, typeOption]);
                       }
                     }}
+                    className="cursor-pointer"
                   >
                     <Checkbox
-                      label={typeOption}
                       checked={types.includes(typeOption)}
-                      onChange={() => {}} // Handled by Menu.Item onClick
-                      styles={{ input: { cursor: 'pointer' }, label: { cursor: 'pointer' } }}
+                      onCheckedChange={() => {}}
+                      className="mr-2"
                     />
-                  </Menu.Item>
+                    {typeOption}
+                  </DropdownMenuItem>
                 ))}
-              </Menu.Dropdown>
-            </Menu>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Select
-              placeholder="All constellations"
-              clearable
-              searchable
-              data={[
-              'Andromeda',
-              'Antlia',
-              'Apus',
-              'Aquarius',
-              'Aquila',
-              'Ara',
-              'Aries',
-              'Auriga',
-              'Boötes',
-              'Caelum',
-              'Camelopardalis',
-              'Cancer',
-              'Canes Venatici',
-              'Canis Major',
-              'Canis Minor',
-              'Capricornus',
-              'Carina',
-              'Cassiopeia',
-              'Centaurus',
-              'Cepheus',
-              'Cetus',
-              'Chamaeleon',
-              'Circinus',
-              'Columba',
-              'Coma Berenices',
-              'Corona Australis',
-              'Corona Borealis',
-              'Corvus',
-              'Crater',
-              'Crux',
-              'Cygnus',
-              'Delphinus',
-              'Dorado',
-              'Draco',
-              'Equuleus',
-              'Eridanus',
-              'Fornax',
-              'Gemini',
-              'Grus',
-              'Hercules',
-              'Horologium',
-              'Hydra',
-              'Hydrus',
-              'Indus',
-              'Lacerta',
-              'Leo',
-              'Leo Minor',
-              'Lepus',
-              'Libra',
-              'Lupus',
-              'Lynx',
-              'Lyra',
-              'Mensa',
-              'Microscopium',
-              'Monoceros',
-              'Musca',
-              'Norma',
-              'Octans',
-              'Ophiuchus',
-              'Orion',
-              'Pavo',
-              'Pegasus',
-              'Perseus',
-              'Phoenix',
-              'Pictor',
-              'Pisces',
-              'Piscis Austrinus',
-              'Puppis',
-              'Pyxis',
-              'Reticulum',
-              'Sagitta',
-              'Sagittarius',
-              'Scorpius',
-              'Sculptor',
-              'Scutum',
-              'Serpens',
-              'Sextans',
-              'Taurus',
-              'Telescopium',
-              'Triangulum',
-              'Triangulum Australe',
-              'Tucana',
-              'Ursa Major',
-              'Ursa Minor',
-              'Vela',
-              'Virgo',
-              'Volans',
-              'Vulpecula',
-            ]}
-            value={constellation}
-            onChange={(val) => {
-              setConstellation(val || '');
-            }}
-          />
-        </Group>
-      </Stack>
+              value={constellation}
+              onValueChange={(val) => setConstellation(val || '')}
+            >
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="All constellations" />
+              </SelectTrigger>
+              <SelectContent>
+                {[
+                  'Andromeda', 'Antlia', 'Apus', 'Aquarius', 'Aquila', 'Ara', 'Aries', 'Auriga',
+                  'Boötes', 'Caelum', 'Camelopardalis', 'Cancer', 'Canes Venatici', 'Canis Major',
+                  'Canis Minor', 'Capricornus', 'Carina', 'Cassiopeia', 'Centaurus', 'Cepheus',
+                  'Cetus', 'Chamaeleon', 'Circinus', 'Columba', 'Coma Berenices', 'Corona Australis',
+                  'Corona Borealis', 'Corvus', 'Crater', 'Crux', 'Cygnus', 'Delphinus', 'Dorado',
+                  'Draco', 'Equuleus', 'Eridanus', 'Fornax', 'Gemini', 'Grus', 'Hercules',
+                  'Horologium', 'Hydra', 'Hydrus', 'Indus', 'Lacerta', 'Leo', 'Leo Minor', 'Lepus',
+                  'Libra', 'Lupus', 'Lynx', 'Lyra', 'Mensa', 'Microscopium', 'Monoceros', 'Musca',
+                  'Norma', 'Octans', 'Ophiuchus', 'Orion', 'Pavo', 'Pegasus', 'Perseus', 'Phoenix',
+                  'Pictor', 'Pisces', 'Piscis Austrinus', 'Puppis', 'Pyxis', 'Reticulum', 'Sagitta',
+                  'Sagittarius', 'Scorpius', 'Sculptor', 'Scutum', 'Serpens', 'Sextans', 'Taurus',
+                  'Telescopium', 'Triangulum', 'Triangulum Australe', 'Tucana', 'Ursa Major',
+                  'Ursa Minor', 'Vela', 'Virgo', 'Volans', 'Vulpecula',
+                ].map((const_name) => (
+                  <SelectItem key={const_name} value={const_name}>
+                    {const_name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            </Group>
 
-        {/* Sort and Advanced Filters */}
-        <Group gap="md" mb={0} align="center">
-          <Button
-            variant="subtle"
-            leftSection={<IconArrowsSort size={16} />}
-            rightSection={showSort ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
-            onClick={() => setShowSort(!showSort)}
-          >
-            Sort
-          </Button>
-          <Button
-            variant="subtle"
-            leftSection={<IconFilter size={16} />}
-            rightSection={showFilters ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
-            onClick={() => setShowFilters(!showFilters)}
-            style={{ color: applyAdvancedFilters ? 'var(--mantine-color-green-5)' : undefined }}
-          >
-            Advanced Filters
-          </Button>
+            {/* Advanced Filters, Apply checkbox, and Sort options - same row */}
+            <Group className="gap-4 items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowFilters(!showFilters)}
+                  className={applyAdvancedFilters ? 'text-green-500' : ''}
+                >
+                  <IconFilter className="mr-2 h-4 w-4" />
+                  Advanced Filters
+                  {showFilters ? <IconChevronUp className="ml-2 h-4 w-4" /> : <IconChevronDown className="ml-2 h-4 w-4" />}
+                </Button>
 
-          <Checkbox
-            label="Apply filters"
-            checked={applyAdvancedFilters}
-            onChange={(event) => setApplyAdvancedFilters(event.currentTarget.checked)}
-            color="green"
-          />
-        </Group>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="apply-filters"
+                    checked={applyAdvancedFilters}
+                    onCheckedChange={(checked) => setApplyAdvancedFilters(checked as boolean)}
+                  />
+                  <label htmlFor="apply-filters" className="text-sm cursor-pointer">
+                    Apply filters
+                  </label>
+                </div>
+              </div>
 
-        <Collapse in={showSort}>
-          <Paper p="md" mt="xs" withBorder style={{ backgroundColor: '#1a1b1e' }}>
-            <Stack gap="md">
-              <Group grow>
+              {/* Sort options - aligned right */}
+              <div className="flex items-center gap-2">
+                <IconArrowsSort className="h-4 w-4 text-muted-foreground" />
                 <Select
-                  label="Sort by"
-                  clearable={false}
-                  data={[
-                    { value: 'tonights-best', label: "Tonight's best" },
-                    { value: 'magnitude', label: 'Magnitude' },
-                    { value: 'size', label: 'Size' },
-                  ]}
                   value={sortBy}
-                  onChange={(val) => {
-                    setSortBy((val as 'magnitude' | 'size' | 'tonights-best') || 'magnitude');
-                  }}
-                />
+                  onValueChange={(val) => setSortBy((val as 'magnitude' | 'size' | 'tonights-best') || 'magnitude')}
+                >
+                  <SelectTrigger className="w-[150px] h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="tonights-best">Tonight&apos;s best</SelectItem>
+                    <SelectItem value="magnitude">Magnitude</SelectItem>
+                    <SelectItem value="size">Size</SelectItem>
+                  </SelectContent>
+                </Select>
                 <Select
-                  label="Direction"
-                  clearable={false}
-                  disabled={sortBy === 'tonights-best'}
-                  data={[
-                    {
-                      value: 'desc',
-                      label: sortBy === 'magnitude' ? '↓ Brightest first' :
-                             sortBy === 'size' ? '↓ Largest first' :
-                             '↓ Best first'
-                    },
-                    {
-                      value: 'asc',
-                      label: sortBy === 'magnitude' ? '↑ Faintest first' :
-                             sortBy === 'size' ? '↑ Smallest first' :
-                             '↑ Worst first'
-                    },
-                  ]}
                   value={sortDirection}
-                  onChange={(val) => {
-                    setSortDirection((val as 'asc' | 'desc') || 'desc');
-                  }}
-                />
-              </Group>
-            </Stack>
-          </Paper>
-        </Collapse>
+                  onValueChange={(val) => setSortDirection((val as 'asc' | 'desc') || 'desc')}
+                  disabled={sortBy === 'tonights-best'}
+                >
+                  <SelectTrigger className="w-[130px] h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="desc">
+                      {sortBy === 'magnitude' ? '↓ Brightest' :
+                        sortBy === 'size' ? '↓ Largest' :
+                          '↓ Best'}
+                    </SelectItem>
+                    <SelectItem value="asc">
+                      {sortBy === 'magnitude' ? '↑ Faintest' :
+                        sortBy === 'size' ? '↑ Smallest' :
+                          '↑ Worst'}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </Group>
 
-        <div>
-          <Collapse in={showFilters}>
-            <Paper p="md" mt="xs" withBorder style={{ backgroundColor: '#1a1b1e' }}>
-              <Stack gap="md">
-                <div style={{ paddingLeft: 16, paddingRight: 16 }}>
-                  <Text size="sm" fw={500} mb={8}>
-                    Magnitude Range (brightness - lower is brighter)
-                  </Text>
-                  <RangeSlider
-                    min={-15}
-                    max={25}
-                    step={0.5}
-                    value={magnitudeRange}
-                    onChange={setMagnitudeRange}
-                    marks={[
-                      { value: -15, label: '-15 (Moon)' },
-                      { value: 0, label: '0' },
-                      { value: 15, label: '15' },
-                      { value: 25, label: '25 (faint)' },
-                    ]}
-                  />
-                  <Text size="xs" c="dimmed" mt={20}>
-                    Brighter objects have lower magnitude values
-                  </Text>
-                </div>
-                {/* Time Window Filter */}
-                <div style={{ paddingLeft: 16, paddingRight: 16 }}>
-                  <Text size="sm" fw={500} mb={8}>
-                    Visibility Time Window
-                  </Text>
-                  <RangeSlider
-                    min={12}
-                    max={36}
-                    step={0.5}
-                    minRange={1}
-                    value={timeWindow}
-                    onChange={(val) => {
-                      setTimeWindow([val[0], val[1]]);
-                    }}
-                    marks={[
-                      { value: 12, label: '12h' },
-                      { value: 18, label: '18h' },
-                      { value: 24, label: '00h' },
-                      { value: 30, label: '06h' },
-                      { value: 36, label: '12h' },
-                    ]}
-                    label={(val) => {
-                      const hour = val >= 24 ? val - 24 : val;
-                      return `${hour.toString().padStart(2, '0')}:00`;
-                    }}
-                  />
-                  <Text size="xs" c="dimmed" mt={20}>
-                    Target must be visible during this time window
-                  </Text>
-                </div>
-
-                {/* Altitude Range Filter */}
-                <div style={{ paddingLeft: 16, paddingRight: 16 }}>
-                  <Text size="sm" fw={500} mb={8}>
-                    Altitude Range (degrees above horizon)
-                  </Text>
-                  <RangeSlider
-                    min={0}
-                    max={90}
-                    step={5}
-                    value={altitudeRange}
-                    onChange={(val) => {
-                      setAltitudeRange(val);
-                    }}
-                    marks={[
-                      { value: 0, label: '0°' },
-                      { value: 30, label: '30°' },
-                      { value: 60, label: '60°' },
-                      { value: 90, label: '90°' },
-                    ]}
-                    label={(val) => `${val}°`}
-                  />
-                  <Text size="xs" c="dimmed" mt={20}>
-                    Filter by minimum and maximum altitude
-                  </Text>
-                </div>
-
-                <Divider />
-
-                {/* FOV Coverage Filter */}
-                <div style={{ paddingLeft: 16, paddingRight: 16 }}>
-                  <Group justify="space-between" mb={8}>
-                    <Text size="sm" fw={500}>
-                      FOV Coverage (requires gear selection)
-                    </Text>
-                    <Checkbox
-                      label="Enable FOV filter"
-                      checked={enableFOVFilter}
-                      onChange={(e) => setEnableFOVFilter(e.currentTarget.checked)}
-                      disabled={!selectedGear}
-                      size="xs"
-                    />
-                  </Group>
-
-                  {selectedGear && (
-                    <>
-                      <RangeSlider
-                        min={1}
-                        max={300}
-                        step={5}
-                        value={fovCoverageRange}
-                        onChange={setFovCoverageRange}
-                        disabled={!enableFOVFilter || !selectedGear}
-                        marks={[
-                          { value: 10, label: '10%' },
-                          { value: 100, label: '100%' },
-                          { value: 200, label: '200%' },
-                        ]}
-                      />
-                      <Text size="xs" c="dimmed" mt={20}>
-                        Target should occupy {fovCoverageRange[0]}% to {fovCoverageRange[1]}% of FOV width.
-                        Disable for mosaics or wide-field imaging.
+            {/* Advanced Filters Panel - Overlay */}
+            {showFilters && (
+              <Card className="p-4 absolute left-0 right-0 top-full mt-2 z-50 shadow-lg border max-h-[70vh] overflow-y-auto">
+                <Stack className="gap-4">
+                  {/* Time Window and FOV Coverage - Side by Side */}
+                  <div className="grid grid-cols-2 gap-6">
+                    {/* Time Window Filter */}
+                    <div>
+                      <Text className="text-sm font-medium mb-2">
+                        Visibility Time Window
                       </Text>
-                    </>
-                  )}
-
-                  {!selectedGear && (
-                    <Text size="xs" c="dimmed" mt={8}>
-                      Select gear above to enable FOV-based filtering
-                    </Text>
-                  )}
-                </div>
-
-                <Divider />
-
-                {/* Azimuth Dial Filter */}
-                <div style={{ paddingLeft: 16, paddingRight: 16 }}>
-                  <Text size="sm" fw={500} mb={8}>
-                    Azimuth Direction (exclude obstructed areas)
-                  </Text>
-                  <Box style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
-                    <svg width="220" height="220" style={{ cursor: 'pointer' }}>
-                      {/* Outer circle */}
-                      <circle
-                        cx="110"
-                        cy="110"
-                        r="100"
-                        fill="none"
-                        stroke="var(--mantine-color-dark-4)"
-                        strokeWidth="2"
+                      <Slider
+                        min={12}
+                        max={36}
+                        step={0.5}
+                        value={timeWindow}
+                        onValueChange={(val) => setTimeWindow(val as [number, number])}
                       />
+                      <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                        <span>12h</span>
+                        <span>18h</span>
+                        <span>00h</span>
+                        <span>06h</span>
+                        <span>12h</span>
+                      </div>
+                      <Text className="text-xs text-muted-foreground mt-2">
+                        Target must be visible during this time window
+                      </Text>
+                    </div>
 
-                      {/* 24 segments of 15° each */}
-                      {azimuthSegments.map((enabled, i) => {
-                        const angle = i * 15;
-                        const startAngle = (angle - 90) * (Math.PI / 180);
-                        const endAngle = ((angle + 15) - 90) * (Math.PI / 180);
-
-                        const x1 = 110 + 84 * Math.cos(startAngle);
-                        const y1 = 110 + 84 * Math.sin(startAngle);
-                        const x2 = 110 + 84 * Math.cos(endAngle);
-                        const y2 = 110 + 84 * Math.sin(endAngle);
-
-                        const largeArc = 0;
-                        const d = `M 110 110 L ${x1} ${y1} A 84 84 0 ${largeArc} 1 ${x2} ${y2} Z`;
-
-                        return (
-                          <path
-                            key={i}
-                            d={d}
-                            fill={enabled ? 'var(--mantine-color-blue-6)' : 'var(--mantine-color-dark-6)'}
-                            opacity={enabled ? 0.6 : 0.3}
-                            stroke="var(--mantine-color-dark-5)"
-                            strokeWidth="0.5"
-                            onClick={() => {
-                              const newSegments = [...azimuthSegments];
-                              newSegments[i] = !newSegments[i];
-                              setAzimuthSegments(newSegments);
-                            }}
-                            style={{ cursor: 'pointer' }}
+                    {/* FOV Coverage Filter */}
+                    <div>
+                      <Group className="justify-between mb-2">
+                        <Text className="text-sm font-medium">
+                          FOV Coverage
+                        </Text>
+                        <div className="flex items-center gap-2">
+                          <Checkbox
+                            id="enable-fov"
+                            checked={enableFOVFilter}
+                            onCheckedChange={(checked) => setEnableFOVFilter(checked as boolean)}
+                            disabled={!selectedGear}
                           />
-                        );
-                      })}
+                          <label htmlFor="enable-fov" className="text-xs cursor-pointer">
+                            Enable
+                          </label>
+                        </div>
+                      </Group>
 
-                      {/* Degree labels at every 30° */}
-                      {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => {
-                        const angle = (deg - 90) * (Math.PI / 180);
-                        const x = 110 + 92 * Math.cos(angle);
-                        const y = 110 + 92 * Math.sin(angle);
+                      {selectedGear && (
+                        <>
+                          <Slider
+                            min={1}
+                            max={300}
+                            step={5}
+                            value={fovCoverageRange}
+                            onValueChange={(val) => setFovCoverageRange(val as [number, number])}
+                            disabled={!enableFOVFilter || !selectedGear}
+                          />
+                          <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                            <span>10%</span>
+                            <span>100%</span>
+                            <span>200%</span>
+                          </div>
+                          <Text className="text-xs text-muted-foreground mt-2">
+                            Target should occupy {fovCoverageRange[0]}% to {fovCoverageRange[1]}% of FOV width.
+                          </Text>
+                        </>
+                      )}
 
-                        return (
-                          <text
-                            key={deg}
-                            x={x}
-                            y={y + 4}
-                            textAnchor="middle"
-                            fill="var(--mantine-color-dimmed)"
-                            fontSize="9"
-                            fontWeight="500"
-                          >
-                            {deg}°
-                          </text>
-                        );
-                      })}
+                      {!selectedGear && (
+                        <Text className="text-xs text-muted-foreground mt-2">
+                          Select gear above to enable FOV-based filtering
+                        </Text>
+                      )}
+                    </div>
+                  </div>
 
-                      {/* Center dot */}
-                      <circle cx="110" cy="110" r="3" fill="var(--mantine-color-blue-4)" />
-                    </svg>
-                  </Box>
-                  <Text size="xs" c="dimmed" mt={8} ta="center">
-                    Click 15° segments to exclude obstructed directions (trees, buildings, etc.)
-                  </Text>
-                </div>
-              </Stack>
-            </Paper>
-          </Collapse>
-        </div>
+                  {/* Magnitude and Altitude - Side by Side */}
+                  <div className="grid grid-cols-2 gap-6">
+                    {/* Magnitude Range Filter */}
+                    <div>
+                      <Text className="text-sm font-medium mb-2">
+                        Magnitude Range
+                      </Text>
+                      <Slider
+                        min={-15}
+                        max={25}
+                        step={0.5}
+                        value={magnitudeRange}
+                        onValueChange={(val) => setMagnitudeRange(val as [number, number])}
+                      />
+                      <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                        <span>-15</span>
+                        <span>0</span>
+                        <span>15</span>
+                        <span>25</span>
+                      </div>
+                      <Text className="text-xs text-muted-foreground mt-2">
+                        Lower = brighter
+                      </Text>
+                    </div>
+
+                    {/* Altitude Range Filter */}
+                    <div>
+                      <Text className="text-sm font-medium mb-2">
+                        Altitude Range
+                      </Text>
+                      <Slider
+                        min={0}
+                        max={90}
+                        step={5}
+                        value={altitudeRange}
+                        onValueChange={(val) => setAltitudeRange(val as [number, number])}
+                      />
+                      <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                        <span>0°</span>
+                        <span>30°</span>
+                        <span>60°</span>
+                        <span>90°</span>
+                      </div>
+                      <Text className="text-xs text-muted-foreground mt-2">
+                        Degrees above horizon
+                      </Text>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Azimuth Dial Filter */}
+                    <div>
+                      <Text className="text-sm font-medium mb-2">
+                        Azimuth Direction
+                      </Text>
+                      <Box className="flex justify-center">
+                        <svg width="200" height="200" className="cursor-pointer">
+                          {/* 24 segments of 15° each */}
+                          {azimuthSegments.map((enabled, i) => {
+                            const angle = i * 15;
+                            const startAngle = (angle - 90) * (Math.PI / 180);
+                            const endAngle = ((angle + 15) - 90) * (Math.PI / 180);
+
+                            const x1 = 100 + 70 * Math.cos(startAngle);
+                            const y1 = 100 + 70 * Math.sin(startAngle);
+                            const x2 = 100 + 70 * Math.cos(endAngle);
+                            const y2 = 100 + 70 * Math.sin(endAngle);
+
+                            const largeArc = 0;
+                            const d = `M 100 100 L ${x1} ${y1} A 70 70 0 ${largeArc} 1 ${x2} ${y2} Z`;
+
+                            return (
+                              <path
+                                key={i}
+                                d={d}
+                                fill={enabled ? 'var(--color-primary)' : 'var(--color-input)'}
+                                stroke="var(--color-border)"
+                                strokeWidth="1"
+                                onClick={() => {
+                                  const newSegments = [...azimuthSegments];
+                                  newSegments[i] = !newSegments[i];
+                                  setAzimuthSegments(newSegments);
+                                }}
+                                className="cursor-pointer hover:opacity-80"
+                              />
+                            );
+                          })}
+
+                          {/* Degree labels at every 30° */}
+                          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => {
+                            const angle = (deg - 90) * (Math.PI / 180);
+                            const x = 100 + 85 * Math.cos(angle);
+                            const y = 100 + 85 * Math.sin(angle);
+
+                            return (
+                              <text
+                                key={deg}
+                                x={x}
+                                y={y + 3}
+                                textAnchor="middle"
+                                className="fill-muted-foreground"
+                                fontSize="9"
+                                fontWeight="500"
+                              >
+                                {deg}°
+                              </text>
+                            );
+                          })}
+
+                          {/* Center dot */}
+                          <circle cx="100" cy="100" r="3" fill="var(--color-primary)" />
+                        </svg>
+                      </Box>
+                      <Text className="text-xs text-muted-foreground mt-2 text-center">
+                        Click segments to exclude obstructed directions
+                      </Text>
+                    </div>
+                </Stack>
+              </Card>
+            )}
+          </Stack>
+        </Card>
 
         {/* Target Grid */}
-        <div style={{ position: 'relative' }}>
+        <div className="relative">
           {isLoading && (
-            <Paper
-              p="xl"
-              withBorder
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                zIndex: 100,
-                backgroundColor: 'var(--mantine-color-dark-7)'
-              }}
+            <Card
+              className="absolute top-0 left-0 right-0 z-50 p-8"
+              style={{ backgroundColor: 'hsl(var(--card))' }}
             >
-              <Center>
-                <Stack align="center" gap="xs">
+              <div className="flex justify-center">
+                <Stack className="items-center gap-2">
                   <Loader size="md" />
-                  <Text size="sm" fw={500}>
+                  <Text className="text-sm font-medium">
                     Processing {totalCount > 0 ? totalCount.toLocaleString() : '...'} targets{loadingDots}
                   </Text>
-                  <Text size="xs" c="dimmed">
+                  <Text className="text-xs text-muted-foreground">
                     This takes a while
                   </Text>
                 </Stack>
-              </Center>
-            </Paper>
+              </div>
+            </Card>
           )}
 
           {!selectedLocation && (
-            <Paper p="xl" withBorder>
-              <Stack align="center" gap="md">
-                <IconAlertCircle size={48} stroke={1.5} color="orange" />
-                <Text c="dimmed" ta="center">
+            <Card className="p-8">
+              <Stack className="items-center gap-4">
+                <IconAlertCircle size={48} stroke={1.5} className="text-warning" />
+                <Text className="text-muted-foreground text-center">
                   Please select a location to view targets
                 </Text>
               </Stack>
-            </Paper>
+            </Card>
           )}
 
           {allTargets.length > 0 ? (
-            <>
-              <Text size="sm" c="dimmed" mb="md">
+            <Card className="p-4">
+              <Text className="text-sm text-muted-foreground mb-4">
                 Showing {allTargets.length} of {totalCount} targets
                 {isFetchingNextPage && ' (loading more...)'}
               </Text>
@@ -2284,123 +2148,144 @@ export default function TargetsPage(): JSX.Element {
                     fetchNextPage();
                   }
                 }}
-                itemContent={(index, target) => {
+                itemContent={(_index, target) => {
                   const isAdded = addedTargets.has(target.id);
                   const imageUrl = getTargetImageUrl(target);
 
                   return (
-                    <Paper key={target.id} p="xs" withBorder style={{ backgroundColor: '#1a1b1e', marginBottom: 8 }}>
-                      <Group align="flex-start" gap="sm" wrap="nowrap">
+                    <Card key={target.id} className="p-2 mb-2" style={{ backgroundColor: 'hsl(var(--card))' }}>
+                      <Group className="items-start gap-3">
                         {/* Preview Image - Click to enlarge */}
                         <Box
-                          style={{ minWidth: 150, width: 150, cursor: 'pointer' }}
+                          className="min-w-[130px] w-[130px] cursor-pointer"
                           onClick={() => handleImageClick(target)}
                         >
-                          <Image
+                          <img
                             src={imageUrl}
-                            height={150}
-                            width={150}
                             alt={target.name}
                             loading="lazy"
-                            fallbackSrc="https://placehold.co/150x150/1a1b1e/white?text=No+Image"
-                            radius="sm"
-                            style={{ transition: 'transform 0.2s', ':hover': { transform: 'scale(1.05)' } }}
+                            onError={(e) => {
+                              const img = e.target as HTMLImageElement;
+                              img.src = 'https://placehold.co/130x130/0d1117/white?text=No+Image';
+                            }}
+                            className="rounded-sm transition-transform hover:scale-105"
+                            style={{ width: 130, height: 130, objectFit: 'cover' }}
                           />
                         </Box>
 
                         {/* Target Info */}
-                        <Stack gap={4} style={{ flex: 1, minWidth: 200 }}>
+                        <Stack className="gap-0.5 flex-1 min-w-[150px]">
                           <div>
-                            <Group gap="xs" mb={4}>
+                            <Group className="gap-2 mb-1">
                               {target.messierId && (
-                                <Badge size="sm" color="yellow" variant="filled">
+                                <Badge variant="default" className="text-xs">
                                   {target.messierId}
                                 </Badge>
                               )}
-                              <Text fw={600} size="lg" c="green">
+                              <Text className="font-semibold text-sm text-green-500">
                                 {target.name}
                               </Text>
                             </Group>
                             {target.catalogId && (
-                              <Text size="sm" c="dimmed">
+                              <Text className="text-xs text-muted-foreground">
                                 {target.catalogId}
                               </Text>
                             )}
                           </div>
 
-                          <Group gap="xs">
-                            <Text size="sm" c="dimmed">
-                              <Text span fw={600}>RA</Text> {formatRA(target.dynamicRaDeg ?? target.raDeg)}
+                          <Group className="gap-2">
+                            <Text className="text-xs text-muted-foreground">
+                              <span className="font-semibold">RA</span> {formatRA(target.dynamicRaDeg ?? target.raDeg)}
                             </Text>
-                            <Text size="sm" c="dimmed">
-                              <Text span fw={600}>BRT:</Text> {target.type}
+                            <Text className="text-xs text-muted-foreground">
+                              <span className="font-semibold">Type:</span> {target.type}
                             </Text>
                           </Group>
 
-                          <Group gap="xs">
-                            <Text size="sm" c="dimmed">
-                              <Text span fw={600}>DEC</Text> {formatDec(target.dynamicDecDeg ?? target.decDeg)}
+                          <Group className="gap-2">
+                            <Text className="text-xs text-muted-foreground">
+                              <span className="font-semibold">DEC</span> {formatDec(target.dynamicDecDeg ?? target.decDeg)}
                             </Text>
                             {target.sizeMajorArcmin && (
-                              <Text size="sm" c="dimmed">
-                                <Text span fw={600}>Size:</Text> {target.sizeMajorArcmin.toFixed(1)}′
+                              <Text className="text-xs text-muted-foreground">
+                                <span className="font-semibold">Size:</span> {target.sizeMajorArcmin.toFixed(1)}′
                                 {target.sizeMinorArcmin && ` x ${target.sizeMinorArcmin.toFixed(1)}′`}
                               </Text>
                             )}
                           </Group>
 
                           {target.magnitude && (
-                            <Text size="sm" c="dimmed">
-                              <Text span fw={600}>Mag:</Text> {target.magnitude.toFixed(1)}
+                            <Text className="text-xs text-muted-foreground">
+                              <span className="font-semibold">Mag:</span> {target.magnitude.toFixed(1)}
                             </Text>
                           )}
 
-                          <Group gap="xs" mt="xs">
-                            <Badge color={getTypeColor(target.type)} variant="light" size="sm">
+                          <Group className="gap-2 mt-2">
+                            <Badge variant="secondary" className="text-xs">
                               {target.type}
                             </Badge>
                             {target.constellation && (
-                              <Badge variant="outline" size="sm">
+                              <Badge variant="outline" className="text-xs">
                                 {target.constellation}
                               </Badge>
                             )}
                             {session && (
                               <>
-                                <Tooltip label={isAdded ? 'Remove from wishlist' : 'Add to wishlist'}>
-                                  <ActionIcon
-                                    variant="subtle"
-                                    color={isAdded ? 'red' : 'gray'}
-                                    onClick={() => handleToggleWishlist(target.id)}
-                                    loading={addMutation.isPending || removeMutation.isPending}
-                                    size="sm"
-                                  >
-                                    {isAdded ? <IconHeartFilled size={14} /> : <IconHeart size={14} />}
-                                  </ActionIcon>
-                                </Tooltip>
-                                {!target.isDynamic && (
-                                  <Tooltip label="Find best observation date">
-                                    <ActionIcon
-                                      variant="subtle"
-                                      color="teal"
-                                      onClick={() => handleFindBestDate(target)}
-                                      size="sm"
-                                    >
-                                      <IconCalendarSearch size={14} />
-                                    </ActionIcon>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6"
+                                        onClick={() => handleToggleWishlist(target.id)}
+                                        disabled={addMutation.isPending || removeMutation.isPending}
+                                      >
+                                        {isAdded ? <IconHeartFilled className="h-3.5 w-3.5 text-red-500" /> : <IconHeart className="h-3.5 w-3.5" />}
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      {isAdded ? 'Remove from wishlist' : 'Add to wishlist'}
+                                    </TooltipContent>
                                   </Tooltip>
+                                </TooltipProvider>
+                                {!target.isDynamic && (
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6"
+                                          onClick={() => handleFindBestDate(target)}
+                                        >
+                                          <IconCalendarSearch className="h-3.5 w-3.5" />
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        Find best observation date
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
                                 )}
-                                <Tooltip label={selectedGear ? 'Create session with this target' : 'Select gear to create session'}>
-                                  <ActionIcon
-                                    variant="subtle"
-                                    color="blue"
-                                    onClick={() => handleCreateSession(target.id, target.name)}
-                                    loading={createSessionMutation.isPending}
-                                    disabled={!selectedGear || !selectedLocation}
-                                    size="sm"
-                                  >
-                                    <IconPlus size={14} />
-                                  </ActionIcon>
-                                </Tooltip>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6"
+                                        onClick={() => handleCreateSession(target.id, target.name)}
+                                        disabled={!selectedGear || !selectedLocation || createSessionMutation.isPending}
+                                      >
+                                        <IconPlus className="h-3.5 w-3.5" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      {selectedGear ? 'Create session with this target' : 'Select gear to create session'}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
                               </>
                             )}
                           </Group>
@@ -2420,7 +2305,7 @@ export default function TargetsPage(): JSX.Element {
 
                         {/* Direction Compass and Moon Phase */}
                         {selectedLocation && target.currentAzimuth !== undefined && (
-                          <Stack gap="xs" align="center">
+                          <Stack className="gap-2 items-center">
                             <DirectionCompass azimuth={target.currentAzimuth} />
 
                             {/* Moon Phase Display */}
@@ -2433,122 +2318,107 @@ export default function TargetsPage(): JSX.Element {
                           </Stack>
                         )}
                       </Group>
-                    </Paper>
+                    </Card>
                   );
                 }}
                 components={{
                   Footer: () => hasNextPage ? (
-                    <Paper p="md" withBorder style={{ backgroundColor: 'var(--mantine-color-dark-7)', margin: '8px 0' }}>
-                      <Center>
+                    <Card className="p-4 my-2" style={{ backgroundColor: 'hsl(var(--card))' }}>
+                      <div className="flex justify-center items-center gap-2">
                         <Loader size="sm" />
-                        <Text size="sm" c="dimmed" ml="sm">Loading more targets...</Text>
-                      </Center>
-                    </Paper>
+                        <Text className="text-sm text-muted-foreground">Loading more targets...</Text>
+                      </div>
+                    </Card>
                   ) : null,
                 }}
               />
-            </>
+            </Card>
           ) : (
             !isLoading &&
             selectedLocation && (
-              <Paper p="xl" withBorder>
-                <Text c="dimmed" ta="center" py="xl">
+              <Card className="p-8">
+                <Text className="text-muted-foreground text-center py-8">
                   No targets found. Try adjusting your filters.
                 </Text>
-              </Paper>
+              </Card>
             )
           )}
         </div>
       </Stack>
 
       {/* Image Modal */}
-      <Modal
-        opened={imageModalOpen}
-        onClose={() => setImageModalOpen(false)}
-        title={selectedImageTarget?.name || 'Target Image'}
-        size="xl"
-        centered
-      >
-        {selectedImageTarget && (
-          <Stack gap="md">
-            <Box pos="relative">
-              {imageLoading && (
-                <Center
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    zIndex: 1,
-                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                    borderRadius: '8px',
-                  }}
-                >
-                  <Stack align="center" gap="sm">
-                    <Loader size="lg" />
-                    <Text size="sm" c="dimmed">
-                      Loading high-quality image...
-                    </Text>
-                  </Stack>
-                </Center>
-              )}
-              <Image
-                src={getHighQualityImageUrl(selectedImageTarget)}
-                alt={selectedImageTarget.name}
-                onLoad={() => setImageLoading(false)}
-                onError={() => setImageLoading(false)}
-                fallbackSrc="https://placehold.co/1024x1024/1a1b1e/white?text=Loading..."
-                radius="md"
-                fit="contain"
-                style={{ maxHeight: '70vh' }}
-              />
-            </Box>
-            <Stack gap="xs">
-              <Group justify="space-between">
-                <Text size="lg" fw={600}>{selectedImageTarget.name}</Text>
-                <Badge color={getTypeColor(selectedImageTarget.type)}>
-                  {selectedImageTarget.type}
-                </Badge>
-              </Group>
-              {selectedImageTarget.constellation && (
-                <Text size="sm" c="dimmed">
-                  Constellation: {selectedImageTarget.constellation}
-                </Text>
-              )}
-              {selectedImageTarget.magnitude !== null && (
-                <Text size="sm" c="dimmed">
-                  Magnitude: {selectedImageTarget.magnitude.toFixed(1)}
-                </Text>
-              )}
-              {selectedImageTarget.sizeMajorArcmin && (
-                <Text size="sm" c="dimmed">
-                  Size: {selectedImageTarget.sizeMajorArcmin.toFixed(1)}′ × {selectedImageTarget.sizeMinorArcmin?.toFixed(1) || '?'}′
-                </Text>
-              )}
+      <Dialog open={imageModalOpen} onOpenChange={setImageModalOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{selectedImageTarget?.name || 'Target Image'}</DialogTitle>
+          </DialogHeader>
+          {selectedImageTarget && (
+            <Stack className="gap-4">
+              <Box className="relative">
+                {imageLoading && (
+                  <div
+                    className="absolute inset-0 z-10 flex items-center justify-center rounded-lg"
+                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
+                  >
+                    <Stack className="items-center gap-2">
+                      <Loader size="lg" />
+                      <Text className="text-sm text-muted-foreground">
+                        Loading high-quality image...
+                      </Text>
+                    </Stack>
+                  </div>
+                )}
+                <img
+                  src={getHighQualityImageUrl(selectedImageTarget)}
+                  alt={selectedImageTarget.name}
+                  onLoad={() => setImageLoading(false)}
+                  onError={() => setImageLoading(false)}
+                  className="rounded-md w-full"
+                  style={{ maxHeight: '70vh', objectFit: 'contain' }}
+                />
+              </Box>
+              <Stack className="gap-2">
+                <Group className="justify-between">
+                  <Text className="text-lg font-semibold">{selectedImageTarget.name}</Text>
+                  <Badge>
+                    {selectedImageTarget.type}
+                  </Badge>
+                </Group>
+                {selectedImageTarget.constellation && (
+                  <Text className="text-sm text-muted-foreground">
+                    Constellation: {selectedImageTarget.constellation}
+                  </Text>
+                )}
+                {selectedImageTarget.magnitude !== null && (
+                  <Text className="text-sm text-muted-foreground">
+                    Magnitude: {selectedImageTarget.magnitude.toFixed(1)}
+                  </Text>
+                )}
+                {selectedImageTarget.sizeMajorArcmin && (
+                  <Text className="text-sm text-muted-foreground">
+                    Size: {selectedImageTarget.sizeMajorArcmin.toFixed(1)}′ × {selectedImageTarget.sizeMinorArcmin?.toFixed(1) || '?'}′
+                  </Text>
+                )}
+              </Stack>
             </Stack>
-          </Stack>
-        )}
-      </Modal>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Scroll to top button */}
-      <ActionIcon
-        variant="filled"
-        color="blue"
-        size="xl"
-        radius="xl"
-        onClick={scrollToTop}
+      <Button
+        variant="default"
+        size="icon"
+        className="fixed bottom-6 right-6 rounded-full shadow-lg transition-opacity z-50"
         style={{
-          position: 'fixed',
-          bottom: 24,
-          right: 24,
           opacity: showScrollTop ? 1 : 0,
           visibility: showScrollTop ? 'visible' : 'hidden',
-          transition: 'opacity 0.3s, visibility 0.3s',
-          zIndex: 1000,
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
         }}
+        onClick={scrollToTop}
         aria-label="Scroll to top"
       >
         <IconArrowUp size={24} />
-      </ActionIcon>
+      </Button>
     </Container>
   );
 }

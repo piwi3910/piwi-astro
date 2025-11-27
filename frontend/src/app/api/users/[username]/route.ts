@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db/prisma';
 import { getPresignedUrl } from '@/lib/minio';
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ username: string }> }
 ) {
   const { username } = await params;
@@ -18,7 +18,7 @@ export async function GET(
       avatarUrl: true,
       profileVisibility: true,
       createdAt: true,
-      imageUploads: {
+      images: {
         where: {
           visibility: 'PUBLIC',
         },
@@ -28,13 +28,13 @@ export async function GET(
         orderBy: [
           { featured: 'desc' },
           { viewCount: 'desc' },
-          { createdAt: 'desc' },
+          { uploadedAt: 'desc' },
         ],
         take: 50,
       },
       _count: {
         select: {
-          imageUploads: {
+          images: {
             where: {
               visibility: 'PUBLIC',
             },
@@ -54,7 +54,7 @@ export async function GET(
 
   // Generate presigned URLs for images
   const imagesWithUrls = await Promise.all(
-    user.imageUploads.map(async (image) => {
+    user.images.map(async (image) => {
       const url = await getPresignedUrl(image.storageKey);
       return {
         ...image,
@@ -65,7 +65,7 @@ export async function GET(
 
   return NextResponse.json({
     ...user,
-    imageUploads: imagesWithUrls,
-    publicImageCount: user._count.imageUploads,
+    images: imagesWithUrls,
+    publicImageCount: user._count.images,
   });
 }

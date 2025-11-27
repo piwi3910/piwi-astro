@@ -1,9 +1,12 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import { Icon, DivIcon } from 'leaflet';
-import { Box, Text, Badge, Group } from '@mantine/core';
+import { Box } from '@/components/ui/box';
+import { Text } from '@/components/ui/text';
+import { Badge } from '@/components/ui/badge';
+import { Group } from '@/components/ui/group';
 
 // Fix for default marker icons in React Leaflet
 if (typeof window !== 'undefined') {
@@ -67,7 +70,7 @@ export function LocationMap({
   onMapClick,
   onLocationClick,
   selectedPosition = null,
-}: LocationMapProps): JSX.Element {
+}: LocationMapProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -77,14 +80,8 @@ export function LocationMap({
   if (!mounted) {
     return (
       <Box
-        style={{
-          width: '100%',
-          height,
-          backgroundColor: 'var(--mantine-color-dark-6)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className="w-full flex items-center justify-center bg-card"
+        style={{ height }}
       >
         <Text c="dimmed">Loading map...</Text>
       </Box>
@@ -92,7 +89,7 @@ export function LocationMap({
   }
 
   return (
-    <Box style={{ width: '100%', height, position: 'relative' }}>
+    <Box className="w-full relative" style={{ height }}>
       <MapContainer
         center={center}
         zoom={zoom}
@@ -122,11 +119,11 @@ export function LocationMap({
           >
             <Popup>
               <div>
-                <Text fw={600} size="sm">Selected Position</Text>
+                <Text fw="semibold" size="sm">Selected Position</Text>
                 <Text size="xs" c="dimmed">
                   Lat: {selectedPosition.lat.toFixed(6)}, Lon: {selectedPosition.lng.toFixed(6)}
                 </Text>
-                <Text size="xs" c="dimmed" mt="xs">
+                <Text size="xs" c="dimmed" className="mt-1">
                   Drag to adjust position
                 </Text>
               </div>
@@ -144,15 +141,15 @@ export function LocationMap({
           >
             <Popup>
               <div>
-                <Group gap="xs" mb="xs">
-                  <Text fw={600}>{location.name}</Text>
-                  {location.isFavorite && <Badge size="xs" color="yellow">★ Favorite</Badge>}
+                <Group gap="xs" className="mb-1">
+                  <Text fw="semibold">{location.name}</Text>
+                  {location.isFavorite && <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-500 border-yellow-500/30">★ Favorite</Badge>}
                 </Group>
                 <Text size="xs" c="dimmed">
                   Lat: {location.latitude.toFixed(4)}, Lon: {location.longitude.toFixed(4)}
                 </Text>
                 {location.bortleScale && (
-                  <Badge size="sm" color="blue" mt="xs">
+                  <Badge className="mt-1">
                     Bortle {location.bortleScale}
                   </Badge>
                 )}

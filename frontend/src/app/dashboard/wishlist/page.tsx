@@ -1,28 +1,49 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  Container,
-  Title,
-  Tabs,
-  Table,
-  Badge,
-  Group,
-  ActionIcon,
-  Text,
-  Stack,
-  Select,
-  Button,
-  Modal,
-  Textarea,
-  Rating,
-  Image,
-  Box,
-  Tooltip,
-} from '@mantine/core';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { IconEdit, IconTrash, IconStar, IconCalendarSearch, IconArrowUp } from '@tabler/icons-react';
+import Image from 'next/image';
+
+import { Container } from '@/components/ui/container';
+import { Title } from '@/components/ui/title';
+import { Text } from '@/components/ui/text';
+import { Stack } from '@/components/ui/stack';
+import { Group } from '@/components/ui/group';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@/components/ui/tooltip';
+import { Box } from '@/components/ui/box';
 import { calculateBestObservationDate } from '@/utils/visibility';
 
 interface UserTarget {
@@ -137,7 +158,29 @@ async function deleteUserTarget(id: string): Promise<void> {
   if (!response.ok) throw new Error('Failed to delete target');
 }
 
-export default function WishlistPage(): JSX.Element {
+// Custom Rating Component
+function Rating({ value, onChange }: { value: number; onChange: (value: number) => void }) {
+  return (
+    <div className="flex gap-1">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          type="button"
+          onClick={() => onChange(star)}
+          className="transition-colors hover:scale-110"
+        >
+          <IconStar
+            size={20}
+            fill={star <= value ? 'gold' : 'transparent'}
+            color={star <= value ? 'gold' : '#8b949e'}
+          />
+        </button>
+      ))}
+    </div>
+  );
+}
+
+export default function WishlistPage() {
   const [activeTab, setActiveTab] = useState<string>('WISHLIST');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState({ status: '', rating: 0, notes: '' });
@@ -216,7 +259,7 @@ export default function WishlistPage(): JSX.Element {
       WISHLIST: 'blue',
       PLANNED: 'cyan',
       SHOT: 'green',
-      PROCESSED: 'grape',
+      PROCESSED: 'purple',
     };
     return colors[status] || 'gray';
   };
@@ -250,166 +293,187 @@ export default function WishlistPage(): JSX.Element {
   }
 
   return (
-    <Container size="xl" py="xl">
+    <Container size="xl" className="py-8">
       <Stack gap="lg">
         <Title order={1}>My Targets</Title>
 
-        <Tabs value={activeTab} onChange={(val) => setActiveTab(val || 'WISHLIST')}>
-          <Tabs.List>
-            <Tabs.Tab value="WISHLIST">Wishlist</Tabs.Tab>
-            <Tabs.Tab value="PLANNED">Planned</Tabs.Tab>
-            <Tabs.Tab value="SHOT">Shot</Tabs.Tab>
-            <Tabs.Tab value="PROCESSED">Processed</Tabs.Tab>
-          </Tabs.List>
+        <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val || 'WISHLIST')}>
+          <TabsList>
+            <TabsTrigger value="WISHLIST">Wishlist</TabsTrigger>
+            <TabsTrigger value="PLANNED">Planned</TabsTrigger>
+            <TabsTrigger value="SHOT">Shot</TabsTrigger>
+            <TabsTrigger value="PROCESSED">Processed</TabsTrigger>
+          </TabsList>
 
-          <Tabs.Panel value={activeTab} pt="md">
+          <TabsContent value={activeTab} className="pt-4">
             {targets && targets.length > 0 ? (
               <Table>
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th style={{ width: 70 }}>Image</Table.Th>
-                    <Table.Th>Catalog ID</Table.Th>
-                    <Table.Th>Name</Table.Th>
-                    <Table.Th>Type</Table.Th>
-                    <Table.Th>Status</Table.Th>
-                    <Table.Th>Rating</Table.Th>
-                    <Table.Th>Times Shot</Table.Th>
-                    <Table.Th>Actions</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead style={{ width: 70 }}>Image</TableHead>
+                    <TableHead>Catalog ID</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Rating</TableHead>
+                    <TableHead>Times Shot</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {targets.map((ut) => (
-                    <Table.Tr key={ut.id}>
-                      <Table.Td>
+                    <TableRow key={ut.id}>
+                      <TableCell>
                         <Box style={{ width: 60, height: 60 }}>
                           <Image
                             src={getTargetImageUrl(ut.target)}
                             width={60}
                             height={60}
                             alt={ut.target.name}
-                            radius="sm"
-                            fallbackSrc="https://placehold.co/60x60/1a1b1e/white?text=No+Image"
+                            className="rounded-sm object-cover"
+                            unoptimized
                           />
                         </Box>
-                      </Table.Td>
-                      <Table.Td>{ut.target.catalogId || '-'}</Table.Td>
-                      <Table.Td>{ut.target.name}</Table.Td>
-                      <Table.Td>{ut.target.type}</Table.Td>
-                      <Table.Td>
-                        <Badge color={getStatusColor(ut.status)} variant="light">
+                      </TableCell>
+                      <TableCell>{ut.target.catalogId || '-'}</TableCell>
+                      <TableCell>{ut.target.name}</TableCell>
+                      <TableCell>{ut.target.type}</TableCell>
+                      <TableCell>
+                        <Badge variant="secondary" className={`bg-${getStatusColor(ut.status)}-500/20 text-${getStatusColor(ut.status)}-400 border-${getStatusColor(ut.status)}-500/30`}>
                           {ut.status}
                         </Badge>
-                      </Table.Td>
-                      <Table.Td>
+                      </TableCell>
+                      <TableCell>
                         {ut.rating ? (
-                          <Group gap={4}>
+                          <Group gap="md">
                             <IconStar size={16} fill="gold" color="gold" />
                             <Text size="sm">{ut.rating}</Text>
                           </Group>
                         ) : (
                           '-'
                         )}
-                      </Table.Td>
-                      <Table.Td>{ut.timesShot}</Table.Td>
-                      <Table.Td>
+                      </TableCell>
+                      <TableCell>{ut.timesShot}</TableCell>
+                      <TableCell>
                         <Group gap="xs">
                           {!ut.target.isDynamic && (
-                            <Tooltip label="Find best observation date">
-                              <ActionIcon
-                                variant="subtle"
-                                color="teal"
-                                onClick={() => handleFindBestDate(ut)}
-                              >
-                                <IconCalendarSearch size={16} />
-                              </ActionIcon>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon-sm"
+                                  className="text-teal-400 hover:text-teal-300"
+                                  onClick={() => handleFindBestDate(ut)}
+                                >
+                                  <IconCalendarSearch size={16} />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Find best observation date</TooltipContent>
                             </Tooltip>
                           )}
-                          <Tooltip label="Edit target">
-                            <ActionIcon variant="subtle" onClick={() => handleEdit(ut)}>
-                              <IconEdit size={16} />
-                            </ActionIcon>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={() => handleEdit(ut)}
+                              >
+                                <IconEdit size={16} />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Edit target</TooltipContent>
                           </Tooltip>
-                          <Tooltip label="Remove from list">
-                            <ActionIcon
-                              variant="subtle"
-                              color="red"
-                              onClick={() => deleteMutation.mutate(ut.id)}
-                            >
-                              <IconTrash size={16} />
-                            </ActionIcon>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                className="text-red-400 hover:text-red-300"
+                                onClick={() => deleteMutation.mutate(ut.id)}
+                              >
+                                <IconTrash size={16} />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Remove from list</TooltipContent>
                           </Tooltip>
                         </Group>
-                      </Table.Td>
-                    </Table.Tr>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </Table.Tbody>
+                </TableBody>
               </Table>
             ) : (
-              <Text c="dimmed" ta="center" py="xl">
+              <Text className="text-muted-foreground text-center py-8">
                 No targets in {activeTab.toLowerCase()} yet.
               </Text>
             )}
-          </Tabs.Panel>
+          </TabsContent>
         </Tabs>
 
-        <Modal
-          opened={editingId !== null}
-          onClose={() => setEditingId(null)}
-          title="Edit Target"
-        >
-          <Stack gap="md">
-            <Select
-              label="Status"
-              data={['WISHLIST', 'PLANNED', 'SHOT', 'PROCESSED']}
-              value={editData.status}
-              onChange={(val) => setEditData({ ...editData, status: val || '' })}
-            />
-            <div>
-              <Text size="sm" fw={500} mb="xs">
-                Rating
-              </Text>
-              <Rating
-                value={editData.rating}
-                onChange={(val) => setEditData({ ...editData, rating: val })}
-              />
-            </div>
-            <Textarea
-              label="Notes"
-              value={editData.notes}
-              onChange={(e) => setEditData({ ...editData, notes: e.target.value })}
-            />
-            <Group justify="flex-end">
-              <Button variant="subtle" onClick={() => setEditingId(null)}>
+        <Dialog open={editingId !== null} onOpenChange={(open) => !open && setEditingId(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Target</DialogTitle>
+            </DialogHeader>
+            <Stack gap="md">
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select
+                  value={editData.status}
+                  onValueChange={(val) => setEditData({ ...editData, status: val || '' })}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="WISHLIST">WISHLIST</SelectItem>
+                    <SelectItem value="PLANNED">PLANNED</SelectItem>
+                    <SelectItem value="SHOT">SHOT</SelectItem>
+                    <SelectItem value="PROCESSED">PROCESSED</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Rating</Label>
+                <Rating
+                  value={editData.rating}
+                  onChange={(val) => setEditData({ ...editData, rating: val })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Notes</Label>
+                <Textarea
+                  value={editData.notes}
+                  onChange={(e) => setEditData({ ...editData, notes: e.target.value })}
+                  placeholder="Add notes..."
+                />
+              </div>
+            </Stack>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setEditingId(null)}>
                 Cancel
               </Button>
-              <Button onClick={handleSave} loading={updateMutation.isPending}>
-                Save
+              <Button onClick={handleSave} disabled={updateMutation.isPending}>
+                {updateMutation.isPending ? 'Saving...' : 'Save'}
               </Button>
-            </Group>
-          </Stack>
-        </Modal>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Scroll to top button */}
-        <ActionIcon
-          variant="filled"
-          color="blue"
-          size="xl"
-          radius="xl"
+        <Button
+          variant="default"
+          size="icon-lg"
+          className="fixed bottom-6 right-6 rounded-full shadow-lg transition-opacity duration-300 z-1000"
           onClick={scrollToTop}
           style={{
-            position: 'fixed',
-            bottom: 24,
-            right: 24,
             opacity: showScrollTop ? 1 : 0,
             visibility: showScrollTop ? 'visible' : 'hidden',
-            transition: 'opacity 0.3s, visibility 0.3s',
-            zIndex: 1000,
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
           }}
           aria-label="Scroll to top"
         >
           <IconArrowUp size={24} />
-        </ActionIcon>
+        </Button>
       </Stack>
     </Container>
   );

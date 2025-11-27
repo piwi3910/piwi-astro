@@ -13,7 +13,12 @@ import {
   Area,
   ComposedChart,
 } from 'recharts';
-import { Box, Text, Badge, Group, Stack, Paper } from '@mantine/core';
+import { Box } from '@/components/ui/box';
+import { Text } from '@/components/ui/text';
+import { Badge } from '@/components/ui/badge';
+import { Group } from '@/components/ui/group';
+import { Stack } from '@/components/ui/stack';
+import { Card } from '@/components/ui/card';
 import { IconMoon, IconSun, IconTarget } from '@tabler/icons-react';
 import {
   calculateNightVisibility,
@@ -42,7 +47,7 @@ export function AltitudeChart({
   observer,
   date,
   showMoon = true,
-}: AltitudeChartProps): JSX.Element {
+}: AltitudeChartProps) {
   const chartData = useMemo(() => {
     const nightData = calculateNightVisibility(target, observer, date, 15);
     const transit = calculateMeridianTransit(target, observer, date);
@@ -68,11 +73,11 @@ export function AltitudeChart({
 
   if (data.length === 0) {
     return (
-      <Paper p="xl" withBorder>
+      <Card p="xl" withBorder>
         <Text c="dimmed" ta="center">
           No visibility data available for this date
         </Text>
-      </Paper>
+      </Card>
     );
   }
 
@@ -84,14 +89,14 @@ export function AltitudeChart({
       {/* Info Cards */}
       <Group grow>
         {transit && (
-          <Paper p="md" withBorder>
+          <Card p="md" withBorder>
             <Group gap="xs">
-              <IconTarget size={20} color="var(--mantine-color-blue-5)" />
+              <IconTarget size={20} color="#228be6" />
               <div>
                 <Text size="xs" c="dimmed">
                   Meridian Transit
                 </Text>
-                <Text fw={600}>
+                <Text fw="semibold">
                   {transit.time.toLocaleTimeString('en-US', {
                     hour: '2-digit',
                     minute: '2-digit',
@@ -102,17 +107,17 @@ export function AltitudeChart({
                 </Text>
               </div>
             </Group>
-          </Paper>
+          </Card>
         )}
 
-        <Paper p="md" withBorder>
+        <Card p="md" withBorder>
           <Group gap="xs">
-            <IconSun size={20} color="var(--mantine-color-orange-5)" />
+            <IconSun size={20} color="#fd7e14" />
             <div>
               <Text size="xs" c="dimmed">
                 Observing Window
               </Text>
-              <Text fw={600}>
+              <Text fw="semibold">
                 {data[0].timeFormatted} - {data[data.length - 1].timeFormatted}
               </Text>
               <Text size="xs" c="dimmed">
@@ -120,17 +125,17 @@ export function AltitudeChart({
               </Text>
             </div>
           </Group>
-        </Paper>
+        </Card>
 
         {showMoon && data[0].moonIllumination !== undefined && (
-          <Paper p="md" withBorder>
+          <Card p="md" withBorder>
             <Group gap="xs">
-              <IconMoon size={20} color="var(--mantine-color-yellow-5)" />
+              <IconMoon size={20} color="#fab005" />
               <div>
                 <Text size="xs" c="dimmed">
                   Moon Phase
                 </Text>
-                <Text fw={600}>{data[0].moonIllumination.toFixed(0)}%</Text>
+                <Text fw="semibold">{data[0].moonIllumination.toFixed(0)}%</Text>
                 <Text size="xs" c="dimmed">
                   {data[0].moonIllumination < 25
                     ? 'Dark'
@@ -140,44 +145,44 @@ export function AltitudeChart({
                 </Text>
               </div>
             </Group>
-          </Paper>
+          </Card>
         )}
       </Group>
 
       {/* Chart */}
-      <Box style={{ width: '100%', height: 400 }}>
+      <Box className="w-full h-[400px]">
         <ResponsiveContainer>
           <ComposedChart
             data={data}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--mantine-color-dark-4)" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#424242" />
             <XAxis
               dataKey="timeFormatted"
-              stroke="var(--mantine-color-gray-6)"
+              stroke="#8b949e"
               style={{ fontSize: '12px' }}
               angle={-45}
               textAnchor="end"
               height={80}
             />
             <YAxis
-              stroke="var(--mantine-color-gray-6)"
+              stroke="#8b949e"
               style={{ fontSize: '12px' }}
               label={{
                 value: 'Altitude (degrees)',
                 angle: -90,
                 position: 'insideLeft',
-                style: { fill: 'var(--mantine-color-gray-6)' },
+                style: { fill: '#8b949e' },
               }}
               domain={[Math.max(0, minAltitude - 10), Math.min(90, maxAltitude + 10)]}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: 'var(--mantine-color-dark-6)',
-                border: '1px solid var(--mantine-color-dark-4)',
+                backgroundColor: '#2e2e2e',
+                border: '1px solid #424242',
                 borderRadius: '4px',
               }}
-              labelStyle={{ color: 'var(--mantine-color-gray-3)' }}
+              labelStyle={{ color: '#c9d1d9' }}
               formatter={(value: number, name: string) => [
                 `${value.toFixed(1)}°`,
                 name === 'altitude'
@@ -193,7 +198,7 @@ export function AltitudeChart({
             <Area
               type="monotone"
               dataKey="altitude"
-              fill="var(--mantine-color-blue-9)"
+              fill="#1864ab"
               fillOpacity={0.2}
               stroke="none"
             />
@@ -201,24 +206,24 @@ export function AltitudeChart({
             {/* Reference line at horizon */}
             <ReferenceLine
               y={0}
-              stroke="var(--mantine-color-red-6)"
+              stroke="#fa5252"
               strokeDasharray="3 3"
               label={{
                 value: 'Horizon',
                 position: 'right',
-                style: { fill: 'var(--mantine-color-red-6)', fontSize: '11px' },
+                style: { fill: '#fa5252', fontSize: '11px' },
               }}
             />
 
             {/* Reference line at 30 degrees (minimum good altitude) */}
             <ReferenceLine
               y={30}
-              stroke="var(--mantine-color-green-6)"
+              stroke="#40c057"
               strokeDasharray="3 3"
               label={{
                 value: 'Min. Good Alt',
                 position: 'right',
-                style: { fill: 'var(--mantine-color-green-6)', fontSize: '11px' },
+                style: { fill: '#40c057', fontSize: '11px' },
               }}
             />
 
@@ -226,7 +231,7 @@ export function AltitudeChart({
             <Line
               type="monotone"
               dataKey="altitude"
-              stroke="var(--mantine-color-blue-5)"
+              stroke="#228be6"
               strokeWidth={2}
               dot={false}
               name="Target Altitude"
@@ -237,7 +242,7 @@ export function AltitudeChart({
               <Line
                 type="monotone"
                 dataKey="moonAltitude"
-                stroke="var(--mantine-color-yellow-5)"
+                stroke="#fab005"
                 strokeWidth={2}
                 dot={false}
                 strokeDasharray="5 5"
@@ -250,38 +255,38 @@ export function AltitudeChart({
 
       {/* Quality Indicators */}
       <Group gap="xs">
-        <Text size="sm" fw={600}>
+        <Text size="sm" fw="semibold">
           Observing Conditions:
         </Text>
         {maxAltitude > 60 && (
-          <Badge color="green" variant="light">
+          <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/30">
             Excellent Altitude
           </Badge>
         )}
         {maxAltitude > 30 && maxAltitude <= 60 && (
-          <Badge color="blue" variant="light">
+          <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/30">
             Good Altitude
           </Badge>
         )}
         {maxAltitude <= 30 && (
-          <Badge color="orange" variant="light">
+          <Badge variant="outline" className="bg-orange-500/10 text-orange-500 border-orange-500/30">
             Low Altitude
           </Badge>
         )}
         {showMoon && data[0].moonIllumination !== undefined && (
           <>
             {data[0].moonIllumination < 25 && (
-              <Badge color="green" variant="light">
+              <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/30">
                 Dark Moon
               </Badge>
             )}
             {data[0].moonIllumination >= 25 && data[0].moonIllumination < 75 && (
-              <Badge color="yellow" variant="light">
+              <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/30">
                 Moderate Moon
               </Badge>
             )}
             {data[0].moonIllumination >= 75 && (
-              <Badge color="orange" variant="light">
+              <Badge variant="outline" className="bg-orange-500/10 text-orange-500 border-orange-500/30">
                 Bright Moon
               </Badge>
             )}

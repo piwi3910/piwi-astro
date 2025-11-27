@@ -4,7 +4,7 @@ import { getUserId } from '@/lib/auth/api-auth';
 
 // GET /api/images/[id]/like - Check if user has liked the image
 export async function GET(
-  _request: Request,
+  __request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
@@ -41,7 +41,7 @@ export async function GET(
 
 // POST /api/images/[id]/like - Like an image
 export async function POST(
-  _request: Request,
+  __request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
@@ -91,7 +91,7 @@ export async function POST(
 
 // DELETE /api/images/[id]/like - Unlike an image
 export async function DELETE(
-  _request: Request,
+  __request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;

@@ -4,7 +4,7 @@ import { getUserId } from '@/lib/auth/api-auth';
 import { imageProcessingQueue } from '@/lib/queue/queues';
 
 export async function POST(
-  _request: Request,
+  __request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { userId, error } = await getUserId();

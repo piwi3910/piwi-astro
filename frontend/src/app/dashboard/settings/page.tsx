@@ -1,21 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  Container,
-  Title,
-  Stack,
-  TextInput,
-  Textarea,
-  Select,
-  Button,
-  Card,
-  Text,
-  Group,
-} from '@mantine/core';
+import { Container } from '@/components/ui/container';
+import { Title } from '@/components/ui/title';
+import { Stack } from '@/components/ui/stack';
+import { TextInput } from '@/components/ui/text-input';
+import { TextareaField } from '@/components/ui/textarea-field';
+import { SelectField } from '@/components/ui/select-field';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Text } from '@/components/ui/text';
+import { Group } from '@/components/ui/group';
+import { Loader } from '@/components/ui/loader';
 import { useSession } from 'next-auth/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { notifications } from '@mantine/notifications';
+import { notifications } from '@/components/ui/notifications';
 
 interface UserProfile {
   id: string;
@@ -45,7 +44,7 @@ async function updateUserProfile(data: Partial<UserProfile>): Promise<UserProfil
   return response.json();
 }
 
-export default function SettingsPage(): JSX.Element {
+export default function SettingsPage() {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
 
@@ -103,14 +102,17 @@ export default function SettingsPage(): JSX.Element {
 
   if (isLoading) {
     return (
-      <Container size="md" py="xl">
-        <Text>Loading profile...</Text>
+      <Container size="md" className="py-8">
+        <div className="flex items-center gap-2">
+          <Loader />
+          <Text>Loading profile...</Text>
+        </div>
       </Container>
     );
   }
 
   return (
-    <Container size="md" py="xl">
+    <Container size="md" className="py-8">
       <Stack gap="lg">
         <div>
           <Title order={1}>Profile Settings</Title>
@@ -119,91 +121,98 @@ export default function SettingsPage(): JSX.Element {
           </Text>
         </div>
 
-        <Card shadow="sm" padding="lg" withBorder>
-          <Stack gap="md">
-            <Text fw={600} size="lg">
-              Profile Information
-            </Text>
+        <Card className="shadow-sm">
+          <CardContent>
+            <Stack gap="md">
+              <Text fw="semibold" size="lg">
+                Profile Information
+              </Text>
 
-            <TextInput
-              label="Email"
-              value={profile?.email || ''}
-              disabled
-              description="Email cannot be changed"
-            />
+              <TextInput
+                label="Email"
+                value={profile?.email || ''}
+                disabled
+                description="Email cannot be changed"
+              />
 
-            <TextInput
-              label="Username"
-              placeholder="yourusername"
-              value={formData.username}
-              onChange={(e) =>
-                setFormData({ ...formData, username: e.target.value })
-              }
-              description="Your unique username for public profile URL"
-              required
-            />
+              <TextInput
+                label="Username"
+                placeholder="yourusername"
+                value={formData.username}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
+                description="Your unique username for public profile URL"
+                required
+              />
 
-            <TextInput
-              label="Display Name"
-              placeholder="Your Name"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              description="This name will be displayed on your profile"
-            />
+              <TextInput
+                label="Display Name"
+                placeholder="Your Name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                description="This name will be displayed on your profile"
+              />
 
-            <Textarea
-              label="Bio"
-              placeholder="Tell us about yourself and your astrophotography journey..."
-              value={formData.bio}
-              onChange={(e) =>
-                setFormData({ ...formData, bio: e.target.value })
-              }
-              minRows={4}
-              description="Share your story with the community"
-            />
+              <TextareaField
+                label="Bio"
+                placeholder="Tell us about yourself and your astrophotography journey..."
+                value={formData.bio}
+                onChange={(e) =>
+                  setFormData({ ...formData, bio: e.target.value })
+                }
+                rows={4}
+                description="Share your story with the community"
+              />
 
-            <Select
-              label="Profile Visibility"
-              data={[
-                { value: 'PUBLIC', label: 'Public - Anyone can view your profile' },
-                { value: 'PRIVATE', label: 'Private - Only you can view your profile' },
-              ]}
-              value={formData.profileVisibility}
-              onChange={(val) =>
-                setFormData({
-                  ...formData,
-                  profileVisibility: val || 'PUBLIC',
-                })
-              }
-              description="Control who can see your public profile page"
-            />
+              <SelectField
+                label="Profile Visibility"
+                data={[
+                  { value: 'PUBLIC', label: 'Public - Anyone can view your profile' },
+                  { value: 'PRIVATE', label: 'Private - Only you can view your profile' },
+                ]}
+                value={formData.profileVisibility}
+                onChange={(val) =>
+                  setFormData({
+                    ...formData,
+                    profileVisibility: val,
+                  })
+                }
+                description="Control who can see your public profile page"
+              />
 
-            <Group justify="flex-end" mt="md">
-              <Button
-                onClick={handleSubmit}
-                loading={updateMutation.isPending}
-              >
-                Save Changes
-              </Button>
-            </Group>
-          </Stack>
+              <Group justify="end" className="mt-4">
+                <Button
+                  onClick={handleSubmit}
+                  disabled={updateMutation.isPending}
+                >
+                  {updateMutation.isPending && (
+                    <Loader size="sm" color="white" />
+                  )}
+                  Save Changes
+                </Button>
+              </Group>
+            </Stack>
+          </CardContent>
         </Card>
 
-        <Card shadow="sm" padding="lg" withBorder>
-          <Stack gap="md">
-            <Text fw={600} size="lg">
-              Public Profile URL
-            </Text>
-            <Text size="sm" c="dimmed">
-              Your public profile is available at:
-            </Text>
-            <TextInput
-              value={`${window.location.origin}/users/${formData.username}`}
-              readOnly
-            />
-          </Stack>
+        <Card className="shadow-sm">
+          <CardContent>
+            <Stack gap="md">
+              <Text fw="semibold" size="lg">
+                Public Profile URL
+              </Text>
+              <Text size="sm" c="dimmed">
+                Your public profile is available at:
+              </Text>
+              <TextInput
+                value={`${window.location.origin}/users/${formData.username}`}
+                readOnly
+              />
+            </Stack>
+          </CardContent>
         </Card>
       </Stack>
     </Container>

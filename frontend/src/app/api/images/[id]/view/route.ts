@@ -4,7 +4,7 @@ import { getUserId } from '@/lib/auth/api-auth';
 
 // POST /api/images/[id]/view - Increment view count
 export async function POST(
-  _request: Request,
+  __request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;

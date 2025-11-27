@@ -74,12 +74,12 @@ function parseRow(row: string): any | null {
 
   const [
     name, type, ra, dec, constellation,
-    majAx, minAx, posAng, bMag, vMag,
-    jMag, hMag, kMag, surfBr, hubble,
-    pax, pmRa, pmDec, radVel, redshift,
-    cstarUMag, cstarBMag, cstarVMag,
-    messier, ngc, ic, cstarNames,
-    identifiers, commonNames, nedNotes, opengcNotes, sources
+    majAx, minAx, _posAng, bMag, vMag,
+    _jMag, _hMag, _kMag, surfBr, _hubble,
+    _pax, _pmRa, _pmDec, _radVel, _redshift,
+    _cstarUMag, _cstarBMag, _cstarVMag,
+    messier, ngc, ic, _cstarNames,
+    _identifiers, commonNames, _nedNotes, _opengcNotes, _sources
   ] = fields;
 
   // Skip non-existent and duplicate entries

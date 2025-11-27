@@ -2,17 +2,21 @@
 
 import { useState, useEffect } from 'react';
 import {
-  Modal,
-  TextInput,
-  Textarea,
-  Button,
-  Stack,
-  Group,
-  Switch,
-  Select,
-  Text,
-  Paper,
-} from '@mantine/core';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { TextInput } from '@/components/ui/text-input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Stack } from '@/components/ui/stack';
+import { Group } from '@/components/ui/group';
+import { Switch } from '@/components/ui/switch';
+import { Text } from '@/components/ui/text';
+import { Card } from '@/components/ui/card';
+import { Loader } from '@/components/ui/loader';
 import { LocationMap } from './LocationMap';
 
 interface Location {
@@ -46,18 +50,6 @@ interface LocationFormProps {
   isEditing?: boolean;
 }
 
-const BORTLE_OPTIONS = [
-  { value: '1', label: 'Class 1 - Excellent dark sky' },
-  { value: '2', label: 'Class 2 - Typical dark sky' },
-  { value: '3', label: 'Class 3 - Rural sky' },
-  { value: '4', label: 'Class 4 - Rural/suburban transition' },
-  { value: '5', label: 'Class 5 - Suburban sky' },
-  { value: '6', label: 'Class 6 - Bright suburban sky' },
-  { value: '7', label: 'Class 7 - Suburban/urban transition' },
-  { value: '8', label: 'Class 8 - City sky' },
-  { value: '9', label: 'Class 9 - Inner-city sky' },
-];
-
 export function LocationForm({
   opened,
   onClose,
@@ -67,7 +59,7 @@ export function LocationForm({
   onMapClick,
   allLocations = [],
   isEditing = false,
-}: LocationFormProps): JSX.Element {
+}: LocationFormProps) {
   const [formData, setFormData] = useState<LocationFormData>({
     name: '',
     latitude: 0,
@@ -124,96 +116,113 @@ export function LocationForm({
   };
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      title={isEditing ? 'Edit Location' : 'Add New Location'}
-      size="xl"
-    >
-      <form onSubmit={handleSubmit}>
-        <Stack gap="md">
-          <Paper withBorder p="md">
-            <Text fw={600} mb="md">
-              {isEditing ? 'Location on Map (drag marker or click to reposition)' : 'Click on the map to select a location'}
-            </Text>
-            <LocationMap
-              locations={allLocations}
-              center={mapCenter}
-              height={400}
-              zoom={initialData ? 12 : 8}
-              onMapClick={onMapClick}
-              selectedPosition={formData.latitude && formData.longitude ? { lat: formData.latitude, lng: formData.longitude } : null}
-            />
-          </Paper>
+    <Dialog open={opened} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{isEditing ? 'Edit Location' : 'Add New Location'}</DialogTitle>
+        </DialogHeader>
 
-          <TextInput
-            label="Location Name"
-            placeholder="My backyard"
-            required
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-
-          <Group grow>
-            <TextInput
-              label="Latitude"
-              value={formData.latitude.toFixed(6)}
-              disabled
-              description="Selected from map"
-            />
+        <form onSubmit={handleSubmit}>
+          <Stack gap="md">
+            <Card withBorder p="md">
+              <Text fw="semibold" className="mb-4">
+                {isEditing ? 'Location on Map (drag marker or click to reposition)' : 'Click on the map to select a location'}
+              </Text>
+              <LocationMap
+                locations={allLocations}
+                center={mapCenter}
+                height={400}
+                zoom={initialData ? 12 : 8}
+                onMapClick={onMapClick}
+                selectedPosition={formData.latitude && formData.longitude ? { lat: formData.latitude, lng: formData.longitude } : null}
+              />
+            </Card>
 
             <TextInput
-              label="Longitude"
-              value={formData.longitude.toFixed(6)}
-              disabled
-              description="Selected from map"
-            />
-          </Group>
-
-          <Group grow>
-            <TextInput
-              label="Elevation"
-              value={
-                formData.elevation !== null && formData.elevation !== undefined
-                  ? `${formData.elevation.toFixed(0)}m`
-                  : 'Calculating...'
-              }
-              disabled
-              description="Auto-detected from location"
+              label="Location Name"
+              placeholder="My backyard"
+              required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
 
-            <TextInput
-              label="Timezone"
-              value={formData.timezone || 'Calculating...'}
-              disabled
-              description="Auto-detected from location"
-            />
-          </Group>
+            <Group grow>
+              <TextInput
+                label="Latitude"
+                value={formData.latitude.toFixed(6)}
+                disabled
+                description="Selected from map"
+              />
 
-          <Textarea
-            label="Notes"
-            placeholder="Additional information about this location..."
-            minRows={3}
-            value={formData.notes || ''}
-            onChange={(e) => setFormData({ ...formData, notes: e.target.value || null })}
-          />
+              <TextInput
+                label="Longitude"
+                value={formData.longitude.toFixed(6)}
+                disabled
+                description="Selected from map"
+              />
+            </Group>
 
-          <Switch
-            label="Mark as favorite location"
-            checked={formData.isFavorite}
-            onChange={(e) => setFormData({ ...formData, isFavorite: e.currentTarget.checked })}
-          />
+            <Group grow>
+              <TextInput
+                label="Elevation"
+                value={
+                  formData.elevation !== null && formData.elevation !== undefined
+                    ? `${formData.elevation.toFixed(0)}m`
+                    : 'Calculating...'
+                }
+                disabled
+                description="Auto-detected from location"
+              />
 
-          <Group justify="flex-end" mt="md">
-            <Button variant="subtle" onClick={onClose} disabled={isLoading}>
-              Cancel
-            </Button>
-            <Button type="submit" loading={isLoading}>
-              {isEditing ? 'Update Location' : 'Add Location'}
-            </Button>
-          </Group>
-        </Stack>
-      </form>
-    </Modal>
+              <TextInput
+                label="Timezone"
+                value={formData.timezone || 'Calculating...'}
+                disabled
+                description="Auto-detected from location"
+              />
+            </Group>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-foreground">Notes</label>
+              <Textarea
+                placeholder="Additional information about this location..."
+                rows={3}
+                value={formData.notes || ''}
+                onChange={(e) => setFormData({ ...formData, notes: e.target.value || null })}
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Switch
+                id="favorite-switch"
+                checked={formData.isFavorite}
+                onCheckedChange={(checked) => setFormData({ ...formData, isFavorite: checked })}
+              />
+              <label htmlFor="favorite-switch" className="text-sm font-medium text-foreground cursor-pointer">
+                Mark as favorite location
+              </label>
+            </div>
+
+            <DialogFooter>
+              <Group justify="end" gap="md" className="mt-4">
+                <Button variant="ghost" onClick={onClose} disabled={isLoading}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Loader size="sm" color="white" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    isEditing ? 'Update Location' : 'Add Location'
+                  )}
+                </Button>
+              </Group>
+            </DialogFooter>
+          </Stack>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

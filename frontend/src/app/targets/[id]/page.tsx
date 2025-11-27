@@ -10,15 +10,19 @@ import {
   Group,
   Badge,
   Card,
-  Image,
+  CardContent,
   Grid,
-  Paper,
+  GridCol,
   Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
   Skeleton,
   Button,
-} from '@mantine/core';
+} from '@/components/ui';
 import { useQuery } from '@tanstack/react-query';
-import { DatePicker } from '@mantine/dates';
+import { DatePicker } from '@/components/ui';
 import {
   IconTarget,
   IconRuler,
@@ -28,6 +32,7 @@ import {
 import { AltitudeChart } from '@/components/targets/AltitudeChart';
 import { getDSSImageUrl, calculateFOV } from '@/utils/targetImages';
 import type { ObserverLocation, TargetCoordinates } from '@/utils/astronomical';
+import Image from 'next/image';
 
 interface Target {
   id: string;
@@ -87,10 +92,10 @@ export default function TargetDetailPage() {
 
   if (targetLoading || !target) {
     return (
-      <Container size="lg" py="xl">
+      <Container size="lg" className="py-8">
         <Stack gap="lg">
-          <Skeleton height={50} />
-          <Skeleton height={400} />
+          <Skeleton className="h-[50px]" />
+          <Skeleton className="h-[400px]" />
         </Stack>
       </Container>
     );
@@ -116,20 +121,20 @@ export default function TargetDetailPage() {
     : null;
 
   return (
-    <Container size="xl" py="xl">
+    <Container size="xl" className="py-8">
       <Stack gap="xl">
         {/* Header */}
         <div>
-          <Group gap="xs" mb="xs">
+          <Group gap="xs" className="mb-2">
             <IconTarget size={32} />
             <Title order={1}>{target.name}</Title>
             {target.catalogId && (
-              <Badge size="lg" variant="light">
+              <Badge size="lg" variant="secondary">
                 {target.catalogId}
               </Badge>
             )}
           </Group>
-          <Text size="lg" c="dimmed">
+          <Text size="lg" className="text-muted-foreground">
             {target.type}
             {target.constellation && ` in ${target.constellation}`}
           </Text>
@@ -137,41 +142,46 @@ export default function TargetDetailPage() {
 
         <Grid>
           {/* Target Image */}
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Card shadow="sm" padding="lg" withBorder>
-              <Card.Section>
+          <GridCol span={{ base: 12, md: 6 }}>
+            <Card className="shadow-sm">
+              <div className="relative w-full h-[400px]">
                 <Image
                   src={imageUrl}
-                  height={400}
                   alt={target.name}
-                  fit="contain"
-                  fallbackSrc="https://placehold.co/600x400?text=Loading+Sky+Image"
+                  fill
+                  className="object-contain"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://placehold.co/600x400?text=Loading+Sky+Image';
+                  }}
                 />
-              </Card.Section>
-              <Text size="xs" c="dimmed" mt="xs" ta="center">
-                Image from Digitized Sky Survey (DSS)
-              </Text>
+              </div>
+              <CardContent className="pt-3">
+                <Text size="xs" className="text-muted-foreground text-center">
+                  Image from Digitized Sky Survey (DSS)
+                </Text>
+              </CardContent>
             </Card>
-          </Grid.Col>
+          </GridCol>
 
           {/* Target Information */}
-          <Grid.Col span={{ base: 12, md: 6 }}>
+          <GridCol span={{ base: 12, md: 6 }}>
             <Stack gap="md">
-              <Paper p="md" withBorder>
-                <Text fw={600} size="lg" mb="md">
+              <Card className="p-4">
+                <Text className="font-semibold text-lg mb-4">
                   Object Details
                 </Text>
                 <Stack gap="sm">
-                  <Group justify="space-between">
-                    <Text size="sm" c="dimmed">
+                  <Group justify="between">
+                    <Text size="sm" className="text-muted-foreground">
                       Type
                     </Text>
                     <Badge>{target.type}</Badge>
                   </Group>
 
                   {target.constellation && (
-                    <Group justify="space-between">
-                      <Text size="sm" c="dimmed">
+                    <Group justify="between">
+                      <Text size="sm" className="text-muted-foreground">
                         Constellation
                       </Text>
                       <Text size="sm">{target.constellation}</Text>
@@ -179,8 +189,8 @@ export default function TargetDetailPage() {
                   )}
 
                   {target.magnitude && (
-                    <Group justify="space-between">
-                      <Text size="sm" c="dimmed">
+                    <Group justify="between">
+                      <Text size="sm" className="text-muted-foreground">
                         Magnitude
                       </Text>
                       <Group gap="xs">
@@ -191,8 +201,8 @@ export default function TargetDetailPage() {
                   )}
 
                   {target.sizeMajorArcmin && (
-                    <Group justify="space-between">
-                      <Text size="sm" c="dimmed">
+                    <Group justify="between">
+                      <Text size="sm" className="text-muted-foreground">
                         Size
                       </Text>
                       <Group gap="xs">
@@ -204,92 +214,104 @@ export default function TargetDetailPage() {
                     </Group>
                   )}
                 </Stack>
-              </Paper>
+              </Card>
 
-              <Paper p="md" withBorder>
-                <Text fw={600} size="lg" mb="md">
+              <Card className="p-4">
+                <Text className="font-semibold text-lg mb-4">
                   Coordinates (J2000)
                 </Text>
                 <Stack gap="sm">
-                  <Group justify="space-between">
-                    <Text size="sm" c="dimmed">
+                  <Group justify="between">
+                    <Text size="sm" className="text-muted-foreground">
                       Right Ascension
                     </Text>
-                    <Text size="sm" fw={500}>
+                    <Text size="sm" className="font-medium">
                       {target.raDeg.toFixed(4)}°
                     </Text>
                   </Group>
-                  <Group justify="space-between">
-                    <Text size="sm" c="dimmed">
+                  <Group justify="between">
+                    <Text size="sm" className="text-muted-foreground">
                       Declination
                     </Text>
-                    <Text size="sm" fw={500}>
+                    <Text size="sm" className="font-medium">
                       {target.decDeg.toFixed(4)}°
                     </Text>
                   </Group>
                 </Stack>
-              </Paper>
+              </Card>
             </Stack>
-          </Grid.Col>
+          </GridCol>
         </Grid>
 
         {/* Visibility Section */}
         <div>
-          <Title order={2} size="h3" mb="md">
+          <Title order={2} size="lg" className="mb-4">
             Visibility & Planning
           </Title>
 
           <Stack gap="md">
             {/* Location and Date Selection */}
-            <Group grow>
-              <Select
-                label="Observation Location"
-                placeholder="Select location"
-                data={
-                  locations?.map((loc) => ({
-                    value: loc.id,
-                    label: `${loc.name}${loc.bortleScale ? ` (Bortle ${loc.bortleScale})` : ''}`,
-                  })) || []
-                }
-                value={selectedLocationId}
-                onChange={setSelectedLocationId}
-                leftSection={<IconMapPin size={16} />}
-                disabled={locationsLoading || !locations || locations.length === 0}
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Text size="sm" className="font-medium mb-2 flex items-center gap-2">
+                  <IconMapPin size={16} />
+                  Observation Location
+                </Text>
+                <Select
+                  value={selectedLocationId || undefined}
+                  onValueChange={setSelectedLocationId}
+                  disabled={locationsLoading || !locations || locations.length === 0}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {locations?.map((loc) => (
+                      <SelectItem key={loc.id} value={loc.id}>
+                        {loc.name}{loc.bortleScale ? ` (Bortle ${loc.bortleScale})` : ''}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
               <div>
-                <Text size="sm" fw={500} mb={4}>Observation Date</Text>
+                <Text size="sm" className="font-medium mb-2">Observation Date</Text>
                 <DatePicker
-                  value={observationDate}
-                  onChange={(value: Date | null) => setObservationDate(value)}
+                  value={observationDate || undefined}
+                  onChange={(date: Date | undefined) => setObservationDate(date || null)}
                   minDate={new Date()}
                 />
               </div>
-            </Group>
+            </div>
 
             {!locations || locations.length === 0 ? (
-              <Paper p="xl" withBorder>
+              <Card className="p-8">
                 <Stack align="center" gap="md">
-                  <IconMapPin size={48} stroke={1.5} color="gray" />
-                  <Text c="dimmed" ta="center">
+                  <IconMapPin size={48} stroke={1.5} className="text-muted-foreground" />
+                  <Text className="text-muted-foreground text-center">
                     No locations saved yet. Add a location to see visibility data.
                   </Text>
-                  <Button component="a" href="/dashboard/locations">
-                    Add Location
+                  <Button asChild>
+                    <a href="/dashboard/locations">
+                      Add Location
+                    </a>
                   </Button>
                 </Stack>
-              </Paper>
+              </Card>
             ) : observer && observationDate ? (
-              <Card shadow="sm" padding="lg" withBorder>
-                <Text fw={600} size="lg" mb="md">
-                  Altitude & Visibility Chart
-                </Text>
-                <AltitudeChart
-                  target={targetCoords}
-                  observer={observer}
-                  date={observationDate}
-                  showMoon={true}
-                />
+              <Card className="shadow-sm">
+                <CardContent className="p-6">
+                  <Text className="font-semibold text-lg mb-4">
+                    Altitude & Visibility Chart
+                  </Text>
+                  <AltitudeChart
+                    target={targetCoords}
+                    observer={observer}
+                    date={observationDate}
+                    showMoon={true}
+                  />
+                </CardContent>
               </Card>
             ) : null}
           </Stack>

@@ -8,15 +8,18 @@ import {
   Group,
   Text,
   Avatar,
+  AvatarImage,
+  AvatarFallback,
   Card,
-  Image,
+  CardContent,
   Badge,
-  SimpleGrid,
-  Paper,
+  Grid,
+  GridCol,
   Loader,
-} from '@mantine/core';
+} from '@/components/ui';
 import { useQuery } from '@tanstack/react-query';
 import { IconEye, IconStar, IconCalendar } from '@tabler/icons-react';
+import Image from 'next/image';
 
 interface Target {
   catalogId: string | null;
@@ -64,7 +67,7 @@ export default function UserProfilePage({
   params,
 }: {
   params: Promise<{ username: string }>;
-}): JSX.Element {
+}) {
   const { username } = use(params);
 
   const { data: profile, isLoading, error } = useQuery({
@@ -74,7 +77,7 @@ export default function UserProfilePage({
 
   if (isLoading) {
     return (
-      <Container size="xl" py="xl">
+      <Container size="xl" className="py-8">
         <Stack align="center">
           <Loader size="lg" />
           <Text>Loading profile...</Text>
@@ -85,9 +88,9 @@ export default function UserProfilePage({
 
   if (error) {
     return (
-      <Container size="xl" py="xl">
+      <Container size="xl" className="py-8">
         <Stack align="center">
-          <Text c="red" size="lg">
+          <Text className="text-destructive text-lg">
             {(error as Error).message}
           </Text>
         </Stack>
@@ -97,9 +100,9 @@ export default function UserProfilePage({
 
   if (!profile) {
     return (
-      <Container size="xl" py="xl">
+      <Container size="xl" className="py-8">
         <Stack align="center">
-          <Text c="dimmed" size="lg">
+          <Text className="text-muted-foreground text-lg">
             Profile not found
           </Text>
         </Stack>
@@ -113,116 +116,123 @@ export default function UserProfilePage({
   });
 
   return (
-    <Container size="xl" py="xl">
+    <Container size="xl" className="py-8">
       <Stack gap="lg">
         {/* User Header */}
-        <Paper p="xl" withBorder>
-          <Group align="flex-start">
-            <Avatar
-              src={profile.avatarUrl}
-              size={120}
-              radius="md"
-              alt={profile.name || profile.username}
-            />
-            <Stack gap="xs" style={{ flex: 1 }}>
+        <Card className="p-6 border">
+          <Group align="start">
+            <Avatar className="w-[120px] h-[120px] rounded-md">
+              <AvatarImage
+                src={profile.avatarUrl || undefined}
+                alt={profile.name || profile.username}
+              />
+              <AvatarFallback className="rounded-md text-2xl">
+                {(profile.name || profile.username).charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <Stack gap="xs" className="flex-1">
               <div>
                 <Title order={1}>{profile.name || profile.username}</Title>
-                <Text c="dimmed" size="lg">
+                <Text className="text-muted-foreground text-lg">
                   @{profile.username}
                 </Text>
               </div>
 
               {profile.bio && (
-                <Text size="md" mt="sm">
+                <Text className="text-base mt-2">
                   {profile.bio}
                 </Text>
               )}
 
-              <Group gap="lg" mt="md">
+              <Group gap="lg" className="mt-4">
                 <Group gap="xs">
                   <IconCalendar size={16} />
-                  <Text size="sm" c="dimmed">
+                  <Text className="text-sm text-muted-foreground">
                     Joined {joinDate}
                   </Text>
                 </Group>
                 <Group gap="xs">
-                  <Text size="sm" fw={600}>
+                  <Text className="text-sm font-semibold">
                     {profile.publicImageCount}
                   </Text>
-                  <Text size="sm" c="dimmed">
+                  <Text className="text-sm text-muted-foreground">
                     Public Images
                   </Text>
                 </Group>
               </Group>
             </Stack>
           </Group>
-        </Paper>
+        </Card>
 
         {/* Gallery */}
         <div>
-          <Title order={2} mb="md">
+          <Title order={2} className="mb-4">
             Gallery
           </Title>
 
           {profile.imageUploads.length > 0 ? (
-            <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing="md">
+            <Grid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} gap="md">
               {profile.imageUploads.map((image) => (
-                <Card key={image.id} shadow="sm" padding="sm" withBorder>
-                  <Card.Section>
-                    <Image
-                      src={image.url}
-                      height={200}
-                      alt={image.title || image.target.name}
-                      fit="cover"
-                    />
-                  </Card.Section>
+                <GridCol key={image.id}>
+                  <Card className="shadow-sm border">
+                    <div className="relative w-full h-[200px] overflow-hidden rounded-t-lg">
+                      <Image
+                        src={image.url}
+                        alt={image.title || image.target.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
 
-                  <Stack gap="xs" mt="sm">
-                    <Group justify="space-between" align="flex-start">
-                      <div style={{ flex: 1 }}>
-                        <Text fw={600} size="sm" lineClamp={1}>
-                          {image.title || image.target.name}
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          {image.target.catalogId || image.target.name}
-                        </Text>
-                      </div>
-                      {image.featured && (
-                        <IconStar size={16} fill="gold" color="gold" />
-                      )}
-                    </Group>
-
-                    <Badge size="xs" variant="light">
-                      {image.target.type}
-                    </Badge>
-
-                    {image.description && (
-                      <Text size="xs" c="dimmed" lineClamp={2}>
-                        {image.description}
-                      </Text>
-                    )}
-
-                    <Group justify="space-between">
-                      {image.captureDate && (
-                        <Text size="xs" c="dimmed">
-                          {new Date(image.captureDate).toLocaleDateString()}
-                        </Text>
-                      )}
-                      {image.viewCount > 0 && (
-                        <Group gap={4}>
-                          <IconEye size={12} />
-                          <Text size="xs" c="dimmed">
-                            {image.viewCount}
-                          </Text>
+                    <CardContent className="p-3">
+                      <Stack gap="xs" className="mt-2">
+                        <Group justify="between" align="start">
+                          <div className="flex-1">
+                            <Text className="font-semibold text-sm line-clamp-1">
+                              {image.title || image.target.name}
+                            </Text>
+                            <Text className="text-xs text-muted-foreground">
+                              {image.target.catalogId || image.target.name}
+                            </Text>
+                          </div>
+                          {image.featured && (
+                            <IconStar size={16} fill="gold" color="gold" />
+                          )}
                         </Group>
-                      )}
-                    </Group>
-                  </Stack>
-                </Card>
+
+                        <Badge variant="secondary" className="text-xs w-fit">
+                          {image.target.type}
+                        </Badge>
+
+                        {image.description && (
+                          <Text className="text-xs text-muted-foreground line-clamp-2">
+                            {image.description}
+                          </Text>
+                        )}
+
+                        <Group justify="between">
+                          {image.captureDate && (
+                            <Text className="text-xs text-muted-foreground">
+                              {new Date(image.captureDate).toLocaleDateString()}
+                            </Text>
+                          )}
+                          {image.viewCount > 0 && (
+                            <Group gap="md">
+                              <IconEye size={12} />
+                              <Text className="text-xs text-muted-foreground">
+                                {image.viewCount}
+                              </Text>
+                            </Group>
+                          )}
+                        </Group>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </GridCol>
               ))}
-            </SimpleGrid>
+            </Grid>
           ) : (
-            <Text c="dimmed" ta="center" py="xl">
+            <Text className="text-muted-foreground text-center py-8">
               No public images yet
             </Text>
           )}

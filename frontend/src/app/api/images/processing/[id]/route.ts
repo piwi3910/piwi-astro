@@ -4,7 +4,7 @@ import { getUserId } from '@/lib/auth/api-auth';
 import { deleteFile } from '@/lib/minio';
 
 export async function GET(
-  _request: Request,
+  __request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { userId, error } = await getUserId();
@@ -51,7 +51,7 @@ export async function GET(
 }
 
 export async function DELETE(
-  _request: Request,
+  __request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { userId, error } = await getUserId();
